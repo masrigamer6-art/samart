@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="fr">
+<html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
@@ -8,7 +8,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
   <style>
-    /* (keep all CSS exactly as before – unchanged) */
+    /* same styles – no changes needed */
     * { margin: 0; padding: 0; box-sizing: border-box; }
     body { font-family: 'Inter', sans-serif; background: #FFFFFF; color: #1E1B18; line-height: 1.4; }
     .header { position: sticky; top: 0; z-index: 100; background: rgba(255,255,255,0.85); backdrop-filter: blur(4px); border-bottom: 1px solid #E8D8C8; }
@@ -19,9 +19,21 @@
     .logo-text { display: inline-block; font-family: 'Cormorant Garamond', serif; letter-spacing: 2px; }
     .logo-samar { font-size: 1.8rem; font-weight: 600; color: #2C2C2C; text-shadow: 0 0 6px rgba(196,168,130,0.6); display: block; }
     .logo-piercing { font-size: 1rem; font-weight: 500; color: #A88262; letter-spacing: 3px; display: block; margin-top: 2px; }
-    .cart-icon { background: #FFFFFF; padding: 0.4rem 0.8rem; border-radius: 40px; text-decoration: none; color: #2C2C2C; font-weight: 500; font-size: 0.85rem; display: flex; align-items: center; gap: 6px; border: 1px solid #E8D8C8; box-shadow: 0 1px 2px rgba(0,0,0,0.02); }
+    .cart-icon { background: #FFFFFF; padding: 0.4rem 0.8rem; border-radius: 40px; text-decoration: none; color: #2C2C2C; font-weight: 500; font-size: 0.85rem; display: flex; align-items: center; gap: 6px; border: 1px solid #E8D8C8; }
     .cart-icon i { color: #C4A882; font-size: 1rem; }
     .cart-count { background: #C4A882; color: #1E1B18; border-radius: 30px; padding: 0.15rem 0.5rem; font-size: 0.7rem; font-weight: bold; }
+    .lang-btn {
+      background: none;
+      border: 1px solid #E8D8C8;
+      border-radius: 40px;
+      padding: 0.4rem 0.8rem;
+      font-size: 0.75rem;
+      cursor: pointer;
+      color: #2C2C2C;
+      transition: 0.2s;
+      font-weight: 500;
+    }
+    .lang-btn:hover { background: #F0E2D8; }
     .hero-image { width: 100%; height: auto; max-height: 500px; overflow: hidden; background: #FAFAFA; }
     .hero-image img { width: 100%; height: auto; object-fit: cover; display: block; }
     .shop-by-section { max-width: 1280px; margin: 2rem auto 0; padding: 0 1rem; text-align: center; }
@@ -32,7 +44,7 @@
     .circle-slider::-webkit-scrollbar-thumb { background: #C4A882; border-radius: 10px; }
     .circle-item { flex-shrink: 0; display: flex; flex-direction: column; align-items: center; gap: 0.5rem; cursor: pointer; transition: transform 0.2s; }
     .circle-item:hover { transform: translateY(-5px); }
-    .circle-img { width: 85px; height: 85px; background: #FEFAF5; border-radius: 50%; display: flex; align-items: center; justify-content: center; border: 2px solid #E8D8C8; transition: all 0.2s; overflow: hidden; }
+    .circle-img { width: 85px; height: 85px; background: #FEFAF5; border-radius: 50%; display: flex; align-items: center; justify-content: center; border: 2px solid #E8D8C8; overflow: hidden; }
     .circle-img img { width: 100%; height: 100%; object-fit: cover; }
     .circle-item.active .circle-img { border-color: #C4A882; background: #FFF8F0; box-shadow: 0 0 0 3px rgba(196,168,130,0.2); }
     .circle-label { font-size: 0.75rem; font-weight: 500; color: #2C2C2C; text-align: center; }
@@ -84,6 +96,7 @@
       .circle-slider { gap: 1rem; }
       .logo-samar { font-size: 1.4rem; }
       .logo-piercing { font-size: 0.85rem; }
+      .lang-btn { font-size: 0.7rem; padding: 0.3rem 0.6rem; }
     }
   </style>
 </head>
@@ -97,7 +110,10 @@
         <span class="logo-piercing">PIERCING</span>
       </div>
     </div>
-    <a href="/cart.html" class="cart-icon"><i class="fas fa-shopping-bag"></i> Cart <span id="cartNavBadge" class="cart-count">0</span></a>
+    <div style="display: flex; align-items: center; gap: 0.8rem;">
+      <button id="langToggle" class="lang-btn">🇫🇷 FR</button>
+      <a href="/cart.html" class="cart-icon"><i class="fas fa-shopping-bag"></i> <span id="cartLabel">Cart</span> <span id="cartNavBadge" class="cart-count">0</span></a>
+    </div>
   </div>
 </header>
 
@@ -106,40 +122,134 @@
 </div>
 
 <div class="shop-by-section">
-  <div class="shop-by-title">Shop By Piercing</div>
+  <div class="shop-by-title" id="shopByTitle">Shop By Piercing</div>
   <div class="circle-slider" id="circleSlider"></div>
 </div>
 
 <div class="container" id="mainContent">
   <div id="fullLayout">
-    <div class="section-title">✨ New Arrivals ✨</div>
-    <div class="section-sub">Discover our latest additions</div>
+    <div class="section-title" id="newArrivalsTitle">✨ New Arrivals ✨</div>
+    <div class="section-sub" id="newArrivalsSub">Discover our latest additions</div>
     <div id="newArrivalsGrid" class="products-grid">✨ Loading latest pieces...</div>
     <div id="categorySections"></div>
   </div>
   <div id="filteredProductsGrid" style="display: none;"></div>
 </div>
 
-<footer>© 2026 Samar Piercing — Secure payment with Stripe (MAD)</footer>
+<footer id="footer">© 2026 Samar Piercing — Secure payment with Stripe (MAD)</footer>
 
 <div class="drawer-overlay" id="drawerOverlay"></div>
 <div class="drawer" id="drawer">
   <div class="drawer-header">
-    <h3><i class="fas fa-tags"></i> Catégories</h3>
+    <h3 id="drawerTitle"><i class="fas fa-tags"></i> Categories</h3>
     <button class="close-drawer" id="closeDrawerBtn"><i class="fas fa-times"></i></button>
   </div>
   <div class="categories-list" id="categoriesList"></div>
 </div>
 
 <script>
+  // ---------------- TRANSLATIONS ----------------
+  const translations = {
+    en: {
+      shopByTitle: "Shop By Piercing",
+      newArrivalsTitle: "✨ New Arrivals ✨",
+      newArrivalsSub: "Discover our latest additions",
+      cartLabel: "Cart",
+      footer: "© 2026 Samar Piercing — Secure payment with Stripe (MAD)",
+      drawerTitle: "Categories",
+      allProducts: "✨ All Products",
+      addToCart: "Add",
+      addedToCart: "added to cart",
+      noNewArrivals: "✨ No new arrivals yet ✨",
+      noProducts: "✨ No products available ✨",
+      noFiltered: "✨ No products ✨",
+      loadingError: "⚠️ Unable to load products",
+      // category labels (used in drawer – can be translated)
+      catOreille: "Ear (Orielle)",
+      catNez: "Nose",
+      catNombril: "Belly",
+      catMicroDermal: "Micro dermal",
+      // subcategories (kept as is, but you can translate them too)
+    },
+    fr: {
+      shopByTitle: "Acheter par piercing",
+      newArrivalsTitle: "✨ Nouveautés ✨",
+      newArrivalsSub: "Découvrez nos dernières pièces",
+      cartLabel: "Panier",
+      footer: "© 2026 Samar Piercing — Paiement sécurisé Stripe (MAD)",
+      drawerTitle: "Catégories",
+      allProducts: "✨ Tous les produits",
+      addToCart: "Ajouter",
+      addedToCart: "ajouté au panier",
+      noNewArrivals: "✨ Aucune nouveauté pour le moment ✨",
+      noProducts: "✨ Aucun produit disponible ✨",
+      noFiltered: "✨ Aucun produit ✨",
+      loadingError: "⚠️ Impossible de charger les produits",
+      catOreille: "Oreille (Orielle)",
+      catNez: "Nez",
+      catNombril: "Nombril",
+      catMicroDermal: "Micro dermal",
+    }
+  };
+
+  let currentLang = localStorage.getItem('lang') || 'en';
+
+  function setLanguage(lang) {
+    currentLang = lang;
+    localStorage.setItem('lang', lang);
+    document.getElementById('shopByTitle').innerText = translations[lang].shopByTitle;
+    document.getElementById('newArrivalsTitle').innerHTML = translations[lang].newArrivalsTitle;
+    document.getElementById('newArrivalsSub').innerText = translations[lang].newArrivalsSub;
+    document.getElementById('cartLabel').innerText = translations[lang].cartLabel;
+    document.getElementById('footer').innerText = translations[lang].footer;
+    document.getElementById('drawerTitle').innerHTML = `<i class="fas fa-tags"></i> ${translations[lang].drawerTitle}`;
+    // update toggle button text
+    const toggleBtn = document.getElementById('langToggle');
+    toggleBtn.innerText = lang === 'en' ? '🇫🇷 FR' : '🇬🇧 EN';
+    // re-render drawer (static texts)
+    renderDrawer();
+    // re-render current product views (if needed, but product data is unchanged)
+    // only need to refresh static messages like "no products" because they are generated by renderProductsHTML
+    // we'll re-apply the global filter to refresh messages
+    if (allProducts.length) {
+      applyGlobalFilter();
+    } else {
+      // if products not loaded yet, they will be loaded and then applyGlobalFilter will be called
+      // but we can just refresh the empty state messages
+      const newArrivalsGrid = document.getElementById('newArrivalsGrid');
+      if (newArrivalsGrid && newArrivalsGrid.innerHTML.includes('No new arrivals')) {
+        newArrivalsGrid.innerHTML = `<div style="grid-column:1/-1; text-align:center;">${translations[lang].noNewArrivals}</div>`;
+      }
+      const categorySections = document.getElementById('categorySections');
+      if (categorySections && categorySections.innerHTML.includes('No products available')) {
+        categorySections.innerHTML = `<div style="text-align:center; padding:2rem;">${translations[lang].noProducts}</div>`;
+      }
+    }
+  }
+
+  // Helper to get translated "Add to cart" button text
+  function getAddToCartText() {
+    return translations[currentLang].addToCart;
+  }
+
+  // Helper to get "added to cart" toast message
+  function getAddedToCartMsg(productName) {
+    return `✨ ${productName} ${translations[currentLang].addedToCart}`;
+  }
+
+  // Modify renderProductsHTML to use translated Add button text
+  const originalRenderProductsHTML = renderProductsHTML;
+  // We'll override renderProductsHTML after defining translations
+  // But we need to keep the original for product rendering – we'll replace it with a wrapper
+
+  // ---------- All the existing product and cart logic (unchanged except language strings) ----------
   const categoriesDef = [
-    { main: "oreille", label: "Orielle (Oreille)", sub: ["lobe", "helix", "flat tragus", "conch", "daith", "rook/snug", "industrial", "anti-tragus"] },
-    { main: "nez", label: "Nez", sub: ["nostril", "septum", "bridge", "high nostril"] },
-    { main: "nombril", label: "Nombril", sub: [] },
-    { main: "micro-dermal", label: "Micro dermal", sub: [] }
+    { main: "oreille", labelEn: "Ear (Orielle)", labelFr: "Oreille (Orielle)", sub: ["lobe", "helix", "flat tragus", "conch", "daith", "rook/snug", "industrial", "anti-tragus"] },
+    { main: "nez", labelEn: "Nose", labelFr: "Nez", sub: ["nostril", "septum", "bridge", "high nostril"] },
+    { main: "nombril", labelEn: "Belly", labelFr: "Nombril", sub: [] },
+    { main: "micro-dermal", labelEn: "Micro dermal", labelFr: "Micro dermal", sub: [] }
   ];
 
-  // YOUR AVIF IMAGES – make sure files exist in public/images/
   const circleItems = [
     { name: "Helix", mainCat: "oreille", subCat: "helix", imgUrl: "/images/helix.avif" },
     { name: "Tragus", mainCat: "oreille", subCat: "tragus", imgUrl: "/images/tragus.avif" },
@@ -154,7 +264,6 @@
   let currentMain = "all";
   let currentSub = "";
 
-  // Render circles with IMAGES (AVIF)
   function renderCircleSlider() {
     const container = document.getElementById('circleSlider');
     if (!container) return;
@@ -170,7 +279,6 @@
       `;
     });
     container.innerHTML = html;
-
     document.querySelectorAll('.circle-item').forEach(el => {
       el.addEventListener('click', () => {
         const mainCat = el.dataset.main;
@@ -184,17 +292,17 @@
     });
   }
 
-  // Drawer rendering (same as before)
   function renderDrawer() {
     const container = document.getElementById("categoriesList");
     if (!container) return;
-    let html = `<div class="all-link" data-main="all" data-sub="">✨ Tous les produits</div>`;
+    let html = `<div class="all-link" data-main="all" data-sub="">${translations[currentLang].allProducts}</div>`;
     categoriesDef.forEach(cat => {
+      const catLabel = currentLang === 'en' ? cat.labelEn : cat.labelFr;
       const hasSub = cat.sub.length > 0;
       html += `
         <div class="main-cat-item" data-main="${cat.main}">
           <div class="main-cat-title">
-            ${cat.label}
+            ${catLabel}
             ${hasSub ? '<i class="fas fa-chevron-down"></i>' : ''}
           </div>
           ${hasSub ? `<div class="subcats" data-parent="${cat.main}">` : ''}
@@ -204,7 +312,7 @@
       `;
     });
     container.innerHTML = html;
-    // attach events (same as original)
+
     document.querySelectorAll('.all-link').forEach(el => {
       el.addEventListener('click', () => {
         currentMain = "all";
@@ -282,15 +390,15 @@
     const newArrivals = sorted.slice(0, 4);
     const newArrivalsGrid = document.getElementById('newArrivalsGrid');
     if (newArrivals.length === 0) {
-      newArrivalsGrid.innerHTML = '<div style="grid-column:1/-1; text-align:center;">✨ No new arrivals yet ✨</div>';
+      newArrivalsGrid.innerHTML = `<div style="grid-column:1/-1; text-align:center;">${translations[currentLang].noNewArrivals}</div>`;
     } else {
       newArrivalsGrid.innerHTML = renderProductsHTML(newArrivals);
     }
     const categoryOrder = [
-      { key: "oreille", label: "Orielle (Oreille)" },
-      { key: "nez", label: "Nez" },
-      { key: "nombril", label: "Nombril" },
-      { key: "micro-dermal", label: "Micro dermal" }
+      { key: "oreille", label: currentLang === 'en' ? "Ear (Orielle)" : "Oreille (Orielle)" },
+      { key: "nez", label: currentLang === 'en' ? "Nose" : "Nez" },
+      { key: "nombril", label: currentLang === 'en' ? "Belly" : "Nombril" },
+      { key: "micro-dermal", label: currentLang === 'en' ? "Micro dermal" : "Micro dermal" }
     ];
     const categoryContainer = document.getElementById('categorySections');
     let sectionsHtml = "";
@@ -303,14 +411,14 @@
       `;
     }
     if (sectionsHtml === "") {
-      sectionsHtml = '<div style="text-align:center; padding:2rem;">✨ No products available ✨</div>';
+      sectionsHtml = `<div style="text-align:center; padding:2rem;">${translations[currentLang].noProducts}</div>`;
     }
     categoryContainer.innerHTML = sectionsHtml;
     attachCartEvents();
   }
 
   function renderProductsHTML(productsArray) {
-    if (!productsArray.length) return '<div style="grid-column:1/-1; text-align:center;">✨ No products ✨</div>';
+    if (!productsArray.length) return `<div style="grid-column:1/-1; text-align:center;">${translations[currentLang].noFiltered}</div>`;
     return productsArray.map(p => {
       const catDisplay = p.subCategory || p.mainCategory;
       return `
@@ -319,7 +427,7 @@
           <div class="product-info">
             <div class="product-title">${escapeHtml(p.name)}<span class="subcat-tag">${escapeHtml(catDisplay)}</span></div>
             <div class="product-desc">${escapeHtml(p.description || '')}</div>
-            <div class="price-row"><span class="price">${(p.price / 100).toFixed(2)} MAD</span><button class="add-to-cart" data-id="${p.id}" data-name="${escapeHtml(p.name)}" data-price="${p.price}"><i class="fas fa-plus-circle"></i> Ajouter</button></div>
+            <div class="price-row"><span class="price">${(p.price / 100).toFixed(2)} MAD</span><button class="add-to-cart" data-id="${p.id}" data-name="${escapeHtml(p.name)}" data-price="${p.price}"><i class="fas fa-plus-circle"></i> ${translations[currentLang].addToCart}</button></div>
           </div>
         </div>
       `;
@@ -344,7 +452,7 @@
     else cart.push(product);
     localStorage.setItem('piercingCart', JSON.stringify(cart));
     updateCartBadge();
-    showToast(`✨ ${product.name} ajouté au panier`);
+    showToast(getAddedToCartMsg(product.name));
   }
 
   function updateCartBadge() {
@@ -374,7 +482,7 @@
       renderAllSections(allProducts);
       applyGlobalFilter();
     } catch (err) {
-      document.getElementById('newArrivalsGrid').innerHTML = '<div style="grid-column:1/-1; text-align:center;">⚠️ Erreur chargement produits</div>';
+      document.getElementById('newArrivalsGrid').innerHTML = `<div style="grid-column:1/-1; text-align:center;">${translations[currentLang].loadingError}</div>`;
     }
   }
 
@@ -391,10 +499,18 @@
   document.getElementById('closeDrawerBtn').addEventListener('click', closeDrawer);
   document.getElementById('drawerOverlay').addEventListener('click', closeDrawer);
 
+  // Language toggle
+  document.getElementById('langToggle').addEventListener('click', () => {
+    const newLang = currentLang === 'en' ? 'fr' : 'en';
+    setLanguage(newLang);
+  });
+
+  // Initialization
   renderCircleSlider();
   renderDrawer();
   fetchProducts();
   updateCartBadge();
+  setLanguage(currentLang); // apply saved language
 </script>
 </body>
 </html>
