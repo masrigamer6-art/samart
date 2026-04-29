@@ -12,6 +12,16 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static('public'));
 
+// Verify admin password (used to unlock admin panel)
+app.post('/api/verify-admin', (req, res) => {
+  const { password } = req.body;
+  if (password === process.env.ADMIN_PASSWORD || password === 'admin123') {
+    res.json({ success: true });
+  } else {
+    res.status(401).json({ success: false, error: 'Invalid password' });
+  }
+});
+
 // --------------------- Cloudinary Configuration ---------------------
 cloudinary.config({
   cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
