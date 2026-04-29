@@ -1,21 +1,43 @@
 require('dotenv').config();
 const express = require('express');
 const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
-const fs = require('fs');
-const path = require('path');
+const mongoose = require('mongoose');
 const multer = require('multer');
+const path = require('path');
+const fs = require('fs');
 
 const app = express();
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static('public'));
 
-// ensure uploads folder exists
+// --------------------- MongoDB Connection ---------------------
+const mongoURI = process.env.MONGODB_CONNECT_URL || process.env.MONGODB_CONNECT_URL;
+if (!mongoURI) {
+  console.error('❌ MONGODB_CONNECT_URL or MONGODB_URI is missing in .env');
+  process.exit(1);
+}
+mongoose.connect(mongoURI)
+  .then(() => console.log('✅ MongoDB connected'))
+  .catch(err => console.error('❌ MongoDB connection error:', err));
+
+// --------------------- Product Schema ---------------------
+const productSchema = new mongoose.Schema({
+  id: { type: String, unique: true },
+  name: String,
+  description: String,
+  price: Number,
+  mainCategory: String,
+  subCategory: String,
+  image: String,
+});
+const Product = mongoose.model('Product', productSchema);
+
+// --------------------- Local Image Upload ---------------------
 const uploadDir = path.join(__dirname, 'uploads');
 if (!fs.existsSync(uploadDir)) fs.mkdirSync(uploadDir);
 app.use('/uploads', express.static(uploadDir));
 
-// multer disk storage (local)
 const storage = multer.diskStorage({
   destination: (req, file, cb) => cb(null, uploadDir),
   filename: (req, file, cb) => {
@@ -26,74 +48,58 @@ const storage = multer.diskStorage({
 });
 const upload = multer({ storage, limits: { fileSize: 5 * 1024 * 1024 } });
 
-// products.json file
-const PRODUCTS_FILE = path.join(__dirname, 'products.json');
-
-function loadProducts() {
-  if (!fs.existsSync(PRODUCTS_FILE)) {
-    const defaultProducts = [
-      { id: '1', name: 'Lobe Or', description: 'Créole dorée', price: 2499, mainCategory: 'oreille', subCategory: 'lobe', image: '/uploads/default-lobe.jpg' },
-      { id: '2', name: 'Helix Étoile', description: 'Acier chirurgical', price: 1899, mainCategory: 'oreille', subCategory: 'helix', image: '/uploads/default-helix.jpg' },
-      { id: '3', name: 'Tragus Opale', description: 'Bioflex', price: 1599, mainCategory: 'oreille', subCategory: 'tragus', image: '/uploads/default-tragus.jpg' },
-      { id: '4', name: 'Nostril Or Rose', description: 'Stud discret', price: 999, mainCategory: 'nez', subCategory: 'nostril', image: '/uploads/default-nostril.jpg' },
-      { id: '5', name: 'Septum Anneau', description: 'Titane noir', price: 2799, mainCategory: 'nez', subCategory: 'septum', image: '/uploads/default-septum.jpg' },
-      { id: '6', name: 'Nombril Dangle', description: 'Or 14k', price: 4500, mainCategory: 'nombril', subCategory: '', image: '/uploads/default-belly.jpg' },
-      { id: '7', name: 'Micro dermal Étoile', description: 'Surface piercing', price: 3200, mainCategory: 'micro-dermal', subCategory: '', image: '/uploads/default-dermal.jpg' }
-    ];
-    fs.writeFileSync(PRODUCTS_FILE, JSON.stringify(defaultProducts, null, 2));
-    return defaultProducts;
+// --------------------- API Routes ---------------------
+app.get('/api/products', async (req, res) => {
+  try {
+    const products = await Product.find({});
+    res.json(products);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
   }
-  return JSON.parse(fs.readFileSync(PRODUCTS_FILE));
-}
-
-function saveProducts(products) {
-  fs.writeFileSync(PRODUCTS_FILE, JSON.stringify(products, null, 2));
-}
-
-let products = loadProducts();
-
-// API routes
-app.get('/api/products', (req, res) => res.json(products));
+});
 
 app.post('/api/upload', upload.single('productImage'), (req, res) => {
   if (!req.file) return res.status(400).json({ error: 'No file uploaded' });
   res.json({ imageUrl: `/uploads/${req.file.filename}` });
 });
 
-app.post('/api/products', (req, res) => {
-  const { password, name, description, price, mainCategory, subCategory, image } = req.body;
-  // Simple password check
-  if (password !== process.env.ADMIN_PASSWORD && password !== 'admin123')
-    return res.status(401).json({ error: 'Unauthorized' });
-  
-  // Validate required fields (mainCategory instead of category)
-  if (!name || !price || !mainCategory || !image) {
-    return res.status(400).json({ error: 'Missing fields: name, price, mainCategory, image are required' });
+app.post('/api/products', async (req, res) => {
+  try {
+    const { password, name, description, price, mainCategory, subCategory, image } = req.body;
+    if (password !== process.env.ADMIN_PASSWORD && password !== 'admin123') {
+      return res.status(401).json({ error: 'Unauthorized' });
+    }
+    if (!name || !price || !mainCategory || !image) {
+      return res.status(400).json({ error: 'Missing required fields' });
+    }
+    const priceCents = Math.round(parseFloat(price) * 100);
+    const newProduct = new Product({
+      id: Date.now().toString(),
+      name,
+      description: description || '',
+      price: priceCents,
+      mainCategory,
+      subCategory: subCategory || '',
+      image,
+    });
+    await newProduct.save();
+    res.json({ success: true, product: newProduct });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
   }
-  
-  const priceCents = Math.round(parseFloat(price) * 100);
-  const newProduct = {
-    id: Date.now().toString(),
-    name,
-    description: description || '',
-    price: priceCents,
-    mainCategory,
-    subCategory: subCategory || '',
-    image
-  };
-  products.push(newProduct);
-  saveProducts(products);
-  res.json({ success: true, product: newProduct });
 });
 
-app.delete('/api/products/:id', (req, res) => {
-  const { password } = req.body;
-  if (password !== process.env.ADMIN_PASSWORD && password !== 'admin123')
-    return res.status(401).json({ error: 'Unauthorized' });
-  const id = req.params.id;
-  products = products.filter(p => p.id !== id);
-  saveProducts(products);
-  res.json({ success: true });
+app.delete('/api/products/:id', async (req, res) => {
+  try {
+    const { password } = req.body;
+    if (password !== process.env.ADMIN_PASSWORD && password !== 'admin123') {
+      return res.status(401).json({ error: 'Unauthorized' });
+    }
+    await Product.findOneAndDelete({ id: req.params.id });
+    res.json({ success: true });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
 });
 
 app.post('/api/create-checkout-session', async (req, res) => {
@@ -102,6 +108,7 @@ app.post('/api/create-checkout-session', async (req, res) => {
     if (!cartItems || cartItems.length === 0) {
       return res.status(400).json({ error: 'Cart is empty' });
     }
+    const products = await Product.find({});
     const lineItems = cartItems.map(item => {
       const product = products.find(p => p.id === item.id);
       if (!product) throw new Error(`Product ${item.id} not found`);
@@ -123,9 +130,13 @@ app.post('/api/create-checkout-session', async (req, res) => {
     });
     res.json({ url: session.url });
   } catch (error) {
-    console.error('Stripe error:', error);
     res.status(500).json({ error: error.message });
   }
+});
+
+// Corrected catch-all route: The wildcard must be named.
+app.get('/{*splat}', (req, res) => {
+  res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
 
 const PORT = process.env.PORT || 3000;
