@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin - Piercing Shop</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Inter', sans-serif; background: #FDF9F0; padding: 1rem; }
+        .container { max-width: 800px; margin: 0 auto; background: white; border-radius: 28px; padding: 1.5rem; border: 1px solid #F0E5D2; }
+        h1 { font-size: 1.6rem; margin-bottom: 1rem; background: linear-gradient(135deg, #D4AF37, #A67C1E); background-clip: text; -webkit-background-clip: text; color: transparent; }
+        h2 { font-size: 1.2rem; margin: 1rem 0 0.8rem; color: #B88A2C; }
+        label { display: block; margin-top: 0.8rem; font-weight: 600; font-size: 0.85rem; }
+        input, select, textarea { width: 100%; padding: 0.6rem; margin-top: 0.2rem; border: 1px solid #EAD5B0; border-radius: 16px; background: #FEFAF5; font-family: inherit; }
+        button { background: #D4AF37; color: #1E1B18; border: none; padding: 0.7rem; border-radius: 60px; font-weight: 700; cursor: pointer; width: 100%; margin-top: 1rem; }
+        button:hover { background: #B88A2C; color: white; }
+        .message { margin-top: 0.8rem; padding: 0.6rem; border-radius: 16px; text-align: center; font-size: 0.8rem; }
+        .success { background: #E8F5E9; color: #2E7D32; border-left: 4px solid #D4AF37; }
+        .error { background: #FFEBEE; color: #C62828; border-left: 4px solid #C62828; }
+        .image-preview { margin-top: 0.8rem; max-width: 120px; border-radius: 12px; overflow: hidden; display: none; }
+        .product-item { display: flex; justify-content: space-between; align-items: center; background: #FEFAF5; padding: 0.7rem; border-radius: 20px; margin-bottom: 0.7rem; border: 1px solid #F0E5D2; flex-wrap: wrap; gap: 0.5rem; }
+        .product-info { display: flex; align-items: center; gap: 0.8rem; flex-wrap: wrap; }
+        .product-thumb { width: 50px; height: 50px; object-fit: cover; border-radius: 12px; }
+        .delete-btn { background: #1E1B18; width: auto; padding: 0.4rem 1rem; font-size: 0.75rem; margin-top: 0; }
+        @media (max-width: 600px) { .product-info { flex-direction: column; align-items: flex-start; } }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h1><i class="fas fa-crown"></i> Admin – Gestion des produits</h1>
+    <div style="background:#FEFAF5; padding:0.8rem; border-radius:20px; margin-bottom:1rem;">
+        <label>Mot de passe admin</label>
+        <input type="password" id="globalPassword" placeholder="admin123">
+    </div>
+
+    <h2>➕ Ajouter un produit</h2>
+    <form id="addProductForm">
+        <label>Nom *</label>
+        <input type="text" id="name" required>
+        <label>Description</label>
+        <textarea id="description" rows="2" required></textarea>
+        <label>Prix (MAD) *</label>
+        <input type="number" step="0.01" id="price" required>
+
+        <label>Catégorie principale *</label>
+        <select id="mainCategory" required>
+            <option value="">-- Sélectionnez --</option>
+            <option value="oreille">Orielle (Oreille)</option>
+            <option value="nez">Nez</option>
+            <option value="nombril">Nombril</option>
+            <option value="micro-dermal">Micro dermal</option>
+        </select>
+
+        <label>Sous-catégorie <span id="subLabel"></span></label>
+        <select id="subCategory">
+            <option value="">Aucune</option>
+        </select>
+
+        <label>Image du produit *</label>
+        <input type="file" id="productImage" accept="image/jpeg,image/png,image/gif,image/webp" required>
+        <div class="image-preview" id="imagePreview"><img id="previewImg" alt="Preview"></div>
+
+        <button type="submit">Ajouter le produit</button>
+    </form>
+    <div id="addMessage"></div>
+    <hr>
+    <h2>📦 Produits existants</h2>
+    <div id="currentProducts">Chargement...</div>
+    <a href="/" class="back-link" style="display:inline-block; margin-top:1rem;">← Retour à la boutique</a>
+</div>
+
+<script>
+    const subCategories = {
+        oreille: ['lobe', 'helix', 'tragus', 'conch', 'daith', 'rook/snug', 'industrial', 'anti-tragus'],
+        nez: ['nostril', 'septum', 'bridge', 'high nostril'],
+        nombril: [],
+        'micro-dermal': []
+    };
+
+    const mainCatSelect = document.getElementById('mainCategory');
+    const subCatSelect = document.getElementById('subCategory');
+    const subLabel = document.getElementById('subLabel');
+
+    mainCatSelect.addEventListener('change', () => {
+        const selected = mainCatSelect.value;
+        subCatSelect.innerHTML = '<option value="">Aucune</option>';
+        if (subCategories[selected] && subCategories[selected].length) {
+            subCategories[selected].forEach(sub => {
+                const option = document.createElement('option');
+                option.value = sub;
+                option.textContent = sub;
+                subCatSelect.appendChild(option);
+            });
+            subLabel.textContent = '(optionnelle)';
+        } else {
+            subLabel.textContent = '(aucune sous-catégorie)';
+        }
+    });
+
+    async function loadProducts() {
+        const res = await fetch('/api/products');
+        const products = await res.json();
+        renderProductList(products);
+    }
+
+    function renderProductList(products) {
+        const container = document.getElementById('currentProducts');
+        if (!products.length) { container.innerHTML = '<p>✨ Aucun produit. Ajoutez-en !</p>'; return; }
+        container.innerHTML = products.map(p => `
+            <div class="product-item">
+                <div class="product-info">
+                    <img class="product-thumb" src="${escapeHtml(p.image)}" onerror="this.src='https://via.placeholder.com/50'">
+                    <div>
+                        <strong>${escapeHtml(p.name)}</strong><br>
+                        ${(p.price/100).toFixed(2)} MAD<br>
+                        <small>${escapeHtml(p.mainCategory)} ${p.subCategory ? `→ ${p.subCategory}` : ''}</small>
+                    </div>
+                </div>
+                <button class="delete-btn" onclick="deleteProduct('${p.id}')">Supprimer</button>
+            </div>
+        `).join('');
+    }
+
+    async function deleteProduct(id) {
+        const password = document.getElementById('globalPassword').value;
+        if (!password) return alert("Mot de passe requis");
+        if (!confirm("Supprimer définitivement ?")) return;
+        const res = await fetch(`/api/products/${id}`, {
+            method: 'DELETE',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ password })
+        });
+        if (res.ok) {
+            showMessage('addMessage', 'Produit supprimé', 'success');
+            loadProducts();
+        } else showMessage('addMessage', 'Échec suppression', 'error');
+    }
+
+    document.getElementById('productImage').addEventListener('change', function(e) {
+        const file = e.target.files[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = ev => {
+                document.getElementById('previewImg').src = ev.target.result;
+                document.getElementById('imagePreview').style.display = 'block';
+            };
+            reader.readAsDataURL(file);
+        } else document.getElementById('imagePreview').style.display = 'none';
+    });
+
+    document.getElementById('addProductForm').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const password = document.getElementById('globalPassword').value;
+        if (!password) return alert("Mot de passe admin requis");
+        const name = document.getElementById('name').value.trim();
+        const description = document.getElementById('description').value.trim();
+        const price = parseFloat(document.getElementById('price').value);
+        const mainCategory = document.getElementById('mainCategory').value;
+        const subCategory = document.getElementById('subCategory').value;
+        const imageFile = document.getElementById('productImage').files[0];
+        if (!name || isNaN(price) || !mainCategory || !imageFile)
+            return showMessage('addMessage', 'Tous les champs obligatoires doivent être remplis', 'error');
+        
+        const formData = new FormData();
+        formData.append('productImage', imageFile);
+        const uploadRes = await fetch('/api/upload', { method: 'POST', body: formData });
+        if (!uploadRes.ok) return showMessage('addMessage', "Échec de l'upload", 'error');
+        const { imageUrl } = await uploadRes.json();
+        const productData = { password, name, description, price, mainCategory, subCategory, image: imageUrl };
+        const addRes = await fetch('/api/products', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(productData)
+        });
+        if (addRes.ok) {
+            showMessage('addMessage', 'Produit ajouté avec succès !', 'success');
+            document.getElementById('addProductForm').reset();
+            document.getElementById('imagePreview').style.display = 'none';
+            loadProducts();
+        } else {
+            const err = await addRes.json();
+            showMessage('addMessage', `Erreur: ${err.error}`, 'error');
+        }
+    });
+
+    function showMessage(el, text, type) {
+        const div = document.getElementById(el);
+        div.innerHTML = `<div class="message ${type}">${text}</div>`;
+        setTimeout(() => div.innerHTML = '', 4000);
+    }
+    function escapeHtml(str) { if (!str) return ''; return str.replace(/[&<>]/g, m => m === '&' ? '&amp;' : (m === '<' ? '&lt;' : '&gt;')); }
+    loadProducts();
+</script>
+</body>
+</html>

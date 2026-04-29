@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Your Cart - Puncture Perfect</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        * { margin:0; padding:0; box-sizing:border-box; }
+        body { font-family:'Inter',sans-serif; background:#faf7f2; color:#1e1a17; }
+        .container { max-width:1000px; margin:2rem auto; padding:1rem; }
+        .cart-card { background:white; border-radius:28px; padding:2rem; box-shadow:0 6px 14px rgba(0,0,0,0.05); }
+        h2 { font-size:2rem; margin-bottom:1rem; }
+        .cart-item { display:flex; justify-content:space-between; border-bottom:1px solid #ede6db; padding:1rem 0; flex-wrap:wrap; }
+        .checkout-btn { background:#c2452c; border:none; padding:1rem 2rem; border-radius:60px; font-weight:bold; color:white; width:100%; cursor:pointer; margin-top:2rem; font-size:1rem; }
+        .back-link { display:inline-block; margin-top:1rem; color:#c2452c; }
+        .empty-cart { text-align:center; padding:3rem; }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="cart-card">
+        <h2><i class="fas fa-shopping-bag"></i> Your piercing cart</h2>
+        <div id="cartItemsContainer">Loading cart...</div>
+        <div id="cartTotal" class="cart-total" style="text-align:right; margin-top:1.5rem;"></div>
+        <button id="checkoutButton" class="checkout-btn">Proceed to credit card payment →</button>
+        <div style="margin-top:1rem;"><a href="/" class="back-link"><i class="fas fa-arrow-left"></i> Continue shopping</a></div>
+    </div>
+</div>
+<script>
+    function renderCart() {
+        const cart = JSON.parse(localStorage.getItem('piercingCart')) || [];
+        const container = document.getElementById('cartItemsContainer');
+        const totalSpan = document.getElementById('cartTotal');
+        if (!cart.length) {
+            container.innerHTML = '<div class="empty-cart">🛒 Your cart is empty. Add some stunning piercings!</div>';
+            totalSpan.innerHTML = '';
+            document.getElementById('checkoutButton').disabled = false;
+            return;
+        }
+        let html = '';
+        let total = 0;
+        cart.forEach((item, idx) => {
+            const itemTotal = (item.price * item.quantity);
+            total += itemTotal;
+            html += `
+                <div class="cart-item">
+                    <div><strong>${escapeHtml(item.name)}</strong><br><span style="font-size:0.8rem;color:#7c6b5c;">$${(item.price/100).toFixed(2)} each</span></div>
+                    <div style="display:flex; align-items:center; gap:1rem;">
+                        <div class="quantity-select">
+                            <button class="quantity-btn" data-idx="${idx}" data-delta="-1">-</button>
+                            <span>${item.quantity}</span>
+                            <button class="quantity-btn" data-idx="${idx}" data-delta="1">+</button>
+                        </div>
+                        <button class="remove-btn" data-idx="${idx}"><i class="fas fa-trash-alt"></i> Remove</button>
+                        <strong>$${(itemTotal/100).toFixed(2)}</strong>
+                    </div>
+                </div>
+            `;
+        });
+        container.innerHTML = html;
+        totalSpan.innerHTML = `<strong>Total: $${(total/100).toFixed(2)}</strong>`;
+        attachCartEvents();
+    }
+
+    function attachCartEvents() {
+        document.querySelectorAll('.quantity-btn').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                const idx = parseInt(btn.dataset.idx);
+                const delta = parseInt(btn.dataset.delta);
+                let cart = JSON.parse(localStorage.getItem('piercingCart')) || [];
+                if (cart[idx]) {
+                    let newQty = cart[idx].quantity + delta;
+                    if (newQty <= 0) {
+                        cart.splice(idx, 1);
+                    } else {
+                        cart[idx].quantity = newQty;
+                    }
+                    localStorage.setItem('piercingCart', JSON.stringify(cart));
+                    renderCart();
+                    updateNavBadge();
+                }
+            });
+        });
+        document.querySelectorAll('.remove-btn').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                const idx = parseInt(btn.dataset.idx);
+                let cart = JSON.parse(localStorage.getItem('piercingCart')) || [];
+                cart.splice(idx, 1);
+                localStorage.setItem('piercingCart', JSON.stringify(cart));
+                renderCart();
+                updateNavBadge();
+            });
+        });
+    }
+
+    function updateNavBadge() {
+        const cart = JSON.parse(localStorage.getItem('piercingCart')) || [];
+        const total = cart.reduce((sum,i)=>sum+i.quantity,0);
+        const badge = document.getElementById('cartNavBadge');
+        if(badge) badge.innerText = total;
+    }
+
+    function escapeHtml(str) { return str.replace(/[&<>]/g, function(m){if(m==='&')return '&amp;';if(m==='<')return '&lt;';if(m==='>')return '&gt;';return m;}); }
+
+    document.getElementById('checkoutButton').addEventListener('click', async () => {
+        const cart = JSON.parse(localStorage.getItem('piercingCart')) || [];
+        if(cart.length === 0) {
+            alert("Your cart is empty. Add some products first.");
+            return;
+        }
+        const response = await fetch('/api/create-checkout-session', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ items: cart })
+        });
+        const data = await response.json();
+        if(data.url) {
+            window.location.href = data.url;  // redirects to Stripe checkout
+        } else {
+            alert("Error starting checkout: " + (data.error || "unknown"));
+        }
+    });
+
+    renderCart();
+    if(document.getElementById('cartNavBadge')) updateNavBadge();
+</script>
+</body>
+</html>

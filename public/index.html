@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>Samar Piercing | Or & Beige</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Inter', sans-serif; background: #FDF9F0; color: #1E1B18; line-height: 1.4; }
+        .header { background: #FFFFFF; border-bottom: 1px solid #F0E5D2; position: sticky; top: 0; z-index: 100; }
+        .nav-container { max-width: 1280px; margin: 0 auto; padding: 0.8rem 1rem; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.8rem; }
+        .logo h1 { font-size: 1.4rem; background: linear-gradient(135deg, #D4AF37, #A67C1E); background-clip: text; -webkit-background-clip: text; color: transparent; }
+        .logo span { font-size: 0.7rem; color: #8E7A5E; display: block; }
+        .cart-icon { background: #FFF8EB; padding: 0.4rem 0.8rem; border-radius: 40px; text-decoration: none; color: #2C241E; font-weight: 500; font-size: 0.85rem; display: flex; align-items: center; gap: 6px; border: 1px solid #F0E0C4; }
+        .cart-icon i { color: #D4AF37; font-size: 1rem; }
+        .cart-count { background: #D4AF37; color: #1A1A1A; border-radius: 30px; padding: 0.1rem 0.45rem; font-size: 0.65rem; font-weight: bold; }
+        .container { max-width: 1280px; margin: 1rem auto; padding: 0 0.8rem; }
+        .hero { text-align: center; margin-bottom: 1rem; }
+        .hero h2 { font-size: 1.4rem; background: linear-gradient(135deg, #A67C1E, #D4AF37); background-clip: text; -webkit-background-clip: text; color: transparent; }
+        .hero p { color: #5F4E3A; font-size: 0.8rem; }
+        
+        .filter-section { margin: 1rem 0; }
+        .filter-title { font-weight: 600; margin-bottom: 0.5rem; color: #2C241E; font-size: 0.8rem; }
+        .main-cats, .sub-cats { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-bottom: 1rem; }
+        .cat-btn, .sub-btn {
+            background: #FFFFFF;
+            border: 1px solid #EAD5B0;
+            padding: 0.4rem 0.9rem;
+            border-radius: 60px;
+            font-weight: 500;
+            font-size: 0.75rem;
+            cursor: pointer;
+            font-family: inherit;
+        }
+        .cat-btn.active, .sub-btn.active {
+            background: #D4AF37;
+            border-color: #D4AF37;
+            color: #1E1B18;
+        }
+        .sub-cats { display: none; }
+        .sub-cats.show { display: flex; }
+        
+        .products-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+            gap: 1rem;
+        }
+        .product-card {
+            background: white;
+            border-radius: 20px;
+            overflow: hidden;
+            border: 1px solid #F3E9DA;
+            transition: transform 0.2s;
+        }
+        .product-img { width: 100%; height: 160px; background: #FEF8EF; display: flex; align-items: center; justify-content: center; overflow: hidden; }
+        .product-img img { width: 100%; height: 100%; object-fit: cover; }
+        .product-info { padding: 0.7rem; }
+        .product-title { font-weight: 700; font-size: 0.9rem; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.3rem; }
+        .subcat-tag { font-size: 0.55rem; background: #FFF0DF; padding: 0.15rem 0.45rem; border-radius: 40px; color: #B88A2C; text-transform: capitalize; }
+        .product-desc { font-size: 0.7rem; color: #7C6A53; margin: 0.3rem 0; line-height: 1.3; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+        .price-row { display: flex; justify-content: space-between; align-items: center; margin-top: 0.5rem; }
+        .price { font-weight: 800; font-size: 1rem; color: #C49A2B; }
+        .add-to-cart { background: #1E1B18; border: none; padding: 0.3rem 0.8rem; border-radius: 40px; color: #FDF7E9; font-weight: 600; cursor: pointer; font-size: 0.7rem; display: flex; align-items: center; gap: 4px; }
+        .add-to-cart i { color: #D4AF37; font-size: 0.7rem; }
+        footer { text-align: center; margin-top: 2rem; padding: 1rem; background: white; border-top: 1px solid #F0E5D2; font-size: 0.7rem; color: #8E7A5E; }
+        @media (max-width: 600px) {
+            .products-grid { grid-template-columns: repeat(2, 1fr); gap: 0.8rem; }
+            .product-img { height: 140px; }
+            .product-title { font-size: 0.85rem; }
+            .price { font-size: 0.9rem; }
+        }
+    </style>
+</head>
+<body>
+<header class="header">
+    <div class="nav-container">
+        <div class="logo"><h1>Piercing By Samar</h1><span>piercing & fine jewelry</span></div>
+        <div style="display: flex; gap: 8px;">
+            <a href="/cart.html" class="cart-icon"><i class="fas fa-shopping-bag"></i> Cart <span id="cartNavBadge" class="cart-count">0</span></a>
+        </div>
+    </div>
+</header>
+<main class="container">
+    <div class="hero"><h2>Élevez votre style</h2><p>Piercings en acier chirurgical, bioflex et or — pour chaque piercing.</p></div>
+    
+    <div class="filter-section">
+        <div class="filter-title"><i class="fas fa-tag"></i> Catégorie principale</div>
+        <div class="main-cats" id="mainCats"></div>
+        <div class="filter-title" id="subTitle" style="display:none;"><i class="fas fa-filter"></i> Sous-catégorie</div>
+        <div class="sub-cats" id="subCats"></div>
+    </div>
+    
+    <div class="products-grid" id="productsGrid">✨ Chargement...</div>
+</main>
+<footer>© 2026 Samar Piercing — Paiement sécurisé Stripe (MAD)</footer>
+
+<script>
+    let allProducts = [];
+    let currentMain = 'all';
+    let currentSub = '';
+
+    const mainCategories = [
+        { id: 'all', name: 'Tous', icon: 'fa-grid-2' },
+        { id: 'oreille', name: 'Orielle', icon: 'fa-ear-deaf' },
+        { id: 'nez', name: 'Nez', icon: 'fa-nose' },
+        { id: 'nombril', name: 'Nombril', icon: 'fa-star-of-life' },
+        { id: 'micro-dermal', name: 'Micro dermal', icon: 'fa-circle' }
+    ];
+
+    const subMap = {
+        oreille: ['lobe', 'helix', 'tragus', 'conch', 'daith', 'rook/snug', 'industrial', 'anti-tragus'],
+        nez: ['nostril', 'septum', 'bridge', 'high nostril'],
+        nombril: [],
+        'micro-dermal': []
+    };
+
+    async function fetchProducts() {
+        const res = await fetch('/api/products');
+        allProducts = await res.json();
+        renderFilters();
+        renderProducts();
+    }
+
+    function renderFilters() {
+        const mainContainer = document.getElementById('mainCats');
+        mainContainer.innerHTML = mainCategories.map(cat => `
+            <button class="cat-btn ${cat.id === currentMain ? 'active' : ''}" data-main="${cat.id}">
+                <i class="fas ${cat.icon}"></i> ${cat.name}
+            </button>
+        `).join('');
+        
+        document.querySelectorAll('.cat-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                currentMain = btn.dataset.main;
+                currentSub = '';
+                renderFilters();
+                renderSubFilters();
+                renderProducts();
+            });
+        });
+        renderSubFilters();
+    }
+
+    function renderSubFilters() {
+        const subContainer = document.getElementById('subCats');
+        const subTitle = document.getElementById('subTitle');
+        const subs = subMap[currentMain] || [];
+        if (currentMain !== 'all' && subs.length > 0) {
+            subTitle.style.display = 'block';
+            subContainer.classList.add('show');
+            subContainer.innerHTML = `<button class="sub-btn ${currentSub === '' ? 'active' : ''}" data-sub="">Toutes</button>` +
+                subs.map(sub => `<button class="sub-btn ${currentSub === sub ? 'active' : ''}" data-sub="${sub}">${sub}</button>`).join('');
+            document.querySelectorAll('.sub-btn').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    currentSub = btn.dataset.sub;
+                    renderSubFilters();
+                    renderProducts();
+                });
+            });
+        } else {
+            subTitle.style.display = 'none';
+            subContainer.classList.remove('show');
+        }
+    }
+
+    function renderProducts() {
+        const grid = document.getElementById('productsGrid');
+        let filtered = allProducts;
+        if (currentMain !== 'all') {
+            filtered = filtered.filter(p => p.mainCategory === currentMain);
+            if (currentSub) filtered = filtered.filter(p => p.subCategory === currentSub);
+        }
+        if (filtered.length === 0) {
+            grid.innerHTML = `<div style="grid-column:1/-1; text-align:center; padding:2rem;">✨ Aucun produit dans cette catégorie ✨</div>`;
+            return;
+        }
+        grid.innerHTML = '';
+        filtered.forEach(p => {
+            const card = document.createElement('div');
+            card.className = 'product-card';
+            card.innerHTML = `
+                <div class="product-img"><img src="${escapeHtml(p.image)}" alt="${escapeHtml(p.name)}" loading="lazy" onerror="this.src='https://via.placeholder.com/300x220?text=No+Image'"></div>
+                <div class="product-info">
+                    <div class="product-title">${escapeHtml(p.name)}<span class="subcat-tag">${p.subCategory || p.mainCategory}</span></div>
+                    <div class="product-desc">${escapeHtml(p.description || '')}</div>
+                    <div class="price-row"><span class="price">${(p.price / 100).toFixed(2)} MAD</span><button class="add-to-cart" data-id="${p.id}" data-name="${escapeHtml(p.name)}" data-price="${p.price}"><i class="fas fa-plus-circle"></i> Ajouter</button></div>
+                </div>
+            `;
+            grid.appendChild(card);
+        });
+        document.querySelectorAll('.add-to-cart').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                const id = btn.dataset.id, name = btn.dataset.name, price = parseInt(btn.dataset.price);
+                addToCart({ id, name, price, quantity: 1 });
+            });
+        });
+        updateCartBadge();
+    }
+
+    function addToCart(product) {
+        let cart = JSON.parse(localStorage.getItem('piercingCart')) || [];
+        const idx = cart.findIndex(i => i.id === product.id);
+        if (idx !== -1) cart[idx].quantity += product.quantity;
+        else cart.push(product);
+        localStorage.setItem('piercingCart', JSON.stringify(cart));
+        updateCartBadge();
+        showToast(`✨ ${product.name} ajouté au panier`);
+    }
+
+    function showToast(msg) {
+        let toast = document.createElement('div');
+        toast.innerText = msg;
+        toast.style.cssText = 'position:fixed; bottom:20px; left:50%; transform:translateX(-50%); background:#1E1B18; color:#FDF7E9; border-left:4px solid #D4AF37; padding:8px 16px; border-radius:60px; font-weight:500; z-index:1000; font-size:0.75rem;';
+        document.body.appendChild(toast);
+        setTimeout(() => toast.remove(), 2000);
+    }
+
+    function updateCartBadge() {
+        const cart = JSON.parse(localStorage.getItem('piercingCart')) || [];
+        const total = cart.reduce((s, i) => s + i.quantity, 0);
+        document.querySelectorAll('#cartNavBadge').forEach(b => b.innerText = total);
+    }
+
+    function escapeHtml(str) { if (!str) return ''; return str.replace(/[&<>]/g, m => m === '&' ? '&amp;' : (m === '<' ? '&lt;' : '&gt;')); }
+
+    fetchProducts();
+</script>
+</body>
+</html>
