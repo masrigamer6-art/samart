@@ -1,129 +1,288 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title>Your Cart - Puncture Perfect</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    <style>
-        * { margin:0; padding:0; box-sizing:border-box; }
-        body { font-family:'Inter',sans-serif; background:#faf7f2; color:#1e1a17; }
-        .container { max-width:1000px; margin:2rem auto; padding:1rem; }
-        .cart-card { background:white; border-radius:28px; padding:2rem; box-shadow:0 6px 14px rgba(0,0,0,0.05); }
-        h2 { font-size:2rem; margin-bottom:1rem; }
-        .cart-item { display:flex; justify-content:space-between; border-bottom:1px solid #ede6db; padding:1rem 0; flex-wrap:wrap; }
-        .checkout-btn { background:#c2452c; border:none; padding:1rem 2rem; border-radius:60px; font-weight:bold; color:white; width:100%; cursor:pointer; margin-top:2rem; font-size:1rem; }
-        .back-link { display:inline-block; margin-top:1rem; color:#c2452c; }
-        .empty-cart { text-align:center; padding:3rem; }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+  <title>Shopping Cart - Samar Piercing</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: 'Inter', sans-serif;
+      background: #FFFFFF;
+      color: #1E1B18;
+      line-height: 1.4;
+    }
+    .container {
+      max-width: 1000px;
+      margin: 2rem auto;
+      padding: 1rem;
+    }
+    .cart-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 2rem;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+    h1 {
+      color: #C4A882;
+      font-size: 1.8rem;
+    }
+    .back-link {
+      color: #A88262;
+      text-decoration: none;
+      font-weight: 500;
+    }
+    .cart-items {
+      background: #FEFAF5;
+      border-radius: 24px;
+      padding: 1.5rem;
+      border: 1px solid #E8D8C8;
+    }
+    .cart-item {
+      display: flex;
+      gap: 1rem;
+      padding: 1rem 0;
+      border-bottom: 1px solid #E8D8C8;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+    .cart-item-img {
+      width: 80px;
+      height: 80px;
+      background: #F0E2D8;
+      border-radius: 12px;
+      object-fit: cover;
+    }
+    .cart-item-info {
+      flex: 2;
+    }
+    .cart-item-name {
+      font-weight: 600;
+      font-size: 1rem;
+    }
+    .cart-item-price {
+      color: #A88262;
+      font-size: 0.9rem;
+    }
+    .cart-item-actions {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+    .quantity-btn {
+      background: #E8D8C8;
+      border: none;
+      width: 30px;
+      height: 30px;
+      border-radius: 50%;
+      cursor: pointer;
+      font-weight: bold;
+    }
+    .remove-btn {
+      background: none;
+      border: none;
+      color: #c62828;
+      cursor: pointer;
+      font-size: 0.8rem;
+    }
+    .cart-total {
+      text-align: right;
+      margin-top: 1.5rem;
+      padding-top: 1rem;
+      font-size: 1.3rem;
+      font-weight: 700;
+    }
+    .checkout-btn {
+      background: #C4A882;
+      color: white;
+      border: none;
+      padding: 0.8rem 1.5rem;
+      border-radius: 40px;
+      font-weight: 600;
+      cursor: pointer;
+      width: 100%;
+      margin-top: 1rem;
+      font-size: 1rem;
+    }
+    .checkout-btn:hover {
+      background: #A88262;
+    }
+    .empty-cart {
+      text-align: center;
+      padding: 3rem;
+      color: #8B7A6C;
+    }
+    footer {
+      text-align: center;
+      margin-top: 2rem;
+      padding: 1rem;
+      color: #8C7568;
+      font-size: 0.75rem;
+    }
+    @media (max-width: 600px) {
+      .cart-item { flex-direction: column; align-items: flex-start; }
+      .cart-item-img { width: 100%; height: auto; max-height: 150px; object-fit: cover; }
+    }
+  </style>
 </head>
 <body>
 <div class="container">
-    <div class="cart-card">
-        <h2><i class="fas fa-shopping-bag"></i> Your piercing cart</h2>
-        <div id="cartItemsContainer">Loading cart...</div>
-        <div id="cartTotal" class="cart-total" style="text-align:right; margin-top:1.5rem;"></div>
-        <button id="checkoutButton" class="checkout-btn">Proceed to credit card payment →</button>
-        <div style="margin-top:1rem;"><a href="/" class="back-link"><i class="fas fa-arrow-left"></i> Continue shopping</a></div>
-    </div>
+  <div class="cart-header">
+    <h1><i class="fas fa-shopping-bag"></i> Your Cart</h1>
+    <a href="/" class="back-link"><i class="fas fa-arrow-left"></i> Continue Shopping</a>
+  </div>
+  <div class="cart-items" id="cartItemsContainer">
+    <div class="empty-cart">Your cart is empty.</div>
+  </div>
+  <div id="totalSection" style="display: none;">
+    <div class="cart-total">Total: <span id="cartTotal">0.00</span> MAD</div>
+    <button id="whatsappCheckoutBtn" class="checkout-btn"><i class="fab fa-whatsapp"></i> Place Order via WhatsApp</button>
+  </div>
 </div>
+<footer>© 2026 Samar Piercing — Order by WhatsApp</footer>
+
 <script>
-    function renderCart() {
-        const cart = JSON.parse(localStorage.getItem('piercingCart')) || [];
-        const container = document.getElementById('cartItemsContainer');
-        const totalSpan = document.getElementById('cartTotal');
-        if (!cart.length) {
-            container.innerHTML = '<div class="empty-cart">🛒 Your cart is empty. Add some stunning piercings!</div>';
-            totalSpan.innerHTML = '';
-            document.getElementById('checkoutButton').disabled = false;
-            return;
+  let cart = JSON.parse(localStorage.getItem('piercingCart')) || [];
+
+  async function fetchProductsAndEnrichCart() {
+    try {
+      const res = await fetch('/api/products');
+      const allProducts = await res.json();
+      cart = cart.map(cartItem => {
+        const product = allProducts.find(p => p.id === cartItem.id);
+        if (product) {
+          return {
+            ...cartItem,
+            name: product.name,
+            price: product.price,
+            image: product.image,
+            description: product.description
+          };
         }
-        let html = '';
-        let total = 0;
-        cart.forEach((item, idx) => {
-            const itemTotal = (item.price * item.quantity);
-            total += itemTotal;
-            html += `
-                <div class="cart-item">
-                    <div><strong>${escapeHtml(item.name)}</strong><br><span style="font-size:0.8rem;color:#7c6b5c;">$${(item.price/100).toFixed(2)} each</span></div>
-                    <div style="display:flex; align-items:center; gap:1rem;">
-                        <div class="quantity-select">
-                            <button class="quantity-btn" data-idx="${idx}" data-delta="-1">-</button>
-                            <span>${item.quantity}</span>
-                            <button class="quantity-btn" data-idx="${idx}" data-delta="1">+</button>
-                        </div>
-                        <button class="remove-btn" data-idx="${idx}"><i class="fas fa-trash-alt"></i> Remove</button>
-                        <strong>$${(itemTotal/100).toFixed(2)}</strong>
-                    </div>
-                </div>
-            `;
-        });
-        container.innerHTML = html;
-        totalSpan.innerHTML = `<strong>Total: $${(total/100).toFixed(2)}</strong>`;
-        attachCartEvents();
+        return cartItem;
+      });
+      renderCart();
+    } catch (err) {
+      console.error('Failed to fetch product details', err);
+      renderCart(); // fallback without images enrichment
     }
+  }
 
-    function attachCartEvents() {
-        document.querySelectorAll('.quantity-btn').forEach(btn => {
-            btn.addEventListener('click', (e) => {
-                const idx = parseInt(btn.dataset.idx);
-                const delta = parseInt(btn.dataset.delta);
-                let cart = JSON.parse(localStorage.getItem('piercingCart')) || [];
-                if (cart[idx]) {
-                    let newQty = cart[idx].quantity + delta;
-                    if (newQty <= 0) {
-                        cart.splice(idx, 1);
-                    } else {
-                        cart[idx].quantity = newQty;
-                    }
-                    localStorage.setItem('piercingCart', JSON.stringify(cart));
-                    renderCart();
-                    updateNavBadge();
-                }
-            });
-        });
-        document.querySelectorAll('.remove-btn').forEach(btn => {
-            btn.addEventListener('click', (e) => {
-                const idx = parseInt(btn.dataset.idx);
-                let cart = JSON.parse(localStorage.getItem('piercingCart')) || [];
-                cart.splice(idx, 1);
-                localStorage.setItem('piercingCart', JSON.stringify(cart));
-                renderCart();
-                updateNavBadge();
-            });
-        });
+  function renderCart() {
+    const container = document.getElementById('cartItemsContainer');
+    const totalSection = document.getElementById('totalSection');
+    if (!cart.length) {
+      container.innerHTML = '<div class="empty-cart">Your cart is empty. <a href="/">Start shopping</a></div>';
+      totalSection.style.display = 'none';
+      return;
     }
-
-    function updateNavBadge() {
-        const cart = JSON.parse(localStorage.getItem('piercingCart')) || [];
-        const total = cart.reduce((sum,i)=>sum+i.quantity,0);
-        const badge = document.getElementById('cartNavBadge');
-        if(badge) badge.innerText = total;
-    }
-
-    function escapeHtml(str) { return str.replace(/[&<>]/g, function(m){if(m==='&')return '&amp;';if(m==='<')return '&lt;';if(m==='>')return '&gt;';return m;}); }
-
-    document.getElementById('checkoutButton').addEventListener('click', async () => {
-        const cart = JSON.parse(localStorage.getItem('piercingCart')) || [];
-        if(cart.length === 0) {
-            alert("Your cart is empty. Add some products first.");
-            return;
-        }
-        const response = await fetch('/api/create-checkout-session', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ items: cart })
-        });
-        const data = await response.json();
-        if(data.url) {
-            window.location.href = data.url;  // redirects to Stripe checkout
-        } else {
-            alert("Error starting checkout: " + (data.error || "unknown"));
-        }
+    totalSection.style.display = 'block';
+    let total = 0;
+    let html = '';
+    cart.forEach((item, index) => {
+      const priceMAD = (item.price / 100).toFixed(2);
+      const itemTotal = (item.price * item.quantity) / 100;
+      total += itemTotal;
+      const imgUrl = item.image || 'https://via.placeholder.com/80?text=No+Image';
+      html += `
+        <div class="cart-item" data-index="${index}">
+          <img class="cart-item-img" src="${imgUrl}" onerror="this.src='https://via.placeholder.com/80'" alt="${escapeHtml(item.name)}">
+          <div class="cart-item-info">
+            <div class="cart-item-name">${escapeHtml(item.name)}</div>
+            <div class="cart-item-price">${priceMAD} MAD</div>
+          </div>
+          <div class="cart-item-actions">
+            <button class="quantity-btn" data-id="${item.id}" data-delta="-1">-</button>
+            <span>${item.quantity}</span>
+            <button class="quantity-btn" data-id="${item.id}" data-delta="1">+</button>
+            <button class="remove-btn" data-id="${item.id}"><i class="fas fa-trash-alt"></i> Remove</button>
+          </div>
+        </div>
+      `;
     });
+    container.innerHTML = html;
+    document.getElementById('cartTotal').innerText = total.toFixed(2);
 
-    renderCart();
-    if(document.getElementById('cartNavBadge')) updateNavBadge();
+    document.querySelectorAll('.quantity-btn').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        const id = btn.dataset.id;
+        const delta = parseInt(btn.dataset.delta);
+        const itemIndex = cart.findIndex(i => i.id === id);
+        if (itemIndex !== -1) {
+          cart[itemIndex].quantity += delta;
+          if (cart[itemIndex].quantity <= 0) {
+            cart.splice(itemIndex, 1);
+          }
+          localStorage.setItem('piercingCart', JSON.stringify(cart));
+          fetchProductsAndEnrichCart();
+        }
+      });
+    });
+    document.querySelectorAll('.remove-btn').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        const id = btn.dataset.id;
+        cart = cart.filter(i => i.id !== id);
+        localStorage.setItem('piercingCart', JSON.stringify(cart));
+        fetchProductsAndEnrichCart();
+      });
+    });
+  }
+
+  document.getElementById('whatsappCheckoutBtn')?.addEventListener('click', async () => {
+    if (!cart.length) {
+      alert('Your cart is empty.');
+      return;
+    }
+    const itemsToSend = cart.map(item => ({
+      id: item.id,
+      name: item.name,
+      price: item.price,
+      quantity: item.quantity,
+      image: item.image
+    }));
+    const btn = document.getElementById('whatsappCheckoutBtn');
+    const originalText = btn.innerHTML;
+    btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Generating order...';
+    btn.disabled = true;
+    try {
+      const response = await fetch('/api/create-order-pdf', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ cartItems: itemsToSend })
+      });
+      const data = await response.json();
+      if (response.ok && data.pdfUrl) {
+        const total = cart.reduce((sum, i) => sum + (i.price * i.quantity) / 100, 0).toFixed(2);
+        const whatsappNumber = '212781570083';
+        const message = `🛍️ *New Order* 🛍️%0A%0A*Total:* ${total} MAD%0A%0A📄 *Order PDF:* ${encodeURIComponent(data.pdfUrl)}%0A%0APlease confirm the order and arrange payment. Thank you!`;
+        const whatsappUrl = `https://wa.me/${whatsappNumber}?text=${message}`;
+        window.open(whatsappUrl, '_blank');
+        // Optional: clear cart after order – uncomment if desired
+        // localStorage.removeItem('piercingCart');
+        // cart = [];
+        // renderCart();
+      } else {
+        alert('Failed to generate order PDF: ' + (data.error || 'Unknown error'));
+      }
+    } catch (err) {
+      console.error(err);
+      alert('An error occurred while processing your order. Please try again.');
+    } finally {
+      btn.innerHTML = originalText;
+      btn.disabled = false;
+    }
+  });
+
+  function escapeHtml(str) {
+    if (!str) return '';
+    return str.replace(/[&<>]/g, m => m === '&' ? '&amp;' : (m === '<' ? '&lt;' : '&gt;'));
+  }
+
+  fetchProductsAndEnrichCart();
 </script>
 </body>
 </html>
