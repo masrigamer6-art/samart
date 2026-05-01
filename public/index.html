@@ -8,7 +8,6 @@
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
   <style>
-    /* same styles – no changes needed */
     * { margin: 0; padding: 0; box-sizing: border-box; }
     body { font-family: 'Inter', sans-serif; background: #FFFFFF; color: #1E1B18; line-height: 1.4; }
     .header { position: sticky; top: 0; z-index: 100; background: rgba(255,255,255,0.85); backdrop-filter: blur(4px); border-bottom: 1px solid #E8D8C8; }
@@ -66,7 +65,77 @@
     .add-to-cart i { color: #C4A882; font-size: 0.7rem; }
     .add-to-cart:hover { background: #C4A882; color: #2C2C2C; }
     .add-to-cart:hover i { color: #2C2C2C; }
-    footer { text-align: center; margin-top: 2rem; padding: 1.5rem; background: #FFFFFF; border-top: 1px solid #F0E2D8; font-size: 0.75rem; color: #8C7568; }
+    
+    /* Social & Address Section */
+    .info-section {
+      background: #FFFFFF;
+      border-top: 1px solid #F0E2D8;
+      border-bottom: 1px solid #F0E2D8;
+      padding: 2rem 1rem;
+      margin: 1rem 0 0;
+    }
+    .info-container {
+      max-width: 1280px;
+      margin: 0 auto;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 1.5rem;
+    }
+    .social-links {
+      display: flex;
+      gap: 1.2rem;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+    .social-icon {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 48px;
+      height: 48px;
+      background: #FEFAF5;
+      border-radius: 50%;
+      border: 1px solid #E8D8C8;
+      color: #C4A882;
+      font-size: 1.4rem;
+      transition: all 0.2s;
+      text-decoration: none;
+    }
+    .social-icon:hover {
+      background: #C4A882;
+      color: #FFFFFF;
+      transform: translateY(-3px);
+      border-color: #C4A882;
+    }
+    .shop-address {
+      display: flex;
+      align-items: center;
+      gap: 0.8rem;
+      color: #5E4B3C;
+      font-size: 0.9rem;
+      background: #FEFAF5;
+      padding: 0.6rem 1.2rem;
+      border-radius: 60px;
+      border: 1px solid #E8D8C8;
+    }
+    .shop-address i {
+      color: #C4A882;
+      font-size: 1.2rem;
+    }
+    .shop-address span {
+      max-width: 300px;
+      line-height: 1.4;
+    }
+    footer {
+      text-align: center;
+      margin-top: 0;
+      padding: 1.5rem;
+      background: #FFFFFF;
+      font-size: 0.75rem;
+      color: #8C7568;
+    }
     .drawer-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.4); z-index: 200; visibility: hidden; opacity: 0; transition: 0.2s; }
     .drawer-overlay.open { visibility: visible; opacity: 1; }
     .drawer { position: fixed; top: 0; left: -280px; width: 280px; height: 100%; background: #FFFFFF; box-shadow: 4px 0 20px rgba(0,0,0,0.08); z-index: 201; transition: left 0.3s ease; display: flex; flex-direction: column; overflow-y: auto; border-right: 1px solid #EAD5C8; }
@@ -85,6 +154,7 @@
     .subcat-item:hover { background: #F7E6DC; color: #A88262; }
     .all-link { padding: 0.8rem 1rem; font-weight: 600; cursor: pointer; border-bottom: 1px solid #F0E2D8; color: #C4A882; }
     @media (max-width: 600px) {
+      .info-container { flex-direction: column; text-align: center; }
       .products-grid { grid-template-columns: repeat(2, 1fr); gap: 0.8rem; }
       .product-img { height: 160px; }
       .product-title { font-size: 0.85rem; }
@@ -97,6 +167,7 @@
       .logo-samar { font-size: 1.4rem; }
       .logo-piercing { font-size: 0.85rem; }
       .lang-btn { font-size: 0.7rem; padding: 0.3rem 0.6rem; }
+      .shop-address { justify-content: center; text-align: center; }
     }
   </style>
 </head>
@@ -112,7 +183,7 @@
     </div>
     <div style="display: flex; align-items: center; gap: 0.8rem;">
       <button id="langToggle" class="lang-btn">🇫🇷 FR</button>
-      <a href="/cart.html" class="cart-icon"><i class="fas fa-shopping-bag"></i> <span id="cartLabel">Cart</span> <span id="cartNavBadge" class="cart-count">0</span></a>
+      <a href="/cart" class="cart-icon"><i class="fas fa-shopping-bag"></i> <span id="cartLabel">Cart</span> <span id="cartNavBadge" class="cart-count">0</span></a>
     </div>
   </div>
 </header>
@@ -136,7 +207,35 @@
   <div id="filteredProductsGrid" style="display: none;"></div>
 </div>
 
-<footer id="footer">© 2026 Samar Piercing — Secure payment with Stripe (MAD)</footer>
+<!-- Social Media & Address Section -->
+<div class="info-section">
+  <div class="info-container">
+    <div class="social-links">
+      <!-- WhatsApp (Business) -->
+      <a href="https://wa.me/212781570083" target="_blank" rel="noopener noreferrer" class="social-icon" aria-label="WhatsApp">
+        <i class="fab fa-whatsapp"></i>
+      </a>
+      <!-- Instagram -->
+      <a href="https://www.instagram.com/piercing_bysamar/" target="_blank" rel="noopener noreferrer" class="social-icon" aria-label="Instagram">
+        <i class="fab fa-instagram"></i>
+      </a>
+      <!-- TikTok -->
+      <a href="https://www.tiktok.com/@piercingbysmar" target="_blank" rel="noopener noreferrer" class="social-icon" aria-label="TikTok">
+        <i class="fab fa-tiktok"></i>
+      </a>
+      <!-- Snapchat -->
+      <a href="https://www.snapchat.com/add/piercingbysamar" target="_blank" rel="noopener noreferrer" class="social-icon" aria-label="Snapchat">
+        <i class="fab fa-snapchat-ghost"></i>
+      </a>
+    </div>
+    <div class="shop-address">
+      <i class="fas fa-map-marker-alt"></i>
+      <span>Marrakech, Mhamid 3, derrière la clinique de l’aéroport</span>
+    </div>
+  </div>
+</div>
+
+<footer id="footer">© 2026 Samar Piercing — Order via WhatsApp</footer>
 
 <div class="drawer-overlay" id="drawerOverlay"></div>
 <div class="drawer" id="drawer">
@@ -148,14 +247,14 @@
 </div>
 
 <script>
-  // ---------------- TRANSLATIONS ----------------
+  // Translations (same as before, footer updated)
   const translations = {
     en: {
       shopByTitle: "Shop By Piercing",
       newArrivalsTitle: "✨ New Arrivals ✨",
       newArrivalsSub: "Discover our latest additions",
       cartLabel: "Cart",
-      footer: "© 2026 Samar Piercing — Secure payment with Stripe (MAD)",
+      footer: "© 2026 Samar Piercing — Order via WhatsApp",
       drawerTitle: "Categories",
       allProducts: "✨ All Products",
       addToCart: "Add",
@@ -164,19 +263,17 @@
       noProducts: "✨ No products available ✨",
       noFiltered: "✨ No products ✨",
       loadingError: "⚠️ Unable to load products",
-      // category labels (used in drawer – can be translated)
       catOreille: "Ear (Orielle)",
       catNez: "Nose",
       catNombril: "Belly",
       catMicroDermal: "Micro dermal",
-      // subcategories (kept as is, but you can translate them too)
     },
     fr: {
       shopByTitle: "Acheter par piercing",
       newArrivalsTitle: "✨ Nouveautés ✨",
       newArrivalsSub: "Découvrez nos dernières pièces",
       cartLabel: "Panier",
-      footer: "© 2026 Samar Piercing — Paiement sécurisé Stripe (MAD)",
+      footer: "© 2026 Samar Piercing — Commande via WhatsApp",
       drawerTitle: "Catégories",
       allProducts: "✨ Tous les produits",
       addToCart: "Ajouter",
@@ -203,19 +300,12 @@
     document.getElementById('cartLabel').innerText = translations[lang].cartLabel;
     document.getElementById('footer').innerText = translations[lang].footer;
     document.getElementById('drawerTitle').innerHTML = `<i class="fas fa-tags"></i> ${translations[lang].drawerTitle}`;
-    // update toggle button text
     const toggleBtn = document.getElementById('langToggle');
     toggleBtn.innerText = lang === 'en' ? '🇫🇷 FR' : '🇬🇧 EN';
-    // re-render drawer (static texts)
     renderDrawer();
-    // re-render current product views (if needed, but product data is unchanged)
-    // only need to refresh static messages like "no products" because they are generated by renderProductsHTML
-    // we'll re-apply the global filter to refresh messages
     if (allProducts.length) {
       applyGlobalFilter();
     } else {
-      // if products not loaded yet, they will be loaded and then applyGlobalFilter will be called
-      // but we can just refresh the empty state messages
       const newArrivalsGrid = document.getElementById('newArrivalsGrid');
       if (newArrivalsGrid && newArrivalsGrid.innerHTML.includes('No new arrivals')) {
         newArrivalsGrid.innerHTML = `<div style="grid-column:1/-1; text-align:center;">${translations[lang].noNewArrivals}</div>`;
@@ -227,22 +317,14 @@
     }
   }
 
-  // Helper to get translated "Add to cart" button text
   function getAddToCartText() {
     return translations[currentLang].addToCart;
   }
 
-  // Helper to get "added to cart" toast message
   function getAddedToCartMsg(productName) {
     return `✨ ${productName} ${translations[currentLang].addedToCart}`;
   }
 
-  // Modify renderProductsHTML to use translated Add button text
-  const originalRenderProductsHTML = renderProductsHTML;
-  // We'll override renderProductsHTML after defining translations
-  // But we need to keep the original for product rendering – we'll replace it with a wrapper
-
-  // ---------- All the existing product and cart logic (unchanged except language strings) ----------
   const categoriesDef = [
     { main: "oreille", labelEn: "Ear (Orielle)", labelFr: "Oreille (Orielle)", sub: ["lobe", "helix", "flat tragus", "conch", "daith", "rook/snug", "industrial", "anti-tragus"] },
     { main: "nez", labelEn: "Nose", labelFr: "Nez", sub: ["nostril", "septum", "bridge", "high nostril"] },
@@ -264,7 +346,7 @@
   let currentMain = "all";
   let currentSub = "";
 
-  function renderCircleSlider() {
+  function renderCircleSlider() { /* (unchanged) */ 
     const container = document.getElementById('circleSlider');
     if (!container) return;
     let html = '';
@@ -292,7 +374,7 @@
     });
   }
 
-  function renderDrawer() {
+  function renderDrawer() { /* (unchanged) */
     const container = document.getElementById("categoriesList");
     if (!container) return;
     let html = `<div class="all-link" data-main="all" data-sub="">${translations[currentLang].allProducts}</div>`;
@@ -367,7 +449,7 @@
     });
   }
 
-  function applyGlobalFilter() {
+  function applyGlobalFilter() { /* (unchanged) */
     const isAll = (currentMain === "all" && currentSub === "");
     const fullLayoutDiv = document.getElementById('fullLayout');
     const filteredDiv = document.getElementById('filteredProductsGrid');
@@ -385,7 +467,7 @@
     }
   }
 
-  function renderAllSections(productsArray) {
+  function renderAllSections(productsArray) { /* (unchanged) */
     const sorted = [...productsArray].sort((a,b) => (Number(b.id) || 0) - (Number(a.id) || 0));
     const newArrivals = sorted.slice(0, 4);
     const newArrivalsGrid = document.getElementById('newArrivalsGrid');
@@ -434,7 +516,7 @@
     }).join('');
   }
 
-  function attachCartEvents() {
+  function attachCartEvents() { /* (unchanged) */
     document.querySelectorAll('.add-to-cart').forEach(btn => {
       btn.addEventListener('click', (e) => {
         const id = btn.dataset.id;
@@ -445,7 +527,7 @@
     });
   }
 
-  function addToCart(product) {
+  function addToCart(product) { /* (unchanged) */
     let cart = JSON.parse(localStorage.getItem('piercingCart')) || [];
     const idx = cart.findIndex(i => i.id === product.id);
     if (idx !== -1) cart[idx].quantity += product.quantity;
@@ -455,13 +537,13 @@
     showToast(getAddedToCartMsg(product.name));
   }
 
-  function updateCartBadge() {
+  function updateCartBadge() { /* (unchanged) */
     const cart = JSON.parse(localStorage.getItem('piercingCart')) || [];
     const total = cart.reduce((s, i) => s + i.quantity, 0);
     document.querySelectorAll('#cartNavBadge').forEach(b => b.innerText = total);
   }
 
-  function showToast(msg) {
+  function showToast(msg) { /* (unchanged) */
     let toast = document.createElement('div');
     toast.innerText = msg;
     toast.style.cssText = 'position:fixed; bottom:20px; left:50%; transform:translateX(-50%); background:#2C2C2C; color:#FFFFFF; border-left:4px solid #C4A882; padding:8px 16px; border-radius:60px; font-weight:500; z-index:1000; font-size:0.75rem;';
@@ -469,10 +551,7 @@
     setTimeout(() => toast.remove(), 2000);
   }
 
-  function escapeHtml(str) {
-    if (!str) return '';
-    return str.replace(/[&<>]/g, m => m === '&' ? '&amp;' : (m === '<' ? '&lt;' : '&gt;'));
-  }
+  function escapeHtml(str) { if (!str) return ''; return str.replace(/[&<>]/g, m => m === '&' ? '&amp;' : (m === '<' ? '&lt;' : '&gt;')); }
 
   async function fetchProducts() {
     try {
@@ -486,31 +565,22 @@
     }
   }
 
-  function openDrawer() {
-    document.getElementById('drawer').classList.add('open');
-    document.getElementById('drawerOverlay').classList.add('open');
-  }
-  function closeDrawer() {
-    document.getElementById('drawer').classList.remove('open');
-    document.getElementById('drawerOverlay').classList.remove('open');
-  }
+  function openDrawer() { document.getElementById('drawer').classList.add('open'); document.getElementById('drawerOverlay').classList.add('open'); }
+  function closeDrawer() { document.getElementById('drawer').classList.remove('open'); document.getElementById('drawerOverlay').classList.remove('open'); }
 
   document.getElementById('hamburgerBtn').addEventListener('click', openDrawer);
   document.getElementById('closeDrawerBtn').addEventListener('click', closeDrawer);
   document.getElementById('drawerOverlay').addEventListener('click', closeDrawer);
-
-  // Language toggle
   document.getElementById('langToggle').addEventListener('click', () => {
     const newLang = currentLang === 'en' ? 'fr' : 'en';
     setLanguage(newLang);
   });
 
-  // Initialization
   renderCircleSlider();
   renderDrawer();
   fetchProducts();
   updateCartBadge();
-  setLanguage(currentLang); // apply saved language
+  setLanguage(currentLang);
 </script>
 </body>
 </html>
