@@ -13,12 +13,14 @@
   "type": "commonjs",
   "dependencies": {
     "@dataconnect/generated": "file:src/dataconnect-generated",
+    "axios": "^1.15.2",
     "cloudinary": "^1.41.3",
     "dotenv": "^17.4.2",
     "express": "^5.2.1",
-    "mongoose": "^9.6.0",
+    "mongoose": "^9.6.1",
     "multer": "^2.1.1",
     "multer-storage-cloudinary": "^4.0.0",
+    "pdfkit": "^0.18.0",
     "stripe": "^22.0.2"
   }
 }
