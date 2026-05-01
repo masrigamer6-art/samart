@@ -1,26 +1,18 @@
 require('dotenv').config();
 const express = require('express');
-const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
 const mongoose = require('mongoose');
 const multer = require('multer');
 const { CloudinaryStorage } = require('multer-storage-cloudinary');
 const cloudinary = require('cloudinary').v2;
+const PDFDocument = require('pdfkit');
+const axios = require('axios');
+const fs = require('fs');
 const path = require('path');
 
 const app = express();
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static('public'));
-
-// Verify admin password (used to unlock admin panel)
-app.post('/api/verify-admin', (req, res) => {
-  const { password } = req.body;
-  if (password === process.env.ADMIN_PASSWORD || password === 'admin123') {
-    res.json({ success: true });
-  } else {
-    res.status(401).json({ success: false, error: 'Invalid password' });
-  }
-});
 
 // --------------------- Cloudinary Configuration ---------------------
 cloudinary.config({
@@ -34,7 +26,7 @@ const storage = new CloudinaryStorage({
   cloudinary: cloudinary,
   params: {
     folder: 'samar-piercing',
-    allowed_formats: ['jpg', 'png', 'jpeg', 'gif', 'webp'],
+    allowed_formats: ['jpg', 'png', 'jpeg', 'gif', 'webp', 'avif'],
     public_id: (req, file) => `product-${Date.now()}-${file.originalname.split('.')[0]}`,
   },
 });
@@ -62,6 +54,11 @@ const productSchema = new mongoose.Schema({
 });
 const Product = mongoose.model('Product', productSchema);
 
+// --------------------- Orders Directory (for PDFs) ---------------------
+const ordersDir = path.join(__dirname, 'orders');
+if (!fs.existsSync(ordersDir)) fs.mkdirSync(ordersDir);
+app.use('/orders', express.static(ordersDir));
+
 // --------------------- API Routes ---------------------
 
 // GET all products
@@ -74,12 +71,11 @@ app.get('/api/products', async (req, res) => {
   }
 });
 
-// POST upload image (to Cloudinary)
+// POST upload image (admin only – used by admin panel)
 app.post('/api/upload', upload.single('productImage'), (req, res) => {
   if (!req.file) {
     return res.status(400).json({ error: 'No file uploaded' });
   }
-  // Cloudinary returns the secure URL in req.file.path
   res.json({ imageUrl: req.file.path });
 });
 
@@ -96,12 +92,12 @@ app.post('/api/products', async (req, res) => {
     const priceCents = Math.round(parseFloat(price) * 100);
     const newProduct = new Product({
       id: Date.now().toString(),
-      name,
+      name: String(name),
       description: description || '',
       price: priceCents,
-      mainCategory,
+      mainCategory: String(mainCategory),
       subCategory: subCategory || '',
-      image,
+      image: String(image),
     });
     await newProduct.save();
     res.json({ success: true, product: newProduct });
@@ -124,42 +120,117 @@ app.delete('/api/products/:id', async (req, res) => {
   }
 });
 
-// Stripe checkout session (currency: MAD)
-app.post('/api/create-checkout-session', async (req, res) => {
-  try {
-    const cartItems = req.body.items;
-    if (!cartItems || cartItems.length === 0) {
-      return res.status(400).json({ error: 'Cart is empty' });
-    }
-    const products = await Product.find({});
-    const lineItems = cartItems.map(item => {
-      const product = products.find(p => p.id === item.id);
-      if (!product) throw new Error(`Product ${item.id} not found`);
-      return {
-        price_data: {
-          currency: 'mad',
-          product_data: { name: product.name, description: product.description },
-          unit_amount: product.price,
-        },
-        quantity: item.quantity,
-      };
-    });
-    const session = await stripe.checkout.sessions.create({
-      payment_method_types: ['card'],
-      line_items: lineItems,
-      mode: 'payment',
-      success_url: `${req.headers.origin}/success.html`,
-      cancel_url: `${req.headers.origin}/cancel.html`,
-    });
-    res.json({ url: session.url });
-  } catch (error) {
-    console.error('Stripe error:', error);
-    res.status(500).json({ error: error.message });
+// Verify admin password (for opening admin panel)
+app.post('/api/verify-admin', (req, res) => {
+  const { password } = req.body;
+  if (password === process.env.ADMIN_PASSWORD || password === 'admin123') {
+    res.json({ success: true });
+  } else {
+    res.status(401).json({ success: false, error: 'Invalid password' });
   }
 });
 
-// Catch-all route to serve index.html for any unmatched route (SPA fallback)
+// Generate order PDF (with product images from Cloudinary)
+app.post('/api/create-order-pdf', async (req, res) => {
+  try {
+    const { cartItems } = req.body;
+    if (!cartItems || cartItems.length === 0) {
+      return res.status(400).json({ error: 'Cart is empty' });
+    }
 
+    const orderId = Date.now();
+    const filename = `order-${orderId}.pdf`;
+    const filePath = path.join(ordersDir, filename);
+
+    const doc = new PDFDocument({ margin: 50 });
+    const writeStream = fs.createWriteStream(filePath);
+    doc.pipe(writeStream);
+
+    // Header
+    doc.fontSize(20).text('Samar Piercing - Order Summary', { align: 'center' });
+    doc.moveDown();
+    doc.fontSize(10).text(`Order ID: ${orderId}`, { align: 'right' });
+    doc.text(`Date: ${new Date().toLocaleString()}`, { align: 'right' });
+    doc.moveDown();
+
+    let grandTotal = 0;
+    let startY = doc.y;
+
+    for (const item of cartItems) {
+      const priceMAD = item.price / 100;
+      const total = priceMAD * item.quantity;
+      grandTotal += total;
+
+      // Download image from Cloudinary
+      let imageBuffer = null;
+      if (item.image && (item.image.startsWith('http://') || item.image.startsWith('https://'))) {
+        try {
+          const response = await axios.get(item.image, { responseType: 'arraybuffer', timeout: 10000 });
+          imageBuffer = Buffer.from(response.data, 'utf-8');
+        } catch (err) {
+          console.error(`Failed to load image for ${item.name}:`, err.message);
+        }
+      }
+
+      const imageX = 50;
+      const imageY = startY;
+      if (imageBuffer) {
+        try {
+          doc.image(imageBuffer, imageX, imageY, { width: 50, height: 50 });
+        } catch (err) {
+          console.error('Error embedding image:', err);
+        }
+      }
+
+      const textX = imageX + 60;
+      doc.font('Helvetica').fontSize(10);
+      doc.text(item.name, textX, startY);
+      doc.text(`Qty: ${item.quantity}`, textX, startY + 15);
+      doc.text(`Price: ${priceMAD.toFixed(2)} MAD`, textX, startY + 30);
+      doc.text(`Total: ${total.toFixed(2)} MAD`, textX, startY + 45);
+
+      startY += 70;
+      if (startY > 700) {
+        doc.addPage();
+        startY = 50;
+      }
+    }
+
+    doc.font('Helvetica-Bold').fontSize(14);
+    doc.text(`Grand Total: ${grandTotal.toFixed(2)} MAD`, 50, startY + 20);
+    doc.fontSize(10).text('Thank you for shopping at Samar Piercing!', 50, startY + 60);
+    doc.text('Payment will be arranged via WhatsApp. Please confirm your order.', 50, startY + 75);
+
+    doc.end();
+
+    await new Promise((resolve) => writeStream.on('finish', resolve));
+
+    const pdfUrl = `${req.protocol}://${req.get('host')}/orders/${filename}`;
+    res.json({ success: true, pdfUrl, orderId });
+  } catch (error) {
+    console.error('PDF generation error:', error);
+    res.status(500).json({ error: 'Failed to generate order PDF' });
+  }
+});
+
+// --------------------- Clean URLs (no .html) ---------------------
+app.get('/admin', (req, res) => {
+  res.sendFile(path.join(__dirname, 'public', 'admin.html'));
+});
+app.get('/cart', (req, res) => {
+  res.sendFile(path.join(__dirname, 'public', 'cart.html'));
+});
+app.get('/success', (req, res) => {
+  res.sendFile(path.join(__dirname, 'public', 'success.html'));
+});
+app.get('/cancel', (req, res) => {
+  res.sendFile(path.join(__dirname, 'public', 'cancel.html'));
+});
+// Redirect old .html URLs to clean ones (optional)
+app.get('/admin.html', (req, res) => res.redirect(301, '/admin'));
+app.get('/cart.html', (req, res) => res.redirect(301, '/cart'));
+app.get('/success.html', (req, res) => res.redirect(301, '/success'));
+app.get('/cancel.html', (req, res) => res.redirect(301, '/cancel'));
 
 // --------------------- Start Server ---------------------
 const PORT = process.env.PORT || 3000;
