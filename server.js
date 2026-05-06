@@ -14,7 +14,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static('public'));
 
-// --------------------- Cloudinary Configuration ---------------------
+// --------------------- Cloudinary ---------------------
 cloudinary.config({
   cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
   api_key: process.env.CLOUDINARY_API_KEY,
@@ -30,64 +30,95 @@ const storage = new CloudinaryStorage({
     public_id: (req, file) => `product-${Date.now()}-${file.originalname.split('.')[0]}`,
   },
 });
-const upload = multer({ storage: storage, limits: { fileSize: 5 * 1024 * 1024 } });
+const upload = multer({ storage, limits: { fileSize: 5 * 1024 * 1024 } });
 
-// --------------------- MongoDB Connection ---------------------
+// --------------------- MongoDB ---------------------
 const mongoURI = process.env.MONGODB_URI || process.env.MONGODB_CONNECT_URL;
 if (!mongoURI) {
-  console.error('❌ MongoDB URI missing in environment variables');
+  console.error('❌ MongoDB URI missing');
   process.exit(1);
 }
 mongoose.connect(mongoURI)
   .then(() => console.log('✅ MongoDB connected'))
   .catch(err => console.error('❌ MongoDB connection error:', err));
 
-// --------------------- Product Schema ---------------------
+// Product schema with images array (compatible with old 'image' field)
 const productSchema = new mongoose.Schema({
   id: { type: String, unique: true },
   name: String,
   description: String,
-  price: Number,          // in cents (MAD)
-  mainCategory: String,   // 'oreille', 'nez', 'nombril', 'micro-dermal'
+  price: Number,
+  mainCategory: String,
   subCategory: String,
-  image: String,          // Cloudinary URL
+  image: String,        // old field – kept for backward compatibility
+  images: [String],     // new array field
 });
 const Product = mongoose.model('Product', productSchema);
 
-// --------------------- Orders Directory (for PDFs) ---------------------
+// Migrate old products on startup: convert 'image' to 'images' if not already
+async function migrateOldProducts() {
+  const products = await Product.find({ images: { $exists: false } });
+  for (const prod of products) {
+    if (prod.image) {
+      prod.images = [prod.image];
+      await prod.save();
+      console.log(`Migrated product: ${prod.name}`);
+    } else {
+      prod.images = [];
+      await prod.save();
+    }
+  }
+  // Also ensure all products have at least an empty images array
+  await Product.updateMany({ images: { $exists: false } }, { $set: { images: [] } });
+}
+migrateOldProducts().catch(console.error);
+
+// Orders directory
 const ordersDir = path.join(__dirname, 'orders');
 if (!fs.existsSync(ordersDir)) fs.mkdirSync(ordersDir);
 app.use('/orders', express.static(ordersDir));
 
 // --------------------- API Routes ---------------------
 
-// GET all products
+// GET all products – add a virtual field 'image' for frontend compatibility
 app.get('/api/products', async (req, res) => {
   try {
     const products = await Product.find({});
-    res.json(products);
+    // attach a virtual 'image' = first image in array for backward compatibility
+    const productsWithImage = products.map(p => ({
+      ...p.toObject(),
+      image: p.images && p.images.length ? p.images[0] : null,
+    }));
+    res.json(productsWithImage);
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
 });
 
-// POST upload image (admin only – used by admin panel)
-app.post('/api/upload', upload.single('productImage'), (req, res) => {
-  if (!req.file) {
-    return res.status(400).json({ error: 'No file uploaded' });
-  }
-  res.json({ imageUrl: req.file.path });
+// UPLOAD multiple images (admin)
+app.post('/api/upload-multiple', (req, res) => {
+  upload.array('productImages', 4)(req, res, (err) => {
+    if (err) {
+      console.error('Upload error:', err);
+      return res.status(400).json({ error: err.message });
+    }
+    if (!req.files || req.files.length === 0) {
+      return res.status(400).json({ error: 'No files uploaded' });
+    }
+    const imageUrls = req.files.map(file => file.path);
+    res.json({ imageUrls });
+  });
 });
 
-// POST add new product (admin only)
+// POST add new product (admin) – now accepts 'images' array
 app.post('/api/products', async (req, res) => {
   try {
-    const { password, name, description, price, mainCategory, subCategory, image } = req.body;
+    const { password, name, description, price, mainCategory, subCategory, images } = req.body;
     if (password !== process.env.ADMIN_PASSWORD && password !== 'admin123') {
       return res.status(401).json({ error: 'Unauthorized' });
     }
-    if (!name || !price || !mainCategory || !image) {
-      return res.status(400).json({ error: 'Missing required fields: name, price, mainCategory, image' });
+    if (!name || !price || !mainCategory || !images || !images.length) {
+      return res.status(400).json({ error: 'Missing required fields: name, price, mainCategory, at least one image' });
     }
     const priceCents = Math.round(parseFloat(price) * 100);
     const newProduct = new Product({
@@ -97,7 +128,7 @@ app.post('/api/products', async (req, res) => {
       price: priceCents,
       mainCategory: String(mainCategory),
       subCategory: subCategory || '',
-      image: String(image),
+      images: images.slice(0, 4),
     });
     await newProduct.save();
     res.json({ success: true, product: newProduct });
@@ -106,7 +137,7 @@ app.post('/api/products', async (req, res) => {
   }
 });
 
-// DELETE product (admin only)
+// DELETE product
 app.delete('/api/products/:id', async (req, res) => {
   try {
     const { password } = req.body;
@@ -120,7 +151,7 @@ app.delete('/api/products/:id', async (req, res) => {
   }
 });
 
-// Verify admin password (for opening admin panel)
+// Verify admin password
 app.post('/api/verify-admin', (req, res) => {
   const { password } = req.body;
   if (password === process.env.ADMIN_PASSWORD || password === 'admin123') {
@@ -130,7 +161,7 @@ app.post('/api/verify-admin', (req, res) => {
   }
 });
 
-// Generate order PDF (with product images from Cloudinary)
+// Generate order PDF (uses first image from 'images' array)
 app.post('/api/create-order-pdf', async (req, res) => {
   try {
     const { cartItems } = req.body;
@@ -146,7 +177,6 @@ app.post('/api/create-order-pdf', async (req, res) => {
     const writeStream = fs.createWriteStream(filePath);
     doc.pipe(writeStream);
 
-    // Header
     doc.fontSize(20).text('Samar Piercing - Order Summary', { align: 'center' });
     doc.moveDown();
     doc.fontSize(10).text(`Order ID: ${orderId}`, { align: 'right' });
@@ -161,11 +191,11 @@ app.post('/api/create-order-pdf', async (req, res) => {
       const total = priceMAD * item.quantity;
       grandTotal += total;
 
-      // Download image from Cloudinary
       let imageBuffer = null;
-      if (item.image && (item.image.startsWith('http://') || item.image.startsWith('https://'))) {
+      const primaryImage = item.image; // cart items send 'image' field (first image)
+      if (primaryImage && (primaryImage.startsWith('http://') || primaryImage.startsWith('https://'))) {
         try {
-          const response = await axios.get(item.image, { responseType: 'arraybuffer', timeout: 10000 });
+          const response = await axios.get(primaryImage, { responseType: 'arraybuffer', timeout: 10000 });
           imageBuffer = Buffer.from(response.data, 'utf-8');
         } catch (err) {
           console.error(`Failed to load image for ${item.name}:`, err.message);
@@ -177,9 +207,7 @@ app.post('/api/create-order-pdf', async (req, res) => {
       if (imageBuffer) {
         try {
           doc.image(imageBuffer, imageX, imageY, { width: 50, height: 50 });
-        } catch (err) {
-          console.error('Error embedding image:', err);
-        }
+        } catch (err) { /* ignore */ }
       }
 
       const textX = imageX + 60;
@@ -202,7 +230,6 @@ app.post('/api/create-order-pdf', async (req, res) => {
     doc.text('Payment will be arranged via WhatsApp. Please confirm your order.', 50, startY + 75);
 
     doc.end();
-
     await new Promise((resolve) => writeStream.on('finish', resolve));
 
     const pdfUrl = `${req.protocol}://${req.get('host')}/orders/${filename}`;
@@ -213,25 +240,15 @@ app.post('/api/create-order-pdf', async (req, res) => {
   }
 });
 
-// --------------------- Clean URLs (no .html) ---------------------
-app.get('/admin', (req, res) => {
-  res.sendFile(path.join(__dirname, 'public', 'admin.html'));
-});
-app.get('/cart', (req, res) => {
-  res.sendFile(path.join(__dirname, 'public', 'cart.html'));
-});
-app.get('/success', (req, res) => {
-  res.sendFile(path.join(__dirname, 'public', 'success.html'));
-});
-app.get('/cancel', (req, res) => {
-  res.sendFile(path.join(__dirname, 'public', 'cancel.html'));
-});
-// Redirect old .html URLs to clean ones (optional)
+// --------------------- Clean URLs ---------------------
+app.get('/admin', (req, res) => res.sendFile(path.join(__dirname, 'public', 'admin.html')));
+app.get('/cart', (req, res) => res.sendFile(path.join(__dirname, 'public', 'cart.html')));
+app.get('/success', (req, res) => res.sendFile(path.join(__dirname, 'public', 'success.html')));
+app.get('/cancel', (req, res) => res.sendFile(path.join(__dirname, 'public', 'cancel.html')));
 app.get('/admin.html', (req, res) => res.redirect(301, '/admin'));
 app.get('/cart.html', (req, res) => res.redirect(301, '/cart'));
 app.get('/success.html', (req, res) => res.redirect(301, '/success'));
 app.get('/cancel.html', (req, res) => res.redirect(301, '/cancel'));
 
-// --------------------- Start Server ---------------------
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => console.log(`✅ Server running on http://localhost:${PORT}`));
