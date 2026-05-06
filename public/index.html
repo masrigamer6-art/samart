@@ -168,7 +168,7 @@
   function getAddedToCartMsg(productName) { return `✨ ${productName} ${translations[currentLang].addedToCart}`; }
 
   // Categories and circles (unchanged)
-  const categoriesDef = [ { main: "oreille", labelEn: "Ear (Orielle)", labelFr: "Oreille (Orielle)", sub: ["lobe","helix","flat tragus","conch","daith","rook/snug","industrial","anti-tragus"] }, { main: "nez", labelEn: "Nose", labelFr: "Nez", sub: ["nostril","septum","bridge","high nostril"] }, { main: "nombril", labelEn: "Belly", labelFr: "Nombril", sub: [] }, { main: "micro-dermal", labelEn: "Micro dermal", labelFr: "Micro dermal", sub: [] } ];
+  const categoriesDef = [ { main: "oreille", labelEn: "Ear (Orielle)", labelFr: "Oreille (Orielle)", sub: ["lobe", "helix", "flat helix", "tragus", "conch", "daith", "rook/snug", "industrial", "anti-tragus"]}, { main: "nez", labelEn: "Nose", labelFr: "Nez", sub: ["nostril","septum","bridge","high nostril"] }, { main: "nombril", labelEn: "Belly", labelFr: "Nombril", sub: [] }, { main: "micro-dermal", labelEn: "Micro dermal", labelFr: "Micro dermal", sub: [] } ];
   const circleItems = [ { name: "Helix", mainCat: "oreille", subCat: "helix", imgUrl: "/images/helix.avif" }, { name: "Tragus", mainCat: "oreille", subCat: "tragus", imgUrl: "/images/tragus.avif" }, { name: "Conch", mainCat: "oreille", subCat: "conch", imgUrl: "/images/conch.avif" }, { name: "Daith", mainCat: "oreille", subCat: "daith", imgUrl: "/images/daith.avif" }, { name: "Rook", mainCat: "oreille", subCat: "rook/snug", imgUrl: "/images/rock.avif" }, { name: "Industrial", mainCat: "oreille", subCat: "industrial", imgUrl: "/images/indu.avif" }, { name: "Lobe", mainCat: "oreille", subCat: "lobe", imgUrl: "/images/lobe.avif" } ];
 
   let allProducts = [];
