@@ -8,188 +8,42 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
-    body {
-      font-family: 'Inter', sans-serif;
-      background: #FFFFFF;
-      padding: 1rem;
-      min-height: 100vh;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-    /* Login overlay (initially visible) */
-    .login-container {
-      width: 100%;
-      max-width: 400px;
-      margin: 2rem auto;
-    }
-    .login-card {
-      background: #FFFFFF;
-      border-radius: 32px;
-      padding: 2rem;
-      box-shadow: 0 10px 25px rgba(0,0,0,0.05);
-      border: 1px solid #E8D8C8;
-    }
-    .login-card h2 {
-      color: #C4A882;
-      margin-bottom: 1rem;
-      text-align: center;
-    }
-    .login-card input {
-      width: 100%;
-      padding: 0.8rem;
-      margin: 1rem 0;
-      border: 1px solid #E8D8C8;
-      border-radius: 40px;
-      background: #FEFAF5;
-      font-family: inherit;
-    }
-    .login-card button {
-      width: 100%;
-      background: #C4A882;
-      border: none;
-      padding: 0.8rem;
-      border-radius: 40px;
-      color: white;
-      font-weight: 600;
-      cursor: pointer;
-    }
-    .login-card button:hover {
-      background: #A88262;
-    }
-    .error-msg {
-      color: #c62828;
-      font-size: 0.8rem;
-      text-align: center;
-      margin-top: 1rem;
-    }
-    /* Main admin panel (hidden until login) */
-    .admin-panel {
-      display: none;
-      max-width: 900px;
-      margin: 0 auto;
-      background: white;
-      border-radius: 32px;
-      padding: 2rem;
-      border: 1px solid #E8D8C8;
-      width: 100%;
-    }
-    .admin-panel h1 {
-      font-size: 1.8rem;
-      margin-bottom: 1.5rem;
-      background: linear-gradient(135deg, #C4A882, #A88262);
-      background-clip: text;
-      -webkit-background-clip: text;
-      color: transparent;
-    }
-    .admin-panel h2 {
-      font-size: 1.3rem;
-      margin: 1.5rem 0 1rem;
-      color: #A88262;
-    }
-    label {
-      display: block;
-      margin-top: 1rem;
-      font-weight: 600;
-      color: #2C2C2C;
-    }
-    input, select, textarea {
-      width: 100%;
-      padding: 0.75rem;
-      margin-top: 0.3rem;
-      border: 1px solid #E8D8C8;
-      border-radius: 20px;
-      background: #FEFAF5;
-      font-family: inherit;
-    }
-    button {
-      background: #C4A882;
-      color: #1E1B18;
-      border: none;
-      padding: 0.8rem 1.5rem;
-      border-radius: 60px;
-      font-weight: 700;
-      cursor: pointer;
-      width: 100%;
-      margin-top: 1.5rem;
-      font-size: 1rem;
-      transition: 0.2s;
-    }
+    body { font-family: 'Inter', sans-serif; background: #FFFFFF; padding: 1rem; min-height: 100vh; display: flex; align-items: center; justify-content: center; }
+    .login-container { width: 100%; max-width: 400px; margin: 2rem auto; }
+    .login-card { background: #FFFFFF; border-radius: 32px; padding: 2rem; box-shadow: 0 10px 25px rgba(0,0,0,0.05); border: 1px solid #E8D8C8; }
+    .login-card h2 { color: #C4A882; margin-bottom: 1rem; text-align: center; }
+    .login-card input { width: 100%; padding: 0.8rem; margin: 1rem 0; border: 1px solid #E8D8C8; border-radius: 40px; background: #FEFAF5; }
+    .login-card button { width: 100%; background: #C4A882; border: none; padding: 0.8rem; border-radius: 40px; color: white; font-weight: 600; cursor: pointer; }
+    .error-msg { color: #c62828; font-size: 0.8rem; text-align: center; margin-top: 1rem; }
+    .admin-panel { display: none; max-width: 900px; margin: 0 auto; background: white; border-radius: 32px; padding: 2rem; border: 1px solid #E8D8C8; width: 100%; }
+    .admin-panel h1 { font-size: 1.8rem; margin-bottom: 1.5rem; background: linear-gradient(135deg, #C4A882, #A88262); background-clip: text; -webkit-background-clip: text; color: transparent; }
+    .admin-panel h2 { font-size: 1.3rem; margin: 1.5rem 0 1rem; color: #A88262; }
+    label { display: block; margin-top: 1rem; font-weight: 600; color: #2C2C2C; }
+    input, select, textarea { width: 100%; padding: 0.75rem; margin-top: 0.3rem; border: 1px solid #E8D8C8; border-radius: 20px; background: #FEFAF5; font-family: inherit; }
+    .image-upload-group { margin: 1rem 0; }
+    .image-previews { display: flex; flex-wrap: wrap; gap: 1rem; margin-top: 0.5rem; }
+    .preview-item { position: relative; width: 80px; height: 80px; border-radius: 12px; overflow: hidden; border: 1px solid #E8D8C8; }
+    .preview-item img { width: 100%; height: 100%; object-fit: cover; }
+    .preview-item button { position: absolute; top: 2px; right: 2px; background: rgba(0,0,0,0.6); color: white; border: none; border-radius: 50%; width: 20px; height: 20px; font-size: 12px; cursor: pointer; }
+    button { background: #C4A882; color: #1E1B18; border: none; padding: 0.8rem 1.5rem; border-radius: 60px; font-weight: 700; cursor: pointer; width: 100%; margin-top: 1.5rem; font-size: 1rem; transition: 0.2s; }
     button:hover { background: #A88262; color: white; }
-    .message {
-      margin-top: 1rem;
-      padding: 0.75rem;
-      border-radius: 20px;
-      text-align: center;
-    }
+    .message { margin-top: 1rem; padding: 0.75rem; border-radius: 20px; text-align: center; }
     .success { background: #E8F5E9; color: #2E7D32; border-left: 4px solid #C4A882; }
     .error { background: #FFEBEE; color: #C62828; border-left: 4px solid #C62828; }
-    .back-link {
-      display: inline-block;
-      margin-top: 1rem;
-      color: #A88262;
-      text-decoration: none;
-      font-weight: 500;
-    }
+    .back-link { display: inline-block; margin-top: 1rem; color: #A88262; text-decoration: none; font-weight: 500; }
     hr { margin: 1.5rem 0; border-color: #F0E2D8; }
     .product-list { margin-top: 1rem; display: flex; flex-direction: column; gap: 1rem; }
-    .product-item {
-      background: #FEFAF5;
-      padding: 1rem;
-      border-radius: 24px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      flex-wrap: wrap;
-      gap: 1rem;
-      border: 1px solid #F0E2D8;
-    }
-    .product-info {
-      flex: 3;
-      display: flex;
-      align-items: center;
-      gap: 1rem;
-      flex-wrap: wrap;
-    }
-    .product-thumb {
-      width: 60px;
-      height: 60px;
-      background: #FFF0DF;
-      border-radius: 16px;
-      object-fit: cover;
-    }
+    .product-item { background: #FEFAF5; padding: 1rem; border-radius: 24px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem; border: 1px solid #F0E2D8; }
+    .product-info { flex: 3; display: flex; align-items: center; gap: 1rem; flex-wrap: wrap; }
+    .product-thumb { width: 60px; height: 60px; background: #FFF0DF; border-radius: 16px; object-fit: cover; }
     .product-details { flex: 1; }
     .product-name { font-weight: 700; color: #2C2C2C; }
-    .product-cat {
-      font-size: 0.7rem;
-      background: #FFF0DF;
-      display: inline-block;
-      padding: 0.2rem 0.6rem;
-      border-radius: 40px;
-      color: #A88262;
-      margin-left: 0.5rem;
-    }
     .product-price { color: #A88262; font-weight: 700; }
-    .delete-btn {
-      background: #1E1B18;
-      border: none;
-      padding: 0.5rem 1.2rem;
-      border-radius: 40px;
-      color: #FFFFFF;
-      cursor: pointer;
-      font-weight: 500;
-      width: auto;
-      margin-top: 0;
-    }
-    .delete-btn:hover { background: #C4A882; color: #1E1B18; }
-    @media (max-width: 600px) {
-      .admin-panel { padding: 1rem; }
-      .product-info { flex-direction: column; align-items: flex-start; }
-    }
+    .delete-btn { background: #1E1B18; width: auto; padding: 0.5rem 1.2rem; margin-top: 0; }
+    @media (max-width: 600px) { .admin-panel { padding: 1rem; } .product-info { flex-direction: column; align-items: flex-start; } }
   </style>
 </head>
 <body>
-<!-- Login form (initially visible) -->
 <div class="login-container" id="loginContainer">
   <div class="login-card">
     <h2><i class="fas fa-lock"></i> Admin Login</h2>
@@ -199,10 +53,9 @@
   </div>
 </div>
 
-<!-- Actual admin panel (hidden until login) -->
 <div class="admin-panel" id="adminPanel">
   <h1><i class="fas fa-crown"></i> Admin – Manage Products</h1>
-  <p style="color: #8E7A5E; margin-bottom: 1rem;">Add, edit or delete piercing jewelry with images & categories.</p>
+  <p style="color: #8E7A5E; margin-bottom: 1rem;">Add products with up to 4 images each.</p>
 
   <h2>➕ Add New Product</h2>
   <form id="addProductForm">
@@ -226,33 +79,28 @@
     <label>Subcategory (if any)</label>
     <select id="subCategory">
       <option value="">None</option>
-      <!-- Will be populated based on main category -->
     </select>
 
-    <label>Product Image *</label>
-    <input type="file" id="productImage" accept="image/jpeg,image/png,image/gif,image/webp" required>
-    <div class="image-preview" id="imagePreview" style="margin-top:0.8rem; max-width:120px; border-radius:12px; overflow:hidden; display:none;">
-      <img id="previewImg" style="width:100%; height:auto;" alt="Preview">
-    </div>
+    <label>Product Images (max 4) *</label>
+    <input type="file" id="productImages" accept="image/jpeg,image/png,image/gif,image/webp,image/avif" multiple>
+    <div class="image-previews" id="imagePreviews"></div>
 
     <button type="submit"><i class="fas fa-save"></i> Add Product</button>
   </form>
   <div id="addMessage"></div>
 
   <hr>
-
   <h2>📦 Current Products</h2>
   <div id="currentProducts" class="product-list">Loading...</div>
-  
   <hr>
   <a href="/" class="back-link"><i class="fas fa-arrow-left"></i> Back to Shop</a>
 </div>
 
 <script>
-  let adminPassword = ''; // will be set after successful login
+  let adminPassword = '';
   let currentProducts = [];
+  let selectedFiles = [];
 
-  // Subcategory mapping (same as before)
   const subCategories = {
     oreille: ['lobe', 'helix', 'tragus', 'conch', 'daith', 'rook/snug', 'industrial', 'anti-tragus'],
     nez: ['nostril', 'septum', 'bridge', 'high nostril'],
@@ -260,7 +108,6 @@
     'micro-dermal': []
   };
 
-  // Update subcategory dropdown based on main category
   function updateSubCategories() {
     const mainCat = document.getElementById('category').value;
     const subSelect = document.getElementById('subCategory');
@@ -277,26 +124,43 @@
   document.getElementById('category').addEventListener('change', updateSubCategories);
   updateSubCategories();
 
-  // Image preview
-  document.getElementById('productImage').addEventListener('change', function(e) {
-    const file = e.target.files[0];
-    if (file) {
+  // Image previews
+  document.getElementById('productImages').addEventListener('change', (e) => {
+    const files = Array.from(e.target.files);
+    if (files.length > 4) {
+      alert('You can select up to 4 images.');
+      document.getElementById('productImages').value = '';
+      selectedFiles = [];
+      document.getElementById('imagePreviews').innerHTML = '';
+      return;
+    }
+    selectedFiles = files;
+    const container = document.getElementById('imagePreviews');
+    container.innerHTML = '';
+    files.forEach((file, idx) => {
       const reader = new FileReader();
-      reader.onload = ev => {
-        document.getElementById('previewImg').src = ev.target.result;
-        document.getElementById('imagePreview').style.display = 'block';
+      reader.onload = (ev) => {
+        const div = document.createElement('div');
+        div.className = 'preview-item';
+        div.innerHTML = `<img src="${ev.target.result}"><button type="button" data-idx="${idx}">✕</button>`;
+        container.appendChild(div);
+        div.querySelector('button').addEventListener('click', () => {
+          selectedFiles.splice(idx, 1);
+          document.getElementById('productImages').files = null;
+          const newInput = document.getElementById('productImages');
+          const dataTransfer = new DataTransfer();
+          selectedFiles.forEach(f => dataTransfer.items.add(f));
+          newInput.files = dataTransfer.files;
+          document.getElementById('productImages').dispatchEvent(new Event('change'));
+        });
       };
       reader.readAsDataURL(file);
-    } else {
-      document.getElementById('imagePreview').style.display = 'none';
-    }
+    });
   });
 
-  // Load products (only after login)
   async function loadProducts() {
     try {
       const res = await fetch('/api/products');
-      if (!res.ok) throw new Error('Failed to load');
       currentProducts = await res.json();
       renderProductList();
     } catch (err) {
@@ -311,16 +175,13 @@
       return;
     }
     container.innerHTML = currentProducts.map(p => `
-      <div class="product-item" data-id="${p.id}">
+      <div class="product-item">
         <div class="product-info">
-          <img class="product-thumb" src="${escapeHtml(p.image)}" onerror="this.src='https://via.placeholder.com/60x60?text=No+Image'" alt="">
+          <img class="product-thumb" src="${p.images && p.images[0] || ''}" onerror="this.src='https://via.placeholder.com/60'" alt="">
           <div class="product-details">
-            <div class="product-name">
-              ${escapeHtml(p.name)}
-              <span class="product-cat">${escapeHtml(p.subCategory || p.mainCategory)}</span>
-            </div>
-            <div class="product-price">${(p.price / 100).toFixed(2)} MAD</div>
-            <div style="font-size:0.75rem; color:#7C6A53;">${escapeHtml(p.description || '')}</div>
+            <div class="product-name">${escapeHtml(p.name)} <span class="product-cat">${escapeHtml(p.subCategory || p.mainCategory)}</span></div>
+            <div class="product-price">${(p.price/100).toFixed(2)} MAD</div>
+            <div style="font-size:0.75rem;">${escapeHtml(p.description || '')}</div>
           </div>
         </div>
         <button class="delete-btn" onclick="deleteProduct('${p.id}')"><i class="fas fa-trash-alt"></i> Delete</button>
@@ -328,60 +189,52 @@
     `).join('');
   }
 
-  async function deleteProduct(productId) {
+  async function deleteProduct(id) {
     if (!confirm("Delete this product permanently?")) return;
     try {
-      const res = await fetch(`/api/products/${productId}`, {
+      const res = await fetch(`/api/products/${id}`, {
         method: 'DELETE',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ password: adminPassword })
       });
-      const data = await res.json();
       if (res.ok) {
-        showMessage('addMessage', '✅ Product deleted successfully!', 'success');
+        showMessage('addMessage', '✅ Product deleted', 'success');
         loadProducts();
       } else {
-        showMessage('addMessage', `❌ ${data.error}`, 'error');
+        showMessage('addMessage', '❌ Delete failed', 'error');
       }
     } catch (err) {
       showMessage('addMessage', '❌ Server error', 'error');
     }
   }
 
-  // Form submission (add product)
   document.getElementById('addProductForm').addEventListener('submit', async (e) => {
     e.preventDefault();
     const name = document.getElementById('name').value.trim();
     const description = document.getElementById('description').value.trim();
-    const priceDollars = parseFloat(document.getElementById('price').value);
+    const price = parseFloat(document.getElementById('price').value);
     const mainCategory = document.getElementById('category').value;
     const subCategory = document.getElementById('subCategory').value;
-    const imageFile = document.getElementById('productImage').files[0];
-
-    if (!name || isNaN(priceDollars) || !imageFile) {
-      showMessage('addMessage', '❌ Please fill name, price and upload an image', 'error');
+    if (!name || isNaN(price) || !mainCategory || selectedFiles.length === 0) {
+      showMessage('addMessage', '❌ Please fill name, price, category, and upload at least one image', 'error');
       return;
     }
-
-    // Upload image first
     const formData = new FormData();
-    formData.append('productImage', imageFile);
-    const uploadRes = await fetch('/api/upload', { method: 'POST', body: formData });
+    selectedFiles.forEach(file => formData.append('productImages', file));
+    const uploadRes = await fetch('/api/upload-multiple', { method: 'POST', body: formData });
     if (!uploadRes.ok) {
       showMessage('addMessage', '❌ Image upload failed', 'error');
       return;
     }
-    const { imageUrl } = await uploadRes.json();
-
-    // Then add product
+    const { imageUrls } = await uploadRes.json();
     const productData = {
       password: adminPassword,
       name,
       description,
-      price: priceDollars,
+      price,
       mainCategory,
       subCategory,
-      image: imageUrl
+      images: imageUrls.slice(0, 4)
     };
     const addRes = await fetch('/api/products', {
       method: 'POST',
@@ -391,7 +244,8 @@
     if (addRes.ok) {
       showMessage('addMessage', '✨ Product added successfully!', 'success');
       document.getElementById('addProductForm').reset();
-      document.getElementById('imagePreview').style.display = 'none';
+      selectedFiles = [];
+      document.getElementById('imagePreviews').innerHTML = '';
       loadProducts();
     } else {
       const err = await addRes.json();
@@ -399,29 +253,18 @@
     }
   });
 
-  function showMessage(elementId, text, type) {
-    const msgDiv = document.getElementById(elementId);
-    msgDiv.innerHTML = `<div class="message ${type}"><i class="fas ${type === 'success' ? 'fa-check-circle' : 'fa-exclamation-triangle'}"></i> ${text}</div>`;
+  function showMessage(el, text, type) {
+    const msgDiv = document.getElementById(el);
+    msgDiv.innerHTML = `<div class="message ${type}">${text}</div>`;
     setTimeout(() => msgDiv.innerHTML = '', 4000);
   }
+  function escapeHtml(str) { if (!str) return ''; return str.replace(/[&<>]/g, m => m === '&' ? '&amp;' : (m === '<' ? '&lt;' : '&gt;')); }
 
-  function escapeHtml(str) {
-    if (!str) return '';
-    return str.replace(/[&<>]/g, function(m) {
-      if (m === '&') return '&amp;';
-      if (m === '<') return '&lt;';
-      if (m === '>') return '&gt;';
-      return m;
-    });
-  }
-
-  // ---------- LOGIN LOGIC ----------
+  // Login logic
   const loginContainer = document.getElementById('loginContainer');
   const adminPanel = document.getElementById('adminPanel');
-
   async function attemptLogin() {
-    const passwordInput = document.getElementById('loginPassword');
-    const password = passwordInput.value;
+    const password = document.getElementById('loginPassword').value;
     const loginError = document.getElementById('loginError');
     loginError.innerText = '';
     try {
@@ -435,22 +278,17 @@
         adminPassword = password;
         loginContainer.style.display = 'none';
         adminPanel.style.display = 'block';
-        // now load the product list
         loadProducts();
       } else {
         loginError.innerText = 'Incorrect password. Please try again.';
-        passwordInput.value = '';
-        passwordInput.focus();
+        document.getElementById('loginPassword').value = '';
       }
     } catch (err) {
       loginError.innerText = 'Server error. Please try again later.';
     }
   }
-
   document.getElementById('loginBtn').addEventListener('click', attemptLogin);
-  document.getElementById('loginPassword').addEventListener('keypress', (e) => {
-    if (e.key === 'Enter') attemptLogin();
-  });
+  document.getElementById('loginPassword').addEventListener('keypress', (e) => { if (e.key === 'Enter') attemptLogin(); });
 </script>
 </body>
 </html>
