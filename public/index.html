@@ -16,7 +16,7 @@
     * { margin: 0; padding: 0; box-sizing: border-box; }
     body { font-family: 'Muli', sans-serif; background: #FFFFFF; color: #1E1B18; line-height: 1.4; }
 
-    /* Header (unchanged from your latest version) */
+    /* Header (unchanged) */
     .main-header {
       display: flex;
       align-items: center;
@@ -45,16 +45,102 @@
 
     .hero-image { width: 100%; height: auto; max-height: 500px; overflow: hidden; background: #FAFAFA; }
     .hero-image img { width: 100%; height: auto; object-fit: cover; display: block; }
-    .shop-by-section { max-width: 1280px; margin: 2rem auto 0; padding: 0 1rem; text-align: center; }
-    .shop-by-title { font-size: 1.2rem; font-weight: 500; color: #2C2C2C; margin-bottom: 1.5rem; }
-    .circle-slider { display: flex; flex-wrap: nowrap; overflow-x: auto; gap: 1.5rem; justify-content: center; padding-bottom: 0.5rem; }
-    .circle-item { flex-shrink: 0; display: flex; flex-direction: column; align-items: center; gap: 0.5rem; cursor: pointer; transition: transform 0.2s; }
-    .circle-img { width: 85px; height: 85px; background: #FEFAF5; border-radius: 50%; border: 2px solid #E8D8C8; overflow: hidden; }
-    .circle-img img { width: 100%; height: 100%; object-fit: cover; }
-    .circle-item.active .circle-img { border-color: #C4A882; box-shadow: 0 0 0 3px rgba(196,168,130,0.3); transform: scale(1.02); }
-    .circle-label { font-size: 0.75rem; font-weight: 500; }
 
-    /* New Product Card Styles (from wsk-cp-product) */
+    /* SHOP BY PIERCING - 20% BIGGER */
+    .shop-by-section {
+      max-width: 1280px;
+      margin: 2rem auto 0;
+      padding: 0 1rem;
+      text-align: center;
+      transform: scale(1.05); /* 5% increase inside container, but we also enlarge circles */
+    }
+    .shop-by-title {
+      font-size: 1.4rem; /* slightly bigger text */
+      font-weight: 600;
+      color: #2C2C2C;
+      margin-bottom: 1.8rem;
+      letter-spacing: -0.3px;
+    }
+    .circle-slider {
+      display: flex;
+      flex-wrap: nowrap;
+      overflow-x: auto;
+      gap: 1.8rem;
+      justify-content: center;
+      padding-bottom: 0.5rem;
+    }
+    .circle-item {
+      flex-shrink: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.6rem;
+      cursor: pointer;
+      transition: transform 0.2s;
+    }
+    .circle-img {
+      width: 100px;   /* was 85px -> ~20% bigger */
+      height: 100px;
+      background: #FEFAF5;
+      border-radius: 50%;
+      border: 2px solid #E8D8C8;
+      overflow: hidden;
+    }
+    .circle-img img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+    .circle-label {
+      font-size: 0.85rem; /* slightly larger */
+      font-weight: 500;
+    }
+    .circle-item.active .circle-img {
+      border-color: #C4A882;
+      box-shadow: 0 0 0 3px rgba(196,168,130,0.3);
+      transform: scale(1.02);
+    }
+
+    /* PREMIERE NEW ARRIVALS TEXT */
+    .premiere-title {
+      text-align: center;
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 2.5rem;
+      font-weight: 600;
+      color: #2C2C2C;
+      letter-spacing: 1px;
+      margin: 3rem 0 0.5rem;
+      position: relative;
+      display: inline-block;
+      width: 100%;
+    }
+    .premiere-title::after {
+      content: '';
+      display: block;
+      width: 80px;
+      height: 3px;
+      background: #C4A882;
+      margin: 0.5rem auto 0;
+      border-radius: 2px;
+    }
+    .section-sub {
+      text-align: center;
+      font-size: 0.9rem;
+      color: #8B7A6C;
+      margin-bottom: 2rem;
+    }
+
+    /* Category titles inside sections */
+    .cat-title {
+      text-align: center;
+      font-size: 1.6rem;
+      font-weight: 600;
+      color: #C4A882;
+      margin: 2rem 0 1rem;
+      letter-spacing: 1px;
+    }
+
+    /* Product Cards (wsk-cp-product style) */
     .products-grid {
       display: grid;
       grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
@@ -124,9 +210,6 @@
       box-shadow: none;
       padding: 7px 18px;
     }
-    .wsk-cp-product:hover .wsk-cp-text .category {
-      margin-top: 0px;
-    }
     .title-product {
       text-align: center;
       margin-top: 0.5rem;
@@ -166,7 +249,6 @@
       font-weight: bold;
       color: #C4A882;
     }
-    /* Quantity controls inside card-footer */
     .qty-ctrl {
       display: flex;
       align-items: center;
@@ -187,7 +269,7 @@
       font-size: 1rem;
       color: #C4A882;
     }
-    /* Animated Add to Cart Button (Uiverse style) */
+    /* Animated Add to Cart Button */
     .button {
       --width: 100px;
       --height: 35px;
@@ -286,7 +368,7 @@
     .button:hover::after { bottom: calc(var(--height) + var(--gap-between-tooltip-to-button) - 20px); }
     .button:hover::before { bottom: calc(var(--height) + var(--gap-between-tooltip-to-button)); }
 
-    /* Modal (unchanged, with fixed image sizing) */
+    /* Modal (unchanged) */
     .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); z-index: 1000; align-items: center; justify-content: center; }
     .modal-content { max-width: 700px; width: 90%; background: white; border-radius: 28px; overflow: hidden; max-height: 90vh; overflow-y: auto; }
     .modal-header { display: flex; justify-content: space-between; align-items: center; padding: 1rem; border-bottom: 1px solid #F0E2D8; }
@@ -300,7 +382,7 @@
     .thumb.active { border-color: #C4A882; }
     .modal-add { background: #C4A882; border: none; padding: 0.6rem; border-radius: 40px; font-weight: 600; width: 100%; margin-top: 1rem; cursor: pointer; }
 
-    /* Footer and drawer unchanged */
+    /* Footer, drawer unchanged */
     .info-container-bottom { background: #FFFFFF; border-top: 1px solid #F0E2D8; padding: 1.5rem 1rem; margin-top: 2rem; }
     .info-flex { max-width: 1280px; margin: 0 auto; display: flex; justify-content: center; gap: 2rem; flex-wrap: wrap; }
     .social-links { display: flex; gap: 1.2rem; }
@@ -331,6 +413,7 @@
       .products-grid { grid-template-columns: repeat(2, 1fr); gap: 1rem; }
       .wsk-cp-text { padding-top: 130%; }
       .button { --width: 100%; width: 100%; }
+      .circle-img { width: 80px; height: 80px; }
     }
   </style>
 </head>
@@ -341,10 +424,7 @@
     <button class="appointment-icon" id="bookAppointmentBtn"><i class="fas fa-phone-alt"></i></button>
     <button class="location-icon" id="locationBtn"><i class="fas fa-map-marker-alt"></i></button>
   </div>
-  <div class="logo-stacked">
-    <span class="logo-samar">SAMAR</span>
-    <span class="logo-piercing">PIERCING</span>
-  </div>
+  <div class="logo-stacked"><span class="logo-samar">SAMAR</span><span class="logo-piercing">PIERCING</span></div>
   <div class="header-right">
     <div class="search-bar"><i class="fas fa-search"></i><input type="text" id="searchInput" placeholder="Search..."></div>
     <button id="langToggle" class="lang-toggle">🇫🇷 FR</button>
@@ -352,54 +432,109 @@
   </div>
 </div>
 <div class="hero-image"><img src="Neutral Minimalist Business Proposal Docs Banner.png" alt="Samar piercing collection"></div>
-<div class="shop-by-section"><div class="shop-by-title" id="shopByTitle">Shop By Piercing</div><div class="circle-slider" id="circleSlider"></div></div>
-<div class="container" id="mainContent">
-  <div id="fullLayout">
-    <div class="section-title" id="newArrivalsTitle">✨ New Arrivals ✨</div>
-    <div class="section-sub" id="newArrivalsSub">Discover our latest additions</div>
-    <div id="newArrivalsGrid" class="products-grid">✨ Loading latest pieces...</div>
-    <div id="categorySections"></div>
-  </div>
-  <div id="filteredProductsGrid" style="display: none;"></div>
+
+<!-- Shop By Piercing (20% bigger) -->
+<div class="shop-by-section">
+  <div class="shop-by-title" id="shopByTitle">Shop By Piercing</div>
+  <div class="circle-slider" id="circleSlider"></div>
 </div>
+
+<!-- Dynamic content: New Arrivals, Categories will be injected here -->
+<div id="fullLayout" class="full-layout-container" style="max-width:1280px; margin:0 auto;">
+  <!-- New Arrivals (premiere) and Category sections will be inserted by JS -->
+</div>
+<div id="filteredProductsGrid" style="display: none; max-width:1280px; margin:0 auto;"></div>
+
 <div class="info-container-bottom"><div class="info-flex"><div class="social-links"><a href="https://wa.me/212781570083" target="_blank" class="social-icon"><i class="fab fa-whatsapp"></i></a><a href="https://www.instagram.com/piercing_bysamar" target="_blank" class="social-icon"><i class="fab fa-instagram"></i></a><a href="https://www.tiktok.com/@piercingbysmar" target="_blank" class="social-icon"><i class="fab fa-tiktok"></i></a><a href="https://www.snapchat.com/add/piercingbysamar" target="_blank" class="social-icon"><i class="fab fa-snapchat-ghost"></i></a></div></div></div>
 <footer id="footer">© 2026 Samar Piercing — Order via WhatsApp</footer>
+
 <div class="drawer-overlay" id="drawerOverlay"></div>
 <div class="drawer" id="drawer"><div class="drawer-header"><h3 id="drawerTitle"><i class="fas fa-tags"></i> Categories</h3><button class="close-drawer" id="closeDrawerBtn">&times;</button></div><div class="categories-list" id="categoriesList"></div></div>
+
 <div id="productModal" class="modal"><div class="modal-content"><div class="modal-header"><h3>Product Details</h3><button class="close-modal">&times;</button></div><div class="modal-body"><div class="main-image"><img id="modalMainImage" src="" alt=""></div><div class="thumbnails" id="modalThumbnails"></div><div class="modal-details"><div class="product-title" id="modalTitle"></div><div class="product-desc" id="modalDesc"></div><div class="modal-price" id="modalPrice"></div><div class="price-row" style="margin-top:1rem;"><div class="qty-ctrl" style="display:inline-flex; margin-right:1rem;"><button id="modalQtyMinus">-</button><span id="modalQtyVal">1</span><button id="modalQtyPlus">+</button></div><button id="modalAddToCart" class="modal-add"><i class="fas fa-plus-circle"></i> Add to Cart</button></div></div></div></div></div>
 
 <script>
-  // -------------------- TRANSLATIONS --------------------
-  const translations = { en: { shopByTitle: "Shop By Piercing", newArrivalsTitle: "✨ New Arrivals ✨", newArrivalsSub: "Discover our latest additions", footer: "© 2026 Samar Piercing — Order via WhatsApp", drawerTitle: "Categories", allProducts: "✨ All Products", addToCart: "Add", addedToCart: "added to cart", noNewArrivals: "✨ No new arrivals yet ✨", noProducts: "✨ No products available ✨", noFiltered: "✨ No products ✨", loadingError: "⚠️ Unable to load products", catOreille: "Ear ", catNez: "Nose", catNombril: "Belly", catMicroDermal: "Micro dermal" }, fr: { shopByTitle: "Acheter par piercing", newArrivalsTitle: "✨ Nouveautés ✨", newArrivalsSub: "Découvrez nos dernières pièces", footer: "© 2026 Samar Piercing — Commande via WhatsApp", drawerTitle: "Catégories", allProducts: "✨ Tous les produits", addToCart: "Ajouter", addedToCart: "ajouté au panier", noNewArrivals: "✨ Aucune nouveauté pour le moment ✨", noProducts: "✨ Aucun produit disponible ✨", noFiltered: "✨ Aucun produit ✨", loadingError: "⚠️ Impossible de charger les produits", catOreille: "Oreille", catNez: "Nez", catNombril: "Nombril", catMicroDermal: "Micro dermal" } };
+  // Translations
+  const translations = { en: { shopByTitle: "Shop By Piercing", footer: "© 2026 Samar Piercing — Order via WhatsApp", drawerTitle: "Categories", allProducts: "✨ All Products", addToCart: "Add", addedToCart: "added to cart", loadingError: "⚠️ Unable to load products" }, fr: { shopByTitle: "Acheter par piercing", footer: "© 2026 Samar Piercing — Commande via WhatsApp", drawerTitle: "Catégories", allProducts: "✨ Tous les produits", addToCart: "Ajouter", addedToCart: "ajouté au panier", loadingError: "⚠️ Impossible de charger les produits" } };
   let currentLang = localStorage.getItem('lang') || 'en';
-  function setLanguage(lang) { currentLang = lang; localStorage.setItem('lang', lang); document.getElementById('shopByTitle').innerText = translations[lang].shopByTitle; document.getElementById('newArrivalsTitle').innerHTML = translations[lang].newArrivalsTitle; document.getElementById('newArrivalsSub').innerText = translations[lang].newArrivalsSub; document.getElementById('footer').innerText = translations[lang].footer; document.getElementById('drawerTitle').innerHTML = `<i class="fas fa-tags"></i> ${translations[lang].drawerTitle}`; const toggleBtn = document.getElementById('langToggle'); toggleBtn.innerText = lang === 'en' ? '🇫🇷 FR' : '🇬🇧 EN'; renderDrawer(); if (allProducts.length) applyGlobalFilter(); else fetchProducts(); }
+  function setLanguage(lang) { currentLang = lang; localStorage.setItem('lang', lang); document.getElementById('shopByTitle').innerText = translations[lang].shopByTitle; document.getElementById('footer').innerText = translations[lang].footer; document.getElementById('drawerTitle').innerHTML = `<i class="fas fa-tags"></i> ${translations[lang].drawerTitle}`; const toggleBtn = document.getElementById('langToggle'); toggleBtn.innerText = lang === 'en' ? '🇫🇷 FR' : '🇬🇧 EN'; renderDrawer(); if (allProducts.length) renderFullLayout(allProducts); else fetchProducts(); }
 
-  const categoriesDef = [ { main: "oreille", labelEn: "Ear ", labelFr: "Oreille", sub: ["lobe","helix","flat helix","tragus","conch","daith","rook/snug","industrial","anti-tragus"]}, { main: "nez", labelEn: "Nose", labelFr: "Nez", sub: ["nostril","septum","bridge","high nostril"] }, { main: "nombril", labelEn: "Belly", labelFr: "Nombril", sub: [] }, { main: "micro-dermal", labelEn: "Micro dermal", labelFr: "Micro dermal", sub: [] } ];
+  const categoriesDef = [ { main: "oreille", labelEn: "Ear", labelFr: "Oreille", sub: ["lobe","helix","flat helix","tragus","conch","daith","rook/snug","industrial","anti-tragus"] }, { main: "nez", labelEn: "Nose", labelFr: "Nez", sub: ["nostril","septum","bridge","high nostril"] }, { main: "nombril", labelEn: "Belly", labelFr: "Nombril", sub: [] }, { main: "micro-dermal", labelEn: "Micro dermal", labelFr: "Micro dermal", sub: [] } ];
   const circleItems = [ { name: "Helix", mainCat: "oreille", subCat: "helix", imgUrl: "/images/helix.avif" }, { name: "Tragus", mainCat: "oreille", subCat: "tragus", imgUrl: "/images/tragus.avif" }, { name: "Conch", mainCat: "oreille", subCat: "conch", imgUrl: "/images/conch.avif" }, { name: "Daith", mainCat: "oreille", subCat: "daith", imgUrl: "/images/daith.avif" }, { name: "Rook", mainCat: "oreille", subCat: "rook/snug", imgUrl: "/images/rock.avif" }, { name: "Industrial", mainCat: "oreille", subCat: "industrial", imgUrl: "/images/indu.avif" }, { name: "Lobe", mainCat: "oreille", subCat: "lobe", imgUrl: "/images/lobe.avif" } ];
   let allProducts = [], currentMain = "all", currentSub = "";
 
-  function renderCircleSlider() { const container = document.getElementById('circleSlider'); if(!container) return; let html = ''; circleItems.forEach(item => { html += `<div class="circle-item" data-main="${item.mainCat}" data-sub="${item.subCat}"><div class="circle-img"><img src="${item.imgUrl}" alt="${item.name}" loading="lazy" onerror="this.src='https://via.placeholder.com/85'"></div><div class="circle-label">${item.name}</div></div>`; }); container.innerHTML = html; document.querySelectorAll('.circle-item').forEach(el => { el.addEventListener('click', () => { currentMain = el.dataset.main; currentSub = el.dataset.sub; document.querySelectorAll('.circle-item').forEach(c=>c.classList.remove('active')); el.classList.add('active'); applyGlobalFilter(); }); }); }
-  function renderDrawer() { const container = document.getElementById("categoriesList"); if(!container) return; let html = `<div class="all-link" data-main="all" data-sub="">${translations[currentLang].allProducts}</div>`; categoriesDef.forEach(cat => { const catLabel = currentLang === 'en' ? cat.labelEn : cat.labelFr; const hasSub = cat.sub.length > 0; html += `<div class="main-cat-item" data-main="${cat.main}"><div class="main-cat-title">${catLabel}${hasSub ? '<i class="fas fa-chevron-down"></i>' : ''}</div>${hasSub ? `<div class="subcats" data-parent="${cat.main}">${cat.sub.map(sub => `<div class="subcat-item" data-main="${cat.main}" data-sub="${sub}">${sub.charAt(0).toUpperCase()+sub.slice(1)}</div>`).join('')}</div>` : ''}</div>`; }); container.innerHTML = html; document.querySelectorAll('.all-link').forEach(el => { el.addEventListener('click', () => { currentMain="all"; currentSub=""; closeDrawer(); applyGlobalFilter(); }); }); document.querySelectorAll('.main-cat-title').forEach(title => { title.addEventListener('click', (e) => { e.stopPropagation(); const parentDiv = title.closest('.main-cat-item'); const subDiv = parentDiv.querySelector('.subcats'); if(subDiv) subDiv.classList.toggle('show'); else { currentMain = parentDiv.dataset.main; currentSub = ""; closeDrawer(); applyGlobalFilter(); } }); }); document.querySelectorAll('.subcat-item').forEach(sub => { sub.addEventListener('click', () => { currentMain = sub.dataset.main; currentSub = sub.dataset.sub; closeDrawer(); applyGlobalFilter(); }); }); }
-  function applyGlobalFilter() { const isAll = (currentMain === "all" && currentSub === ""); const fullLayoutDiv = document.getElementById('fullLayout'); const filteredDiv = document.getElementById('filteredProductsGrid'); if(isAll) { fullLayoutDiv.style.display = 'block'; filteredDiv.style.display = 'none'; renderAllSections(allProducts); } else { fullLayoutDiv.style.display = 'none'; filteredDiv.style.display = 'block'; let filtered = allProducts.filter(p => p.mainCategory === currentMain); if(currentSub) filtered = filtered.filter(p => p.subCategory === currentSub); filteredDiv.innerHTML = `<div class="products-grid">${renderProductsHTML(filtered)}</div>`; attachCartEvents(); attachQuantityEvents(); } }
-  function renderAllSections(productsArray) { const sorted = [...productsArray].sort((a,b)=> (Number(b.id)||0)-(Number(a.id)||0)); const newArrivals = sorted.slice(0,4); document.getElementById('newArrivalsGrid').innerHTML = newArrivals.length ? renderProductsHTML(newArrivals) : `<div style="grid-column:1/-1; text-align:center;">${translations[currentLang].noNewArrivals}</div>`; const categoryOrder = [ { key:"oreille", label: currentLang==='en'?"Ear ":"Oreille" }, { key:"nez", label: currentLang==='en'?"Nose":"Nez" }, { key:"nombril", label: currentLang==='en'?"Belly":"Nombril" }, { key:"micro-dermal", label: currentLang==='en'?"Micro dermal":"Micro dermal" } ]; let sectionsHtml=""; for(const cat of categoryOrder){ const catProducts = productsArray.filter(p=>p.mainCategory===cat.key); if(catProducts.length) sectionsHtml += `<div class="section-title">${cat.label}</div><div class="products-grid">${renderProductsHTML(catProducts)}</div>`; } document.getElementById('categorySections').innerHTML = sectionsHtml || `<div style="text-align:center; padding:2rem;">${translations[currentLang].noProducts}</div>`; attachCartEvents(); attachQuantityEvents(); }
+  function renderCircleSlider() { const container = document.getElementById('circleSlider'); if(!container) return; let html = ''; circleItems.forEach(item => { html += `<div class="circle-item" data-main="${item.mainCat}" data-sub="${item.subCat}"><div class="circle-img"><img src="${item.imgUrl}" alt="${item.name}" loading="lazy" onerror="this.src='https://via.placeholder.com/100'"></div><div class="circle-label">${item.name}</div></div>`; }); container.innerHTML = html; document.querySelectorAll('.circle-item').forEach(el => { el.addEventListener('click', () => { currentMain = el.dataset.main; currentSub = el.dataset.sub; document.querySelectorAll('.circle-item').forEach(c=>c.classList.remove('active')); el.classList.add('active'); applyFilter(); }); }); }
 
-  // Render product cards in the new "wsk-cp-product" style
+  function renderDrawer() { const container = document.getElementById("categoriesList"); if(!container) return; let html = `<div class="all-link" data-main="all" data-sub="">${translations[currentLang].allProducts}</div>`; categoriesDef.forEach(cat => { const catLabel = currentLang === 'en' ? cat.labelEn : cat.labelFr; const hasSub = cat.sub.length > 0; html += `<div class="main-cat-item" data-main="${cat.main}"><div class="main-cat-title">${catLabel}${hasSub ? '<i class="fas fa-chevron-down"></i>' : ''}</div>${hasSub ? `<div class="subcats" data-parent="${cat.main}">${cat.sub.map(sub => `<div class="subcat-item" data-main="${cat.main}" data-sub="${sub}">${sub.charAt(0).toUpperCase()+sub.slice(1)}</div>`).join('')}</div>` : ''}</div>`; }); container.innerHTML = html;
+    document.querySelectorAll('.all-link').forEach(el => { el.addEventListener('click', () => { currentMain="all"; currentSub=""; closeDrawer(); applyFilter(); }); });
+    document.querySelectorAll('.main-cat-title').forEach(title => { title.addEventListener('click', (e) => { e.stopPropagation(); const parentDiv = title.closest('.main-cat-item'); const subDiv = parentDiv.querySelector('.subcats'); if(subDiv) subDiv.classList.toggle('show'); else { currentMain = parentDiv.dataset.main; currentSub = ""; closeDrawer(); applyFilter(); } }); });
+    document.querySelectorAll('.subcat-item').forEach(sub => { sub.addEventListener('click', () => { currentMain = sub.dataset.main; currentSub = sub.dataset.sub; closeDrawer(); applyFilter(); }); });
+  }
+
+  function applyFilter() { 
+    const isAll = (currentMain === "all" && currentSub === ""); 
+    const fullLayoutDiv = document.getElementById('fullLayout'); 
+    const filteredDiv = document.getElementById('filteredProductsGrid'); 
+    if(isAll) { 
+      fullLayoutDiv.style.display = 'block'; 
+      filteredDiv.style.display = 'none'; 
+      renderFullLayout(allProducts); 
+    } else { 
+      fullLayoutDiv.style.display = 'none'; 
+      filteredDiv.style.display = 'block'; 
+      let filtered = allProducts.filter(p => p.mainCategory === currentMain); 
+      if(currentSub) filtered = filtered.filter(p => p.subCategory === currentSub); 
+      filteredDiv.innerHTML = `<div class="products-grid">${renderProductsHTML(filtered)}</div>`; 
+      attachCartEvents(); attachQuantityEvents(); 
+    } 
+  }
+
+  // Render New Arrivals (4 newest) + category sections (each up to 4 products)
+  function renderFullLayout(productsArray) {
+    const container = document.getElementById('fullLayout');
+    if (!productsArray.length) {
+      container.innerHTML = `<div style="text-align:center; padding:2rem;">No products available</div>`;
+      return;
+    }
+
+    // 1. New Arrivals: 4 newest products (by id descending)
+    const sorted = [...productsArray].sort((a,b)=> (Number(b.id)||0) - (Number(a.id)||0));
+    const newest = sorted.slice(0,4);
+    let html = `
+      <div class="premiere-title">✨ New Arrivals ✨</div>
+      <div class="section-sub">Discover our latest pieces</div>
+      <div class="products-grid">${renderProductsHTML(newest)}</div>
+    `;
+
+    // 2. Category sections: oreille, nez, nombril, micro-dermal
+    const categoryOrder = [
+      { key: "oreille", label: currentLang === 'en' ? "Ear" : "Oreille" },
+      { key: "nez", label: currentLang === 'en' ? "Nose" : "Nez" },
+      { key: "nombril", label: currentLang === 'en' ? "Belly" : "Nombril" },
+      { key: "micro-dermal", label: currentLang === 'en' ? "Micro dermal" : "Micro dermal" }
+    ];
+    for (const cat of categoryOrder) {
+      const catProducts = productsArray.filter(p => p.mainCategory === cat.key).slice(0,4);
+      if (catProducts.length) {
+        html += `<div class="cat-title">${cat.label}</div><div class="products-grid">${renderProductsHTML(catProducts)}</div>`;
+      }
+    }
+    container.innerHTML = html;
+    attachCartEvents(); attachQuantityEvents();
+  }
+
   function renderProductsHTML(productsArray) {
-    if(!productsArray.length) return `<div style="grid-column:1/-1; text-align:center;">${translations[currentLang].noFiltered}</div>`;
+    if(!productsArray.length) return `<div style="grid-column:1/-1; text-align:center;">No products found</div>`;
     const buttonText = translations[currentLang].addToCart;
     return productsArray.map(p => {
       const catDisplay = p.subCategory || p.mainCategory;
-      const imageUrl = p.images?.[0] || '';
-      const desc = p.description || '';
       return `
         <div class="wsk-cp-product" data-product-id="${p.id}">
-          <div class="wsk-cp-img">
-            <img src="${imageUrl}" alt="${escapeHtml(p.name)}" onerror="this.src='https://via.placeholder.com/300'">
-          </div>
+          <div class="wsk-cp-img"><img src="${p.images?.[0] || ''}" alt="${escapeHtml(p.name)}" onerror="this.src='https://via.placeholder.com/300'"></div>
           <div class="wsk-cp-text">
             <div class="category"><span>${escapeHtml(catDisplay)}</span></div>
             <div class="title-product"><h3>${escapeHtml(p.name)}</h3></div>
-            <div class="description-prod"><p>${escapeHtml(desc)}</p></div>
+            <div class="description-prod"><p>${escapeHtml(p.description || '')}</p></div>
             <div class="card-footer">
               <div class="price">${(p.price/100).toFixed(2)} MAD</div>
               <div class="qty-ctrl" data-pid="${p.id}">
@@ -417,13 +552,17 @@
     }).join('');
   }
 
-  function attachQuantityEvents() { document.querySelectorAll('.qty-minus').forEach(btn => { btn.onclick = (e) => { e.stopPropagation(); const id = btn.dataset.id; const span = document.querySelector(`.qty-num[data-id="${id}"]`); if(span) { let val = parseInt(span.innerText) || 1; if(val>1) span.innerText = val-1; } }; }); document.querySelectorAll('.qty-plus').forEach(btn => { btn.onclick = (e) => { e.stopPropagation(); const id = btn.dataset.id; const span = document.querySelector(`.qty-num[data-id="${id}"]`); if(span) { let val = parseInt(span.innerText) || 1; span.innerText = val+1; } }; }); document.querySelectorAll('.add-to-cart-with-qty').forEach(btn => { btn.onclick = (e) => { e.stopPropagation(); const id = btn.dataset.id; const name = btn.dataset.name; const price = parseInt(btn.dataset.price); const qtySpan = document.querySelector(`.qty-num[data-id="${id}"]`); let quantity = qtySpan ? parseInt(qtySpan.innerText) : 1; addToCart({ id, name, price, quantity }); const resetSpan = document.querySelector(`.qty-num[data-id="${id}"]`); if(resetSpan) resetSpan.innerText = "1"; }; }); }
+  function attachQuantityEvents() { 
+    document.querySelectorAll('.qty-minus').forEach(btn => { btn.onclick = (e) => { e.stopPropagation(); const id = btn.dataset.id; const span = document.querySelector(`.qty-num[data-id="${id}"]`); if(span) { let val = parseInt(span.innerText) || 1; if(val>1) span.innerText = val-1; } }; }); 
+    document.querySelectorAll('.qty-plus').forEach(btn => { btn.onclick = (e) => { e.stopPropagation(); const id = btn.dataset.id; const span = document.querySelector(`.qty-num[data-id="${id}"]`); if(span) { let val = parseInt(span.innerText) || 1; span.innerText = val+1; } }; }); 
+    document.querySelectorAll('.add-to-cart-with-qty').forEach(btn => { btn.onclick = (e) => { e.stopPropagation(); const id = btn.dataset.id; const name = btn.dataset.name; const price = parseInt(btn.dataset.price); const qtySpan = document.querySelector(`.qty-num[data-id="${id}"]`); let quantity = qtySpan ? parseInt(qtySpan.innerText) : 1; addToCart({ id, name, price, quantity }); const resetSpan = document.querySelector(`.qty-num[data-id="${id}"]`); if(resetSpan) resetSpan.innerText = "1"; }; }); 
+  }
   function attachCartEvents() { attachQuantityEvents(); document.querySelectorAll('.wsk-cp-product').forEach(card => { card.addEventListener('click', (e) => { if(e.target.closest('.add-to-cart-with-qty') || e.target.closest('.qty-ctrl')) return; const pid = card.dataset.productId; const product = allProducts.find(p => p.id === pid); if(product) openProductModal(product); }); }); }
   function addToCart(product) { let cart = JSON.parse(localStorage.getItem('piercingCart')) || []; const idx = cart.findIndex(i => i.id === product.id); if(idx !== -1) cart[idx].quantity += product.quantity; else cart.push({ ...product, image: product.image || (allProducts.find(p=>p.id===product.id)?.images?.[0]) }); localStorage.setItem('piercingCart', JSON.stringify(cart)); updateCartBadge(); showToast(`✨ ${product.name} ${translations[currentLang].addedToCart}`); }
   function updateCartBadge() { const cart = JSON.parse(localStorage.getItem('piercingCart')) || []; const total = cart.reduce((s,i)=>s+i.quantity,0); document.querySelectorAll('#cartNavBadge').forEach(b=>b.innerText=total); }
   function showToast(msg) { const toast = document.createElement('div'); toast.innerText = msg; toast.style.cssText = 'position:fixed; bottom:20px; left:50%; transform:translateX(-50%); background:#2C2C2C; color:#fff; padding:8px 18px; border-radius:60px; z-index:2000; font-size:0.8rem;'; document.body.appendChild(toast); setTimeout(()=>toast.remove(),2500); }
   function escapeHtml(str) { if(!str) return ''; return str.replace(/[&<>]/g, m=> m==='&'?'&amp;':(m==='<'?'&lt;':'&gt;')); }
-  async function fetchProducts() { try { const res = await fetch('/api/products'); allProducts = await res.json(); renderAllSections(allProducts); applyGlobalFilter(); } catch(err) { document.getElementById('newArrivalsGrid').innerHTML = `<div class="error">${translations[currentLang].loadingError}</div>`; } }
+  async function fetchProducts() { try { const res = await fetch('/api/products'); allProducts = await res.json(); renderFullLayout(allProducts); } catch(err) { document.getElementById('fullLayout').innerHTML = `<div style="text-align:center;padding:2rem;">${translations[currentLang].loadingError}</div>`; } }
   let currentModalProduct = null, modalQty=1;
   function openProductModal(product) { currentModalProduct = product; modalQty=1; document.getElementById('modalQtyVal').innerText = "1"; document.getElementById('modalTitle').innerText = product.name; document.getElementById('modalDesc').innerText = product.description || ''; document.getElementById('modalPrice').innerHTML = `${(product.price/100).toFixed(2)} MAD`; const images = product.images || []; if(images.length){ document.getElementById('modalMainImage').src = images[0]; let thumbsHtml=''; images.forEach((img,idx)=>{ thumbsHtml += `<div class="thumb ${idx===0?'active':''}" data-img="${img}"><img src="${img}" alt=""></div>`; }); document.getElementById('modalThumbnails').innerHTML = thumbsHtml; document.querySelectorAll('.thumb').forEach(t=>{ t.onclick=()=>{ document.querySelectorAll('.thumb').forEach(t2=>t2.classList.remove('active')); t.classList.add('active'); document.getElementById('modalMainImage').src = t.dataset.img; }; }); } else { document.getElementById('modalMainImage').src = 'https://via.placeholder.com/600x400'; document.getElementById('modalThumbnails').innerHTML=''; } document.getElementById('productModal').style.display='flex'; }
   function closeModal() { document.getElementById('productModal').style.display='none'; }
@@ -439,7 +578,7 @@
   document.getElementById('langToggle').addEventListener('click', () => setLanguage(currentLang === 'en' ? 'fr' : 'en'));
   document.getElementById('bookAppointmentBtn').addEventListener('click', () => window.open('https://wa.me/212781570083?text=Hello%2C%20I%20would%20like%20to%20book%20a%20piercing%20appointment.', '_blank'));
   document.getElementById('locationBtn').addEventListener('click', () => window.open('https://maps.google.com/?q=Marrakech+Mhamid+3+derrière+la+clinique+de+l’aéroport', '_blank'));
-  document.getElementById('searchInput').addEventListener('input', (e) => { const term = e.target.value.toLowerCase(); if(term === '') applyGlobalFilter(); else { const filtered = allProducts.filter(p => p.name.toLowerCase().includes(term)); renderAllSections(filtered); } });
+  document.getElementById('searchInput').addEventListener('input', (e) => { const term = e.target.value.toLowerCase(); if(term === '') renderFullLayout(allProducts); else { const filtered = allProducts.filter(p => p.name.toLowerCase().includes(term)); renderFullLayout(filtered); } });
   renderCircleSlider(); renderDrawer(); fetchProducts(); updateCartBadge(); setLanguage(currentLang);
 </script>
 </body>
