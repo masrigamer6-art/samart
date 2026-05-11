@@ -7,361 +7,50 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
   <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
-
-    body {
-      font-family: 'Inter', sans-serif;
-      background: #F5F7FB;
-      color: #1A1F36;
-      line-height: 1.4;
-      padding: 2rem;
-    }
-
-    /* login */
-    .login-container {
-      max-width: 420px;
-      margin: 6rem auto;
-    }
-    .login-card {
-      background: white;
-      border-radius: 28px;
-      padding: 2rem;
-      box-shadow: 0 8px 20px rgba(0,0,0,0.05);
-      border: 1px solid #E6EDF4;
-    }
-    .login-card h2 {
-      font-size: 1.6rem;
-      font-weight: 600;
-      margin-bottom: 1.5rem;
-      color: #1A1F36;
-    }
-    .login-card input {
-      width: 100%;
-      padding: 0.9rem 1rem;
-      border: 1px solid #DFE6EF;
-      border-radius: 14px;
-      font-size: 0.9rem;
-      margin-bottom: 1rem;
-    }
-    .login-card button {
-      background: #1A1F36;
-      color: white;
-      border: none;
-      border-radius: 14px;
-      padding: 0.9rem;
-      font-weight: 600;
-      width: 100%;
-      cursor: pointer;
-      transition: 0.2s;
-    }
-    .login-card button:hover {
-      background: #2C3E66;
-    }
-    .error-msg {
-      color: #E5484D;
-      font-size: 0.8rem;
-      text-align: center;
-      margin-top: 1rem;
-    }
-
-    /* admin panel */
-    .admin-panel {
-      display: none;
-      max-width: 1400px;
-      margin: 0 auto;
-    }
-    .admin-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 2rem;
-      flex-wrap: wrap;
-      gap: 1rem;
-    }
-    .admin-header h1 {
-      font-size: 1.8rem;
-      font-weight: 700;
-      color: #1A1F36;
-    }
-    .logout-btn {
-      background: #F0F2F5;
-      border: none;
-      padding: 0.6rem 1.2rem;
-      border-radius: 40px;
-      font-weight: 500;
-      cursor: pointer;
-      transition: 0.2s;
-      font-size: 0.85rem;
-    }
-    .logout-btn:hover {
-      background: #E2E8F0;
-    }
-
-    /* products header + search */
-    .products-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      flex-wrap: wrap;
-      gap: 1rem;
-      margin: 2rem 0 1.5rem;
-    }
-    .search-box {
-      display: flex;
-      align-items: center;
-      background: white;
-      border: 1px solid #E2E8F0;
-      border-radius: 40px;
-      padding: 0.4rem 1rem;
-      width: 260px;
-    }
-    .search-box i {
-      color: #94A3B8;
-      margin-right: 8px;
-    }
-    .search-box input {
-      border: none;
-      background: transparent;
-      width: 100%;
-      outline: none;
-      font-size: 0.85rem;
-    }
-    .filter-buttons {
-      display: flex;
-      gap: 0.8rem;
-    }
-    .filter-buttons button {
-      background: white;
-      border: 1px solid #E2E8F0;
-      padding: 0.4rem 1rem;
-      border-radius: 30px;
-      font-size: 0.75rem;
-      font-weight: 500;
-      cursor: pointer;
-    }
-    .filter-buttons .active {
-      background: #1A1F36;
-      color: white;
-      border-color: #1A1F36;
-    }
-
-    /* product table */
-    .products-table-container {
-      background: white;
-      border-radius: 24px;
-      border: 1px solid #EDF2F7;
-      overflow-x: auto;
-      box-shadow: 0 1px 3px rgba(0,0,0,0.03);
-    }
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      font-size: 0.85rem;
-    }
-    th {
-      text-align: left;
-      padding: 1rem 1rem;
-      background: #F8FAFE;
-      font-weight: 600;
-      color: #334155;
-      border-bottom: 1px solid #EDF2F7;
-    }
-    td {
-      padding: 1rem 1rem;
-      border-bottom: 1px solid #F0F4F9;
-      vertical-align: middle;
-    }
-    .product-thumb {
-      width: 48px;
-      height: 48px;
-      object-fit: cover;
-      border-radius: 12px;
-      background: #F1F5F9;
-    }
-    .product-name-cell {
-      font-weight: 600;
-    }
-    .status-badge {
-      display: inline-block;
-      background: #E6F7EC;
-      color: #2E7D32;
-      font-size: 0.7rem;
-      padding: 0.2rem 0.6rem;
-      border-radius: 40px;
-      font-weight: 500;
-    }
-    .status-hidden {
-      background: #FFECEE;
-      color: #C62828;
-    }
-    .action-icons button {
-      background: none;
-      border: none;
-      cursor: pointer;
-      font-size: 1rem;
-      margin: 0 4px;
-      color: #64748B;
-      transition: 0.2s;
-    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: 'Inter', sans-serif; background: #F5F7FB; color: #1A1F36; padding: 2rem; }
+    .login-container { max-width: 420px; margin: 6rem auto; }
+    .login-card { background: white; border-radius: 28px; padding: 2rem; box-shadow: 0 8px 20px rgba(0,0,0,0.05); border: 1px solid #E6EDF4; }
+    .login-card h2 { font-size: 1.6rem; margin-bottom: 1.5rem; color: #1A1F36; }
+    .login-card input { width: 100%; padding: 0.9rem; border: 1px solid #DFE6EF; border-radius: 14px; margin-bottom: 1rem; }
+    .login-card button { background: #1A1F36; color: white; border: none; border-radius: 14px; padding: 0.9rem; width: 100%; cursor: pointer; }
+    .error-msg { color: #E5484D; font-size: 0.8rem; text-align: center; margin-top: 1rem; }
+    .admin-panel { display: none; max-width: 1400px; margin: 0 auto; }
+    .admin-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem; flex-wrap: wrap; gap: 1rem; }
+    .admin-header h1 { font-size: 1.8rem; font-weight: 700; }
+    .logout-btn { background: #F0F2F5; border: none; padding: 0.6rem 1.2rem; border-radius: 40px; cursor: pointer; }
+    .products-header { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem; margin: 2rem 0 1.5rem; }
+    .search-box { display: flex; align-items: center; background: white; border: 1px solid #E2E8F0; border-radius: 40px; padding: 0.4rem 1rem; width: 260px; }
+    .search-box i { color: #94A3B8; margin-right: 8px; }
+    .search-box input { border: none; background: transparent; width: 100%; outline: none; }
+    .filter-buttons { display: flex; gap: 0.8rem; }
+    .filter-buttons button { background: white; border: 1px solid #E2E8F0; padding: 0.4rem 1rem; border-radius: 30px; cursor: pointer; }
+    .filter-buttons .active { background: #1A1F36; color: white; border-color: #1A1F36; }
+    .products-table-container { background: white; border-radius: 24px; border: 1px solid #EDF2F7; overflow-x: auto; }
+    table { width: 100%; border-collapse: collapse; font-size: 0.85rem; }
+    th { text-align: left; padding: 1rem; background: #F8FAFE; font-weight: 600; border-bottom: 1px solid #EDF2F7; }
+    td { padding: 1rem; border-bottom: 1px solid #F0F4F9; vertical-align: middle; }
+    .product-thumb { width: 48px; height: 48px; object-fit: cover; border-radius: 12px; }
+    .status-badge { display: inline-block; background: #E6F7EC; color: #2E7D32; padding: 0.2rem 0.6rem; border-radius: 40px; font-size: 0.7rem; }
+    .status-hidden { background: #FFECEE; color: #C62828; }
+    .action-icons button { background: none; border: none; cursor: pointer; margin: 0 4px; color: #64748B; }
     .action-icons .edit-btn:hover { color: #3B82F6; }
     .action-icons .delete-btn:hover { color: #E5484D; }
-
-    /* pagination */
-    .pagination {
-      display: flex;
-      justify-content: flex-end;
-      align-items: center;
-      gap: 1rem;
-      margin-top: 1.5rem;
-      font-size: 0.8rem;
-    }
-    .pagination button {
-      background: white;
-      border: 1px solid #E2E8F0;
-      padding: 0.3rem 0.8rem;
-      border-radius: 30px;
-      cursor: pointer;
-    }
-
-    /* add product section (card) */
-    .add-product-card {
-      background: white;
-      border-radius: 28px;
-      border: 1px solid #EDF2F7;
-      padding: 1.8rem;
-      margin: 2rem 0;
-    }
-    .add-product-card h2 {
-      font-size: 1.3rem;
-      margin-bottom: 1.5rem;
-      font-weight: 600;
-    }
-    .form-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-      gap: 1.5rem;
-    }
-    .field-group label {
-      font-weight: 600;
-      font-size: 0.8rem;
-      display: block;
-      margin-bottom: 0.4rem;
-      color: #334155;
-    }
-    .field-group input, .field-group select, .field-group textarea {
-      width: 100%;
-      padding: 0.7rem 1rem;
-      border: 1px solid #E2E8F0;
-      border-radius: 16px;
-      font-family: inherit;
-      font-size: 0.85rem;
-    }
-    .media-upload {
-      border: 1px dashed #CBD5E1;
-      border-radius: 20px;
-      padding: 1rem;
-      text-align: center;
-      background: #F8FAFE;
-      cursor: pointer;
-      margin-top: 0.5rem;
-    }
-    .image-previews {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 0.8rem;
-      margin-top: 0.8rem;
-    }
-    .preview-item {
-      position: relative;
-      width: 80px;
-      height: 80px;
-      border-radius: 12px;
-      overflow: hidden;
-      border: 1px solid #E2E8F0;
-    }
+    .pagination { display: flex; justify-content: flex-end; align-items: center; gap: 1rem; margin-top: 1.5rem; }
+    .add-product-card { background: white; border-radius: 28px; border: 1px solid #EDF2F7; padding: 1.8rem; margin: 2rem 0; }
+    .form-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.5rem; }
+    .field-group label { font-weight: 600; font-size: 0.8rem; display: block; margin-bottom: 0.4rem; }
+    .field-group input, .field-group select, .field-group textarea { width: 100%; padding: 0.7rem 1rem; border: 1px solid #E2E8F0; border-radius: 16px; font-family: inherit; }
+    .media-upload { border: 1px dashed #CBD5E1; border-radius: 20px; padding: 1rem; text-align: center; background: #F8FAFE; cursor: pointer; margin-top: 0.5rem; }
+    .image-previews { display: flex; flex-wrap: wrap; gap: 0.8rem; margin-top: 0.8rem; }
+    .preview-item { position: relative; width: 80px; height: 80px; border-radius: 12px; overflow: hidden; border: 1px solid #E2E8F0; background: white; }
     .preview-item img { width: 100%; height: 100%; object-fit: cover; }
-    .preview-item .remove-img {
-      position: absolute;
-      top: 2px;
-      right: 2px;
-      background: rgba(0,0,0,0.6);
-      color: white;
-      border: none;
-      border-radius: 50%;
-      width: 18px;
-      height: 18px;
-      font-size: 10px;
-      cursor: pointer;
-    }
-    .price-row {
-      display: flex;
-      gap: 1rem;
-    }
-    .price-row .field-group {
-      flex: 1;
-    }
-    .submit-btn {
-      background: #1A1F36;
-      color: white;
-      border: none;
-      border-radius: 40px;
-      padding: 0.8rem 1.8rem;
-      font-weight: 600;
-      cursor: pointer;
-      margin-top: 1.5rem;
-      width: auto;
-    }
-
-    /* edit modal (inline drawer) */
-    .edit-drawer {
-      display: none;
-      position: fixed;
-      top: 0;
-      right: 0;
-      width: 100%;
-      max-width: 500px;
-      height: 100%;
-      background: white;
-      box-shadow: -4px 0 20px rgba(0,0,0,0.1);
-      z-index: 1000;
-      padding: 2rem;
-      overflow-y: auto;
-    }
-    .edit-drawer.open {
-      display: block;
-    }
-    .edit-drawer h3 {
-      font-size: 1.3rem;
-      margin-bottom: 1.5rem;
-    }
-    .edit-drawer .close-edit {
-      background: none;
-      border: none;
-      font-size: 1.4rem;
-      float: right;
-      cursor: pointer;
-    }
-    .edit-drawer .field-group {
-      margin-bottom: 1rem;
-    }
-    .edit-drawer button {
-      background: #1A1F36;
-      color: white;
-      padding: 0.6rem;
-      border-radius: 40px;
-      width: 100%;
-      margin-top: 1rem;
-    }
-
-    @media (max-width: 700px) {
-      body { padding: 1rem; }
-      .products-header { flex-direction: column; align-items: stretch; }
-      .search-box { width: 100%; }
-    }
+    .preview-item .remove-img { position: absolute; top: 2px; right: 2px; background: rgba(0,0,0,0.6); color: white; border: none; border-radius: 50%; width: 18px; height: 18px; font-size: 10px; cursor: pointer; }
+    .submit-btn { background: #1A1F36; color: white; border: none; border-radius: 40px; padding: 0.8rem 1.8rem; font-weight: 600; cursor: pointer; margin-top: 1.5rem; width: auto; }
+    .edit-drawer { display: none; position: fixed; top: 0; right: 0; width: 100%; max-width: 500px; height: 100%; background: white; box-shadow: -4px 0 20px rgba(0,0,0,0.1); z-index: 1000; padding: 2rem; overflow-y: auto; }
+    .edit-drawer.open { display: block; }
+    .edit-drawer .close-edit { float: right; background: none; border: none; font-size: 1.4rem; cursor: pointer; }
+    @media (max-width: 700px) { body { padding: 1rem; } .products-header { flex-direction: column; align-items: stretch; } .search-box { width: 100%; } }
   </style>
 </head>
 <body>
@@ -378,103 +67,39 @@
 <div class="admin-panel" id="adminPanel">
   <div class="admin-header">
     <h1><i class="fas fa-gem"></i> Products</h1>
-    <button class="logout-btn" id="logoutBtn"><i class="fas fa-sign-out-alt"></i> Logout</button>
+    <button class="logout-btn" id="logoutBtn">Logout</button>
   </div>
 
-  <!-- search + filters -->
   <div class="products-header">
-    <div class="search-box">
-      <i class="fas fa-search"></i>
-      <input type="text" id="searchInput" placeholder="Search products...">
-    </div>
-    <div class="filter-buttons">
-      <button data-filter="all" class="active">All products</button>
-      <button data-filter="published">Published</button>
-      <button data-filter="hidden">Hidden</button>
-    </div>
+    <div class="search-box"><i class="fas fa-search"></i><input type="text" id="searchInput" placeholder="Search products..."></div>
+    <div class="filter-buttons"><button data-filter="all" class="active">All products</button><button data-filter="published">Published</button><button data-filter="hidden">Hidden</button></div>
   </div>
 
-  <!-- product table -->
   <div class="products-table-container">
-    <table>
-      <thead>
-        <tr><th>Product</th><th>Status</th><th>Price</th><th>Inventory</th><th></th></tr>
-      </thead>
-      <tbody id="productsTableBody">
-        <tr><td colspan="5">Loading...</td></tr>
-      </tbody>
-    </table>
+    <table><thead><tr><th>Product</th><th>Status</th><th>Price</th><th>Inventory</th><th></th></tr></thead><tbody id="productsTableBody"><tr><td colspan="5">Loading...</td></tr></tbody></table>
   </div>
   <div class="pagination" id="pagination"></div>
 
-  <!-- add product card -->
   <div class="add-product-card">
     <h2><i class="fas fa-plus-circle"></i> Add Product</h2>
     <form id="addProductForm">
       <div class="form-grid">
-        <div class="field-group">
-          <label>Title *</label>
-          <input type="text" id="productName" placeholder="Enter title" required>
-        </div>
-        <div class="field-group">
-          <label>Category *</label>
-          <select id="productCategory" required>
-            <option value="oreille">Oreille</option>
-            <option value="nez">Nez</option>
-            <option value="nombril">Nombril</option>
-            <option value="micro-dermal">Micro dermal</option>
-          </select>
-        </div>
-        <div class="field-group">
-          <label>Subcategory</label>
-          <select id="productSubcategory"><option value="">None</option></select>
-        </div>
+        <div class="field-group"><label>Title *</label><input type="text" id="productName" required></div>
+        <div class="field-group"><label>Category *</label><select id="productCategory" required><option value="oreille">Oreille</option><option value="nez">Nez</option><option value="nombril">Nombril</option><option value="micro-dermal">Micro dermal</option></select></div>
+        <div class="field-group"><label>Subcategory</label><select id="productSubcategory"><option value="">None</option></select></div>
       </div>
-      <div class="field-group">
-        <label>Description</label>
-        <textarea id="productDesc" rows="2" placeholder="Product description"></textarea>
-      </div>
-      <div class="field-group">
-        <label>Media (max 4 images)</label>
-        <div class="media-upload" id="mediaUploadTrigger">
-          <i class="fas fa-cloud-upload-alt"></i> Choose a file or drag & drop<br>
-          <small>JPG, PNG, GIF, WEBP up to 5MB</small>
-          <input type="file" id="productImages" multiple accept="image/jpeg,image/png,image/gif,image/webp,image/avif" style="display:none">
-        </div>
-        <div id="addImagePreviews" class="image-previews"></div>
-      </div>
-      <div class="price-row">
-        <div class="field-group">
-          <label>Price (MAD) *</label>
-          <input type="number" step="0.01" id="productPrice" placeholder="0.00" required>
-        </div>
-        <div class="field-group">
-          <label>Sale Price (optional)</label>
-          <input type="number" step="0.01" id="productSalePrice" placeholder="0.00">
-        </div>
-      </div>
-      <button type="submit" class="submit-btn"><i class="fas fa-save"></i> Add product</button>
+      <div class="field-group"><label>Description</label><textarea id="productDesc" rows="2"></textarea></div>
+      <div class="field-group"><label>Media (max 4 images)</label><div class="media-upload" id="mediaUploadTrigger"><i class="fas fa-cloud-upload-alt"></i> Choose a file or drag & drop<br><small>JPG, PNG, GIF, WEBP up to 5MB</small><input type="file" id="productImages" multiple accept="image/jpeg,image/png,image/gif,image/webp,image/avif" style="display:none"></div><div id="addImagePreviews" class="image-previews"></div></div>
+      <div class="price-row" style="display:flex; gap:1rem;"><div class="field-group" style="flex:1"><label>Price (MAD) *</label><input type="number" step="0.01" id="productPrice" required></div><div class="field-group" style="flex:1"><label>Sale Price (optional)</label><input type="number" step="0.01" id="productSalePrice"></div></div>
+      <button type="submit" class="submit-btn">Add product</button>
     </form>
     <div id="addMessage"></div>
   </div>
 </div>
 
-<!-- edit drawer (inline) -->
-<div id="editDrawer" class="edit-drawer">
-  <button class="close-edit" id="closeEditDrawer">&times;</button>
-  <h3>Edit product</h3>
-  <input type="hidden" id="editId">
-  <div class="field-group"><label>Title</label><input id="editName"></div>
-  <div class="field-group"><label>Description</label><textarea id="editDescription" rows="2"></textarea></div>
-  <div class="field-group"><label>Price (MAD)</label><input type="number" step="0.01" id="editPrice"></div>
-  <div class="field-group"><label>Category</label><select id="editCategory"><option value="oreille">Oreille</option><option value="nez">Nez</option><option value="nombril">Nombril</option><option value="micro-dermal">Micro dermal</option></select></div>
-  <div class="field-group"><label>Subcategory</label><select id="editSubCategory"><option value="">None</option></select></div>
-  <div class="field-group"><label>Images</label><div id="editImagePreview" class="image-previews"></div><input type="file" id="editNewImages" multiple accept="image/*"></div>
-  <button id="saveEditBtn">Save changes</button>
-</div>
+<div id="editDrawer" class="edit-drawer"><button class="close-edit" id="closeEditDrawer">&times;</button><h3>Edit product</h3><input type="hidden" id="editId"><div class="field-group"><label>Title</label><input id="editName"></div><div class="field-group"><label>Description</label><textarea id="editDescription" rows="2"></textarea></div><div class="field-group"><label>Price (MAD)</label><input type="number" step="0.01" id="editPrice"></div><div class="field-group"><label>Category</label><select id="editCategory"><option value="oreille">Oreille</option><option value="nez">Nez</option><option value="nombril">Nombril</option><option value="micro-dermal">Micro dermal</option></select></div><div class="field-group"><label>Subcategory</label><select id="editSubCategory"><option value="">None</option></select></div><div class="field-group"><label>Images</label><div id="editImagePreview" class="image-previews"></div><input type="file" id="editNewImages" multiple accept="image/*"></div><button id="saveEditBtn">Save changes</button></div>
 
 <script>
-  // ---------- GLOBALS ----------
   let adminToken = localStorage.getItem('adminToken') || '';
   let allProducts = [];
   let currentFilter = 'all';
@@ -482,42 +107,30 @@
   let currentPage = 1;
   const itemsPerPage = 10;
 
-  // for add form images
   let selectedFiles = [];
-
-  // for edit: existing image urls + new files
   let editExistingImages = [];
   let editNewFiles = [];
 
-  // subcategory mapping
-  const subMap = {
-    oreille: ['lobe','helix','flat helix','tragus','conch','daith','rook/snug','industrial','anti-tragus'],
-    nez: ['nostril','septum','bridge','high nostril'],
-    nombril: [],
-    'micro-dermal': []
-  };
+  const subMap = { oreille: ['lobe','helix','flat helix','tragus','conch','daith','rook/snug','industrial','anti-tragus'], nez: ['nostril','septum','bridge','high nostril'], nombril: [], 'micro-dermal': [] };
   function updateSubCategorySelect(selectId, mainCat) {
     const select = document.getElementById(selectId);
     select.innerHTML = '<option value="">None</option>';
-    (subMap[mainCat] || []).forEach(sub => {
-      const opt = document.createElement('option');
-      opt.value = sub;
-      opt.textContent = sub.charAt(0).toUpperCase()+sub.slice(1);
-      select.appendChild(opt);
-    });
+    (subMap[mainCat] || []).forEach(sub => { const opt = document.createElement('option'); opt.value = sub; opt.textContent = sub.charAt(0).toUpperCase()+sub.slice(1); select.appendChild(opt); });
   }
 
-  // API helper (with JWT, auto adds Authorization)
+  // FIXED API CALL: For FormData, DO NOT set Content-Type header
   async function apiCall(url, options = {}) {
     const headers = { ...options.headers };
-    if (!(options.body instanceof FormData)) headers['Content-Type'] = 'application/json';
+    // Only set Content-Type for JSON, not for FormData
+    if (!(options.body instanceof FormData)) {
+      headers['Content-Type'] = 'application/json';
+    }
     if (adminToken) headers['Authorization'] = `Bearer ${adminToken}`;
     const res = await fetch(url, { ...options, headers });
     if (res.status === 401 && !url.includes('/login')) { logout(); throw new Error('Session expired'); }
     return res;
   }
 
-  // load products from server
   async function loadProducts() {
     try {
       const res = await apiCall('/api/products');
@@ -527,54 +140,36 @@
   }
 
   function renderTable() {
-    let filtered = [...allProducts];
-    if (searchTerm) {
-      filtered = filtered.filter(p => p.name.toLowerCase().includes(searchTerm.toLowerCase()));
-    }
+    let filtered = allProducts.filter(p => p.name?.toLowerCase().includes(searchTerm.toLowerCase()));
     if (currentFilter === 'published') filtered = filtered.filter(p => p.status !== 'hidden');
     else if (currentFilter === 'hidden') filtered = filtered.filter(p => p.status === 'hidden');
-    // add status field for products (default 'published')
     filtered = filtered.map(p => ({ ...p, status: p.status || 'published' }));
     const totalPages = Math.ceil(filtered.length / itemsPerPage);
-    const start = (currentPage-1)*itemsPerPage;
-    const paginated = filtered.slice(start, start+itemsPerPage);
+    const paginated = filtered.slice((currentPage-1)*itemsPerPage, currentPage*itemsPerPage);
     const tbody = document.getElementById('productsTableBody');
-    if (!paginated.length) {
-      tbody.innerHTML = '<tr><td colspan="5">No products found</td></tr>';
-    } else {
+    if (!paginated.length) tbody.innerHTML = '<tr><td colspan="5">No products</td></tr>';
+    else {
       tbody.innerHTML = paginated.map(p => `
         <tr>
-          <td style="display: flex; align-items: center; gap: 12px;">
-            <img class="product-thumb" src="${p.images?.[0] || ''}" onerror="this.src='https://placehold.co/48x48?text=No+Image'">
-            <div class="product-name-cell">${escapeHtml(p.name)}</div>
-          </td>
+          <td style="display: flex; align-items: center; gap: 12px;"><img class="product-thumb" src="${p.images?.[0] || ''}" onerror="this.src='https://placehold.co/48x48'"><div>${escapeHtml(p.name)}</div></td>
           <td><span class="status-badge ${p.status === 'hidden' ? 'status-hidden' : ''}">${p.status === 'hidden' ? 'Hidden' : 'Published'}</span></td>
           <td>${(p.price/100).toFixed(2)} MAD</td>
           <td>In stock</td>
-          <td class="action-icons">
-            <button class="edit-btn" data-id="${p.id}"><i class="fas fa-edit"></i></button>
-            <button class="delete-btn" data-id="${p.id}"><i class="fas fa-trash-alt"></i></button>
-          </td>
+          <td class="action-icons"><button class="edit-btn" data-id="${p.id}"><i class="fas fa-edit"></i></button><button class="delete-btn" data-id="${p.id}"><i class="fas fa-trash-alt"></i></button></td>
         </tr>
       `).join('');
     }
-    // pagination controls
-    const pagDiv = document.getElementById('pagination');
-    pagDiv.innerHTML = `<span>Page ${currentPage} of ${totalPages || 1}</span>
-      <div><button ${currentPage===1?'disabled':''} id="prevPage"><i class="fas fa-chevron-left"></i> Prev</button>
-      <button ${currentPage===totalPages||totalPages===0?'disabled':''} id="nextPage">Next <i class="fas fa-chevron-right"></i></button></div>`;
+    document.getElementById('pagination').innerHTML = `<span>Page ${currentPage} of ${totalPages||1}</span><div><button ${currentPage===1?'disabled':''} id="prevPage">Prev</button><button ${currentPage===totalPages||totalPages===0?'disabled':''} id="nextPage">Next</button></div>`;
     document.getElementById('prevPage')?.addEventListener('click', () => { if(currentPage>1){currentPage--; renderTable();} });
     document.getElementById('nextPage')?.addEventListener('click', () => { if(currentPage<totalPages){currentPage++; renderTable();} });
     attachTableEvents();
   }
-
   function attachTableEvents() {
     document.querySelectorAll('.edit-btn').forEach(btn => btn.addEventListener('click', () => openEditDrawer(btn.dataset.id)));
     document.querySelectorAll('.delete-btn').forEach(btn => btn.addEventListener('click', () => deleteProduct(btn.dataset.id)));
   }
-
   async function deleteProduct(id) {
-    if (!confirm('Delete this product permanently?')) return;
+    if (!confirm('Delete permanently?')) return;
     try {
       const res = await apiCall(`/api/products/${id}`, { method: 'DELETE', body: JSON.stringify({}) });
       if (res.ok) { showMessage('addMessage', 'Deleted', 'success'); loadProducts(); }
@@ -582,7 +177,7 @@
     } catch(e) { showMessage('addMessage', 'Error', 'error'); }
   }
 
-  // edit drawer
+  // EDIT DRAWER
   function openEditDrawer(id) {
     const product = allProducts.find(p => p.id === id);
     if (!product) return;
@@ -594,11 +189,10 @@
     document.getElementById('editPrice').value = (product.price/100).toFixed(2);
     document.getElementById('editCategory').value = product.mainCategory;
     updateSubCategorySelect('editSubCategory', product.mainCategory);
-    setTimeout(() => { document.getElementById('editSubCategory').value = product.subCategory || ''; }, 20);
+    setTimeout(() => document.getElementById('editSubCategory').value = product.subCategory || '', 20);
     renderEditImagePreviews();
     document.getElementById('editDrawer').classList.add('open');
   }
-
   function renderEditImagePreviews() {
     const container = document.getElementById('editImagePreview');
     container.innerHTML = '';
@@ -621,8 +215,7 @@
   }
   document.getElementById('editNewImages').addEventListener('change', (e) => {
     const files = Array.from(e.target.files);
-    const total = editExistingImages.length + editNewFiles.length + files.length;
-    if (total > 4) { alert('Max 4 images'); e.target.value = ''; return; }
+    if (editExistingImages.length + editNewFiles.length + files.length > 4) { alert('Max 4 images'); e.target.value = ''; return; }
     editNewFiles.push(...files);
     renderEditImagePreviews();
     e.target.value = '';
@@ -640,7 +233,7 @@
       const formData = new FormData();
       editNewFiles.forEach(f => formData.append('productImages', f));
       const uploadRes = await apiCall('/api/upload-multiple', { method: 'POST', body: formData });
-      if (!uploadRes.ok) { showMessage('addMessage', 'Upload failed', 'error'); return; }
+      if (!uploadRes.ok) { showMessage('addMessage', 'Image upload failed', 'error'); return; }
       const { imageUrls } = await uploadRes.json();
       newImageUrls = imageUrls;
     }
@@ -654,7 +247,7 @@
   document.getElementById('closeEditDrawer').onclick = () => document.getElementById('editDrawer').classList.remove('open');
   document.getElementById('editCategory').addEventListener('change', () => updateSubCategorySelect('editSubCategory', document.getElementById('editCategory').value));
 
-  // ADD product logic
+  // ADD PRODUCT (with upload)
   document.getElementById('mediaUploadTrigger').addEventListener('click', () => document.getElementById('productImages').click());
   document.getElementById('productImages').addEventListener('change', (e) => {
     const files = Array.from(e.target.files);
@@ -680,6 +273,7 @@
     const mainCategory = document.getElementById('productCategory').value;
     const subCategory = document.getElementById('productSubcategory').value;
     if (!name || isNaN(price) || !mainCategory || selectedFiles.length===0) { showMessage('addMessage','Fill all fields and at least one image','error'); return; }
+    // Upload images
     const formData = new FormData();
     selectedFiles.forEach(f => formData.append('productImages', f));
     const uploadRes = await apiCall('/api/upload-multiple', { method: 'POST', body: formData });
@@ -693,12 +287,11 @@
       selectedFiles = [];
       document.getElementById('addImagePreviews').innerHTML = '';
       loadProducts();
-    } else { showMessage('addMessage','Error','error'); }
+    } else { showMessage('addMessage','Error adding product','error'); }
   });
   document.getElementById('productCategory').addEventListener('change', () => updateSubCategorySelect('productSubcategory', document.getElementById('productCategory').value));
   updateSubCategorySelect('productSubcategory', 'oreille');
 
-  // filter & search events
   document.getElementById('searchInput').addEventListener('input', (e) => { searchTerm = e.target.value; currentPage=1; renderTable(); });
   document.querySelectorAll('.filter-buttons button').forEach(btn => {
     btn.addEventListener('click', () => {
@@ -712,12 +305,11 @@
 
   function showMessage(elId, text, type) {
     const div = document.getElementById(elId);
-    div.innerHTML = `<div class="message ${type}" style="padding:0.5rem; border-radius:20px; margin-top:1rem; background:${type==='success'?'#E6F7EC':'#FFECEE'}">${text}</div>`;
+    div.innerHTML = `<div style="padding:0.5rem; border-radius:20px; margin-top:1rem; background:${type==='success'?'#E6F7EC':'#FFECEE'}">${text}</div>`;
     setTimeout(() => div.innerHTML = '', 3000);
   }
   function escapeHtml(str) { if(!str) return ''; return str.replace(/[&<>]/g, m=> m==='&'?'&amp;':(m==='<'?'&lt;':'&gt;')); }
 
-  // login / logout
   async function attemptLogin() {
     const pwd = document.getElementById('loginPassword').value;
     try {
@@ -732,7 +324,7 @@
       } else document.getElementById('loginError').innerText = 'Invalid password';
     } catch(e) { document.getElementById('loginError').innerText = 'Server error'; }
   }
-  function logout() { adminToken = ''; localStorage.removeItem('adminToken'); document.getElementById('loginContainer').style.display = 'block'; document.getElementById('adminPanel').style.display = 'none'; document.getElementById('loginPassword').value = ''; }
+  function logout() { adminToken = ''; localStorage.removeItem('adminToken'); document.getElementById('loginContainer').style.display = 'block'; document.getElementById('adminPanel').style.display = 'none'; }
   document.getElementById('loginBtn').addEventListener('click', attemptLogin);
   document.getElementById('loginPassword').addEventListener('keypress', (e) => { if(e.key==='Enter') attemptLogin(); });
   document.getElementById('logoutBtn').addEventListener('click', logout);
