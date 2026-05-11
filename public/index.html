@@ -577,7 +577,7 @@
   document.getElementById('drawerOverlay').addEventListener('click', closeDrawer);
   document.getElementById('langToggle').addEventListener('click', () => setLanguage(currentLang === 'en' ? 'fr' : 'en'));
   document.getElementById('bookAppointmentBtn').addEventListener('click', () => window.open('https://wa.me/212781570083?text=Hello%2C%20I%20would%20like%20to%20book%20a%20piercing%20appointment.', '_blank'));
-  document.getElementById('locationBtn').addEventListener('click', () => window.open('https://maps.google.com/?q=Marrakech+Mhamid+3+derrière+la+clinique+de+l’aéroport', '_blank'));
+  document.getElementById('locationBtn').addEventListener('click', () => window.open('https://maps.app.goo.gl/Y2torVt1XQcVSWeM7', '_blank'));
   document.getElementById('searchInput').addEventListener('input', (e) => { const term = e.target.value.toLowerCase(); if(term === '') renderFullLayout(allProducts); else { const filtered = allProducts.filter(p => p.name.toLowerCase().includes(term)); renderFullLayout(filtered); } });
   renderCircleSlider(); renderDrawer(); fetchProducts(); updateCartBadge(); setLanguage(currentLang);
 </script>
