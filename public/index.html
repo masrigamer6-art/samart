@@ -18,11 +18,11 @@
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
     body { font-family: 'Inter', sans-serif; background: #FFFFFF; color: #1E1B18; line-height: 1.4; scroll-behavior: smooth; }
-    /* header & navbar */
+
+    /* header & navbar (unchanged) */
     .header { position: sticky; top: 0; z-index: 100; background: rgba(255,255,255,0.92); backdrop-filter: blur(8px); border-bottom: 1px solid #E8D8C8; }
     .nav-container { max-width: 1280px; margin: 0 auto; padding: 0.8rem 1rem; display: flex; justify-content: space-between; align-items: center; gap: 1rem; }
     .hamburger { background: none; border: none; font-size: 1.6rem; cursor: pointer; color: #2C2C2C; width: 44px; height: 44px; display: flex; align-items: center; justify-content: center; border-radius: 50%; transition: background 0.2s; }
-    .hamburger:hover { background: rgba(232,216,200,0.3); }
     .logo { flex: 1; text-align: center; line-height: 1.2; }
     .logo-text { display: inline-block; font-family: 'Cormorant Garamond', serif; letter-spacing: 2px; }
     .logo-samar { font-size: 1.8rem; font-weight: 600; color: #2C2C2C; text-shadow: 0 0 6px rgba(196,168,130,0.3); display: block; }
@@ -32,14 +32,16 @@
     .cart-count { background: #C4A882; color: #1E1B18; border-radius: 30px; padding: 0.15rem 0.5rem; font-size: 0.7rem; font-weight: bold; margin-left: 4px; }
     .lang-btn { background: none; border: 1px solid #E8D8C8; border-radius: 40px; padding: 0.4rem 0.9rem; font-size: 0.75rem; cursor: pointer; color: #2C2C2C; transition: 0.2s; font-weight: 500; min-width: 70px; }
     .lang-btn:hover { background: #F0E2D8; }
-    /* top info bar (address + appointment) */
+
+    /* top info bar */
     .top-info-bar { background: #FEFAF5; border-bottom: 1px solid #F0E2D8; padding: 0.6rem 1rem; display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: 1.2rem; font-size: 0.8rem; }
     .clickable-address { display: inline-flex; align-items: center; gap: 6px; background: #FFFFFF; padding: 0.3rem 1rem; border-radius: 40px; border: 1px solid #E8D8C8; text-decoration: none; color: #2C2C2C; transition: 0.2s; }
     .clickable-address i { color: #C4A882; }
     .clickable-address:hover { background: #F0E2D8; border-color: #C4A882; }
     .book-appointment-btn { background: #A88262; color: white; border: none; padding: 0.3rem 1rem; border-radius: 40px; font-weight: 500; cursor: pointer; transition: 0.2s; font-size: 0.8rem; display: inline-flex; align-items: center; gap: 6px; text-decoration: none; }
-    .book-appointment-btn i { font-size: 0.9rem; }
     .book-appointment-btn:hover { background: #C4A882; transform: translateY(-1px); }
+
+    /* hero, circles, products grid (mostly unchanged) */
     .hero-image { width: 100%; height: auto; max-height: 500px; overflow: hidden; background: #FAFAFA; }
     .hero-image img { width: 100%; height: auto; object-fit: cover; display: block; }
     .shop-by-section { max-width: 1280px; margin: 2rem auto 0; padding: 0 1rem; text-align: center; }
@@ -49,11 +51,11 @@
     .circle-slider::-webkit-scrollbar-track { background: #F0E2D8; border-radius: 10px; }
     .circle-slider::-webkit-scrollbar-thumb { background: #C4A882; border-radius: 10px; }
     .circle-item { flex-shrink: 0; display: flex; flex-direction: column; align-items: center; gap: 0.5rem; cursor: pointer; transition: transform 0.2s; }
-    .circle-item:hover { transform: translateY(-5px); }
     .circle-img { width: 85px; height: 85px; background: #FEFAF5; border-radius: 50%; display: flex; align-items: center; justify-content: center; border: 2px solid #E8D8C8; overflow: hidden; transition: all 0.2s; }
     .circle-img img { width: 100%; height: 100%; object-fit: cover; }
     .circle-item.active .circle-img { border-color: #C4A882; background: #FFF8F0; box-shadow: 0 0 0 3px rgba(196,168,130,0.3); transform: scale(1.02); }
     .circle-label { font-size: 0.75rem; font-weight: 500; color: #2C2C2C; text-align: center; }
+
     .section-title { text-align: center; font-size: 1.8rem; font-weight: 500; margin: 2.5rem 0 0.5rem; color: #C4A882; letter-spacing: 1px; }
     .section-sub { text-align: center; font-size: 0.9rem; color: #8B7A6C; margin-bottom: 2rem; min-height: 2rem; }
     .container { max-width: 1280px; margin: 0 auto; padding: 0 1rem; }
@@ -68,27 +70,164 @@
     .product-desc { font-size: 0.75rem; color: #7F6A5C; margin: 0.5rem 0; line-height: 1.4; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
     .price-row { display: flex; justify-content: space-between; align-items: center; margin-top: 0.5rem; flex-wrap: wrap; gap: 0.5rem; }
     .price { font-weight: 800; font-size: 1.1rem; color: #1E1B18; }
+
+    /* Quantity controls */
     .qty-ctrl { display: flex; align-items: center; gap: 6px; background: #FEFAF5; padding: 0.2rem 0.5rem; border-radius: 60px; border: 1px solid #E8D8C8; }
     .qty-ctrl button { background: white; border: none; width: 26px; height: 26px; border-radius: 50%; font-weight: bold; cursor: pointer; font-size: 1rem; color: #C4A882; transition: 0.1s; }
     .qty-ctrl span { min-width: 24px; text-align: center; font-weight: 600; font-size: 0.9rem; }
-    .add-to-cart { background: #2C2C2C; border: none; padding: 0.3rem 0.8rem; border-radius: 40px; color: #FFFFFF; font-weight: 600; cursor: pointer; font-size: 0.7rem; display: flex; align-items: center; gap: 4px; transition: 0.2s; }
-.add-to-cart i { color: #C4A882; font-size: 0.7rem; }
-.add-to-cart:hover { background: #C4A882; color: #2C2C2C; }
-    .add-to-cart:hover { background: #C4A882; color: #2C2C2C; }
-    /* modal improvements */
+
+    /* ========== NEW ADD TO CART BUTTON (UIVERSE STYLE) ========== */
+    .button {
+      --width: 110px;
+      --height: 38px;
+      --tooltip-height: 32px;
+      --tooltip-width: 100px;
+      --gap-between-tooltip-to-button: 12px;
+      --button-color: #222;
+      --tooltip-color: #fff;
+      width: var(--width);
+      height: var(--height);
+      background: var(--button-color);
+      position: relative;
+      text-align: center;
+      border-radius: 0.45em;
+      font-family: 'Inter', sans-serif;
+      transition: background 0.3s;
+      cursor: pointer;
+      border: none;
+      outline: none;
+      font-weight: 600;
+    }
+    .button::before {
+      position: absolute;
+      content: attr(data-tooltip);
+      width: var(--tooltip-width);
+      height: var(--tooltip-height);
+      background-color: #555;
+      font-size: 0.75rem;
+      color: #fff;
+      border-radius: .25em;
+      line-height: var(--tooltip-height);
+      bottom: calc(var(--height) + var(--gap-between-tooltip-to-button) + 10px);
+      left: calc(50% - var(--tooltip-width) / 2);
+      pointer-events: none;
+    }
+    .button::after {
+      position: absolute;
+      content: '';
+      width: 0;
+      height: 0;
+      border: 8px solid transparent;
+      border-top-color: #555;
+      left: calc(50% - 8px);
+      bottom: calc(100% + var(--gap-between-tooltip-to-button) - 10px);
+      pointer-events: none;
+    }
+    .button::after, .button::before {
+      opacity: 0;
+      visibility: hidden;
+      transition: all 0.4s ease;
+    }
+    .button .button-wrapper {
+      overflow: hidden;
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      left: 0;
+      top: 0;
+      border-radius: 0.45em;
+    }
+    .button .text {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      top: 0;
+      left: 0;
+      color: #fff;
+      font-weight: 500;
+      font-size: 0.8rem;
+      transition: top 0.4s ease;
+    }
+    .button .icon {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      top: 100%;
+      left: 0;
+      color: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: top 0.4s ease;
+    }
+    .button .icon i {
+      font-size: 1rem;
+      color: #C4A882;
+    }
+    .button:hover {
+      background: #222;
+    }
+    .button:hover .text {
+      top: -100%;
+    }
+    .button:hover .icon {
+      top: 0;
+    }
+    .button:hover::before,
+    .button:hover::after {
+      opacity: 1;
+      visibility: visible;
+    }
+    .button:hover::after {
+      bottom: calc(var(--height) + var(--gap-between-tooltip-to-button) - 20px);
+    }
+    .button:hover::before {
+      bottom: calc(var(--height) + var(--gap-between-tooltip-to-button));
+    }
+
+    /* Modal button also gets similar treatment but simpler for now (optional) */
+    .modal-add {
+      background: #222;
+      color: white;
+      border: none;
+      padding: 0.6rem 1rem;
+      border-radius: 0.45em;
+      font-weight: 600;
+      transition: background 0.3s;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+    .modal-add:hover {
+      background: #C4A882;
+      color: #1E1B18;
+    }
+
+    /* Modal rest unchanged */
     .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); z-index: 1000; align-items: center; justify-content: center; }
     .modal-content { max-width: 700px; width: 90%; background: white; border-radius: 28px; overflow: hidden; position: relative; max-height: 90vh; overflow-y: auto; }
     .modal-header { display: flex; justify-content: space-between; align-items: center; padding: 1rem; border-bottom: 1px solid #F0E2D8; position: sticky; top:0; background:white; z-index:5; }
     .close-modal { background: #F0E2D8; border: none; font-size: 1.5rem; cursor: pointer; color: #A88262; width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; }
-    .close-modal:hover { background: #E8D8C8; }
     .modal-body { padding: 1rem; }
+    .modal-images { display: flex; flex-direction: column; gap: 0.5rem; }
+    .main-image { width: 100%; background: #FEFAF5; border-radius: 16px; overflow: hidden; display: flex; justify-content: center; align-items: center; }
+    .main-image img { max-width: 100%; max-height: 400px; object-fit: contain; }
+    .thumbnails { display: flex; gap: 0.5rem; flex-wrap: wrap; justify-content: center; margin-top: 0.5rem; }
+    .thumb { width: 60px; height: 60px; border-radius: 12px; overflow: hidden; cursor: pointer; border: 2px solid transparent; transition: 0.2s; }
+    .thumb img { width: 100%; height: 100%; object-fit: cover; }
+    .thumb.active { border-color: #C4A882; }
+    .modal-details { margin-top: 1rem; }
     .info-container-bottom { background: #FFFFFF; border-top: 1px solid #F0E2D8; border-bottom: 1px solid #F0E2D8; padding: 1.5rem 1rem; margin: 0.5rem 0 0; }
     .info-flex { max-width: 1280px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1.5rem; }
     .social-links { display: flex; gap: 1.2rem; }
     .social-icon { display: flex; align-items: center; justify-content: center; width: 48px; height: 48px; background: #FEFAF5; border-radius: 50%; border: 1px solid #E8D8C8; color: #C4A882; font-size: 1.4rem; transition: all 0.2s; text-decoration: none; }
     .social-icon:hover { background: #C4A882; color: #FFFFFF; transform: translateY(-3px); }
     footer { text-align: center; padding: 1.5rem; font-size: 0.75rem; color: #8C7568; }
-    .drawer-overlay, .drawer { /* same as original, kept for brevity */ }
     .drawer-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.4); z-index: 200; visibility: hidden; opacity: 0; transition: 0.2s; }
     .drawer-overlay.open { visibility: visible; opacity: 1; }
     .drawer { position: fixed; top: 0; left: -280px; width: 280px; height: 100%; background: #FFFFFF; box-shadow: 4px 0 20px rgba(0,0,0,0.08); z-index: 201; transition: left 0.3s ease; display: flex; flex-direction: column; border-right: 1px solid #EAD5C8; }
@@ -100,32 +239,44 @@
     .subcats { padding-left: 1.5rem; display: none; background: #FEFAF5; }
     .subcats.show { display: block; }
     .subcat-item, .all-link { padding: 0.6rem 1rem; cursor: pointer; font-size: 0.85rem; }
-    .active-filter-badge { display: inline-block; background: #C4A882; color: white; font-size: 0.7rem; padding: 0.2rem 0.8rem; border-radius: 40px; margin-left: 10px; }
+
+    /* Mobile fixes with adjusted button width */
     @media (max-width: 600px) {
       .products-grid { grid-template-columns: repeat(2, 1fr); gap: 0.8rem; }
-      .product-img { height: 150px; }
+      .product-img { height: 120px; }
+      .product-title { font-size: 0.75rem; }
       .price-row { flex-direction: column; align-items: stretch; }
-      .qty-ctrl { justify-content: space-between; }
+      .qty-ctrl { justify-content: space-between; width: 100%; margin-bottom: 6px; }
+      .button { --width: 100%; width: 100%; }  /* full width on mobile */
       .top-info-bar { flex-direction: column; align-items: stretch; text-align: center; }
-      .close-modal { width: 36px; height: 36px; }
+      .main-image img { max-height: 200px; }
+      .thumb { width: 45px; height: 45px; }
+      .circle-img { width: 60px; height: 60px; }
+      .circle-label { font-size: 0.6rem; }
     }
   </style>
 </head>
 <body>
+
 <header class="header">
   <div class="nav-container">
     <button class="hamburger" id="hamburgerBtn" aria-label="Menu"><i class="fas fa-bars"></i></button>
     <div class="logo"><div class="logo-text"><span class="logo-samar">SAMAR</span><span class="logo-piercing">PIERCING</span></div></div>
-    <div style="display: flex; align-items: center; gap: 0.8rem;"><button id="langToggle" class="lang-btn" aria-label="Change language">🇫🇷 FR</button><a href="/cart" class="cart-icon" aria-label="Cart"><i class="fas fa-shopping-bag"></i> <span id="cartLabel">Cart</span> <span id="cartNavBadge" class="cart-count">0</span></a></div>
+    <div style="display: flex; align-items: center; gap: 0.8rem;">
+      <button id="langToggle" class="lang-btn" aria-label="Change language">🇫🇷 FR</button>
+      <a href="/cart" class="cart-icon" aria-label="Cart"><i class="fas fa-shopping-bag"></i> <span id="cartLabel">Cart</span> <span id="cartNavBadge" class="cart-count">0</span></a>
+    </div>
   </div>
 </header>
-<!-- Top info bar: clickable address + appointment button (higher position) -->
+
 <div class="top-info-bar">
   <a href="https://maps.google.com/?q=Marrakech+Mhamid+3+derrière+la+clinique+de+l’aéroport" target="_blank" rel="noopener noreferrer" class="clickable-address"><i class="fas fa-map-marker-alt"></i> <span>Marrakech, Mhamid 3, derrière clinique aéroport</span></a>
   <button id="bookAppointmentBtn" class="book-appointment-btn"><i class="fas fa-calendar-check"></i> Book Appointment</button>
 </div>
+
 <div class="hero-image"><img src="Neutral Minimalist Business Proposal Docs Banner.png" alt="Samar piercing elegant jewelry collection" loading="eager"></div>
 <div class="shop-by-section"><div class="shop-by-title" id="shopByTitle">Shop By Piercing</div><div class="circle-slider" id="circleSlider"></div></div>
+
 <div class="container" id="mainContent">
   <div id="fullLayout">
     <div class="section-title" id="newArrivalsTitle">✨ New Arrivals ✨</div>
@@ -135,39 +286,78 @@
   </div>
   <div id="filteredProductsGrid" style="display: none;"></div>
 </div>
+
 <div class="info-container-bottom"><div class="info-flex"><div class="social-links"><a href="https://wa.me/212781570083" target="_blank" class="social-icon" aria-label="WhatsApp"><i class="fab fa-whatsapp"></i></a><a href="https://www.instagram.com/piercing_bysamar" target="_blank" class="social-icon" aria-label="Instagram"><i class="fab fa-instagram"></i></a><a href="https://www.tiktok.com/@piercingbysmar" target="_blank" class="social-icon" aria-label="TikTok"><i class="fab fa-tiktok"></i></a><a href="https://www.snapchat.com/add/piercingbysamar" target="_blank" class="social-icon" aria-label="Snapchat"><i class="fab fa-snapchat-ghost"></i></a></div></div></div>
 <footer id="footer">© 2026 Samar Piercing — Order via WhatsApp</footer>
+
 <div class="drawer-overlay" id="drawerOverlay"></div>
 <div class="drawer" id="drawer"><div class="drawer-header"><h3 id="drawerTitle"><i class="fas fa-tags"></i> Categories</h3><button class="close-drawer" id="closeDrawerBtn" aria-label="Close"><i class="fas fa-times"></i></button></div><div class="categories-list" id="categoriesList"></div></div>
-<div id="productModal" class="modal"><div class="modal-content"><div class="modal-header"><h3>Product Details</h3><button class="close-modal" aria-label="Close">&times;</button></div><div class="modal-body"><div class="modal-images"><div class="main-image"><img id="modalMainImage" src="" alt=""></div><div class="thumbnails" id="modalThumbnails"></div></div><div class="modal-details"><div class="product-title" id="modalTitle"></div><div class="product-desc" id="modalDesc"></div><div class="modal-price" id="modalPrice"></div><div class="price-row" style="margin-top:1rem;"><div class="qty-ctrl" id="modalQtyCtrl"><button id="modalQtyMinus">-</button><span id="modalQtyVal">1</span><button id="modalQtyPlus">+</button></div><button id="modalAddToCart" class="modal-add" style="background:#C4A882; border:none; padding:0.6rem 1rem; border-radius:40px;"><i class="fas fa-plus-circle"></i> Add to Cart</button></div></div></div></div></div>
+
+<div id="productModal" class="modal"><div class="modal-content"><div class="modal-header"><h3>Product Details</h3><button class="close-modal" aria-label="Close">&times;</button></div><div class="modal-body"><div class="modal-images"><div class="main-image"><img id="modalMainImage" src="" alt=""></div><div class="thumbnails" id="modalThumbnails"></div></div><div class="modal-details"><div class="product-title" id="modalTitle"></div><div class="product-desc" id="modalDesc"></div><div class="modal-price" id="modalPrice"></div><div class="price-row" style="margin-top:1rem;"><div class="qty-ctrl" id="modalQtyCtrl"><button id="modalQtyMinus">-</button><span id="modalQtyVal">1</span><button id="modalQtyPlus">+</button></div><button id="modalAddToCart" class="modal-add"><i class="fas fa-plus-circle"></i> Add to Cart</button></div></div></div></div></div>
+
 <script>
-  // -------------------- TRANSLATIONS (corrected oreille) --------------------
+  // -------------------- TRANSLATIONS --------------------
   const translations = { en: { shopByTitle: "Shop By Piercing", newArrivalsTitle: "✨ New Arrivals ✨", newArrivalsSub: "Discover our latest additions", cartLabel: "Cart", footer: "© 2026 Samar Piercing — Order via WhatsApp", drawerTitle: "Categories", allProducts: "✨ All Products", addToCart: "Add", addedToCart: "added to cart", noNewArrivals: "✨ No new arrivals yet ✨", noProducts: "✨ No products available ✨", noFiltered: "✨ No products ✨", loadingError: "⚠️ Unable to load products", catOreille: "Ear ", catNez: "Nose", catNombril: "Belly", catMicroDermal: "Micro dermal" }, fr: { shopByTitle: "Acheter par piercing", newArrivalsTitle: "✨ Nouveautés ✨", newArrivalsSub: "Découvrez nos dernières pièces", cartLabel: "Panier", footer: "© 2026 Samar Piercing — Commande via WhatsApp", drawerTitle: "Catégories", allProducts: "✨ Tous les produits", addToCart: "Ajouter", addedToCart: "ajouté au panier", noNewArrivals: "✨ Aucune nouveauté pour le moment ✨", noProducts: "✨ Aucun produit disponible ✨", noFiltered: "✨ Aucun produit ✨", loadingError: "⚠️ Impossible de charger les produits", catOreille: "Oreille", catNez: "Nez", catNombril: "Nombril", catMicroDermal: "Micro dermal" } };
   let currentLang = localStorage.getItem('lang') || 'en';
   function setLanguage(lang) { currentLang = lang; localStorage.setItem('lang', lang); document.getElementById('shopByTitle').innerText = translations[lang].shopByTitle; document.getElementById('newArrivalsTitle').innerHTML = translations[lang].newArrivalsTitle; document.getElementById('newArrivalsSub').innerText = translations[lang].newArrivalsSub; document.getElementById('cartLabel').innerText = translations[lang].cartLabel; document.getElementById('footer').innerText = translations[lang].footer; document.getElementById('drawerTitle').innerHTML = `<i class="fas fa-tags"></i> ${translations[lang].drawerTitle}`; const toggleBtn = document.getElementById('langToggle'); toggleBtn.innerText = lang === 'en' ? '🇫🇷 FR' : '🇬🇧 EN'; renderDrawer(); if (allProducts.length) applyGlobalFilter(); else fetchProducts(); }
   function getAddToCartText() { return translations[currentLang].addToCart; }
-  // categories definition fix
+
   const categoriesDef = [ { main: "oreille", labelEn: "Ear ", labelFr: "Oreille", sub: ["lobe", "helix", "flat helix", "tragus", "conch", "daith", "rook/snug", "industrial", "anti-tragus"]}, { main: "nez", labelEn: "Nose", labelFr: "Nez", sub: ["nostril","septum","bridge","high nostril"] }, { main: "nombril", labelEn: "Belly", labelFr: "Nombril", sub: [] }, { main: "micro-dermal", labelEn: "Micro dermal", labelFr: "Micro dermal", sub: [] } ];
   const circleItems = [ { name: "Helix", mainCat: "oreille", subCat: "helix", imgUrl: "/images/helix.avif" }, { name: "Tragus", mainCat: "oreille", subCat: "tragus", imgUrl: "/images/tragus.avif" }, { name: "Conch", mainCat: "oreille", subCat: "conch", imgUrl: "/images/conch.avif" }, { name: "Daith", mainCat: "oreille", subCat: "daith", imgUrl: "/images/daith.avif" }, { name: "Rook", mainCat: "oreille", subCat: "rook/snug", imgUrl: "/images/rock.avif" }, { name: "Industrial", mainCat: "oreille", subCat: "industrial", imgUrl: "/images/indu.avif" }, { name: "Lobe", mainCat: "oreille", subCat: "lobe", imgUrl: "/images/lobe.avif" } ];
   let allProducts = [];
   let currentMain = "all", currentSub = "";
+
   function renderCircleSlider() { const container = document.getElementById('circleSlider'); if(!container) return; let html = ''; circleItems.forEach(item => { html += `<div class="circle-item" data-main="${item.mainCat}" data-sub="${item.subCat}"><div class="circle-img"><img src="${item.imgUrl}" alt="${item.name}" loading="lazy" onerror="this.src='https://via.placeholder.com/85?text=No+Img'"></div><div class="circle-label">${item.name}</div></div>`; }); container.innerHTML = html; document.querySelectorAll('.circle-item').forEach(el => { el.addEventListener('click', () => { currentMain = el.dataset.main; currentSub = el.dataset.sub; document.querySelectorAll('.circle-item').forEach(c=>c.classList.remove('active')); el.classList.add('active'); applyGlobalFilter(); }); }); }
   function renderDrawer() { const container = document.getElementById("categoriesList"); if(!container) return; let html = `<div class="all-link" data-main="all" data-sub="">${translations[currentLang].allProducts}</div>`; categoriesDef.forEach(cat => { const catLabel = currentLang === 'en' ? cat.labelEn : cat.labelFr; const hasSub = cat.sub.length > 0; html += `<div class="main-cat-item" data-main="${cat.main}"><div class="main-cat-title">${catLabel}${hasSub ? '<i class="fas fa-chevron-down"></i>' : ''}</div>${hasSub ? `<div class="subcats" data-parent="${cat.main}">${cat.sub.map(sub => `<div class="subcat-item" data-main="${cat.main}" data-sub="${sub}">${sub.charAt(0).toUpperCase()+sub.slice(1)}</div>`).join('')}</div>` : ''}</div>`; }); container.innerHTML = html;
     document.querySelectorAll('.all-link').forEach(el => { el.addEventListener('click', () => { currentMain="all"; currentSub=""; document.querySelectorAll('.circle-item').forEach(c=>c.classList.remove('active')); closeDrawer(); applyGlobalFilter(); }); });
     document.querySelectorAll('.main-cat-title').forEach(title => { title.addEventListener('click', (e) => { e.stopPropagation(); const parentDiv = title.closest('.main-cat-item'); const subDiv = parentDiv.querySelector('.subcats'); if(subDiv) { subDiv.classList.toggle('show'); const icon = title.querySelector('i'); if(icon) icon.classList.toggle('fa-chevron-up'); } else { currentMain = parentDiv.dataset.main; currentSub = ""; closeDrawer(); applyGlobalFilter(); } }); });
     document.querySelectorAll('.subcat-item').forEach(sub => { sub.addEventListener('click', (e) => { e.stopPropagation(); currentMain = sub.dataset.main; currentSub = sub.dataset.sub; closeDrawer(); applyGlobalFilter(); }); });
   }
+
   function applyGlobalFilter() { const isAll = (currentMain === "all" && currentSub === ""); const fullLayoutDiv = document.getElementById('fullLayout'); const filteredDiv = document.getElementById('filteredProductsGrid'); if(isAll) { fullLayoutDiv.style.display = 'block'; filteredDiv.style.display = 'none'; renderAllSections(allProducts); } else { fullLayoutDiv.style.display = 'none'; filteredDiv.style.display = 'block'; let filtered = allProducts.filter(p => p.mainCategory === currentMain); if(currentSub) filtered = filtered.filter(p => p.subCategory === currentSub); filteredDiv.innerHTML = `<div class="products-grid">${renderProductsHTML(filtered)}</div>`; attachCartEvents(); attachQuantityEvents(); } }
+
   function renderAllSections(productsArray) { const sorted = [...productsArray].sort((a,b)=> (Number(b.id)||0)-(Number(a.id)||0)); const newArrivals = sorted.slice(0,4); document.getElementById('newArrivalsGrid').innerHTML = newArrivals.length ? renderProductsHTML(newArrivals) : `<div style="grid-column:1/-1; text-align:center;">${translations[currentLang].noNewArrivals}</div>`; const categoryOrder = [ { key:"oreille", label: currentLang==='en'?"Ear ":"Oreille" }, { key:"nez", label: currentLang==='en'?"Nose":"Nez" }, { key:"nombril", label: currentLang==='en'?"Belly":"Nombril" }, { key:"micro-dermal", label: currentLang==='en'?"Micro dermal":"Micro dermal" } ]; let sectionsHtml=""; for(const cat of categoryOrder){ const catProducts = productsArray.filter(p=>p.mainCategory===cat.key); if(catProducts.length) sectionsHtml += `<div class="section-title">${cat.label}</div><div class="products-grid">${renderProductsHTML(catProducts)}</div>`; } document.getElementById('categorySections').innerHTML = sectionsHtml || `<div style="text-align:center; padding:2rem;">${translations[currentLang].noProducts}</div>`; attachCartEvents(); attachQuantityEvents(); }
-  function renderProductsHTML(productsArray) { if(!productsArray.length) return `<div style="grid-column:1/-1; text-align:center;">${translations[currentLang].noFiltered}</div>`; return productsArray.map(p => { const catDisplay = p.subCategory || p.mainCategory; return `<div class="product-card" data-product-id="${p.id}"><div class="product-img"><img src="${p.images && p.images[0] || ''}" alt="${escapeHtml(p.name)}" loading="lazy" onerror="this.src='https://via.placeholder.com/300x220?text=No+Image'"></div><div class="product-info"><div class="product-title">${escapeHtml(p.name)}<span class="subcat-tag">${escapeHtml(catDisplay)}</span></div><div class="product-desc">${escapeHtml(p.description || '')}</div><div class="price-row"><span class="price">${(p.price/100).toFixed(2)} MAD</span><div class="qty-ctrl" data-pid="${p.id}"><button class="qty-minus" data-id="${p.id}">-</button><span class="qty-num" data-id="${p.id}">1</span><button class="qty-plus" data-id="${p.id}">+</button></div><button class="add-to-cart-with-qty" data-id="${p.id}" data-name="${escapeHtml(p.name)}" data-price="${p.price}"><i class="fas fa-plus-circle"></i> ${translations[currentLang].addToCart}</button></div></div></div>`; }).join(''); }
+
+  // Updated renderProductsHTML using the new animated button
+  function renderProductsHTML(productsArray) {
+    if(!productsArray.length) return `<div style="grid-column:1/-1; text-align:center;">${translations[currentLang].noFiltered}</div>`;
+    return productsArray.map(p => {
+      const catDisplay = p.subCategory || p.mainCategory;
+      const buttonText = translations[currentLang].addToCart;
+      return `<div class="product-card" data-product-id="${p.id}">
+        <div class="product-img"><img src="${p.images && p.images[0] || ''}" alt="${escapeHtml(p.name)}" loading="lazy" onerror="this.src='https://via.placeholder.com/300x220?text=No+Image'"></div>
+        <div class="product-info">
+          <div class="product-title">${escapeHtml(p.name)}<span class="subcat-tag">${escapeHtml(catDisplay)}</span></div>
+          <div class="product-desc">${escapeHtml(p.description || '')}</div>
+          <div class="price-row">
+            <span class="price">${(p.price/100).toFixed(2)} MAD</span>
+            <div class="qty-ctrl" data-pid="${p.id}">
+              <button class="qty-minus" data-id="${p.id}">-</button>
+              <span class="qty-num" data-id="${p.id}">1</span>
+              <button class="qty-plus" data-id="${p.id}">+</button>
+            </div>
+            <button class="button add-to-cart-with-qty" data-id="${p.id}" data-name="${escapeHtml(p.name)}" data-price="${p.price}" data-tooltip="${buttonText}">
+              <div class="button-wrapper">
+                <div class="text">${buttonText}</div>
+                <div class="icon"><i class="fas fa-shopping-cart"></i></div>
+              </div>
+            </button>
+          </div>
+        </div>
+      </div>`;
+    }).join('');
+  }
+
   function attachQuantityEvents() { document.querySelectorAll('.qty-minus').forEach(btn => { btn.onclick = (e) => { e.stopPropagation(); const id = btn.dataset.id; const span = document.querySelector(`.qty-num[data-id="${id}"]`); if(span) { let val = parseInt(span.innerText) || 1; if(val>1) span.innerText = val-1; } }; }); document.querySelectorAll('.qty-plus').forEach(btn => { btn.onclick = (e) => { e.stopPropagation(); const id = btn.dataset.id; const span = document.querySelector(`.qty-num[data-id="${id}"]`); if(span) { let val = parseInt(span.innerText) || 1; span.innerText = val+1; } }; }); document.querySelectorAll('.add-to-cart-with-qty').forEach(btn => { btn.onclick = (e) => { e.stopPropagation(); const id = btn.dataset.id; const name = btn.dataset.name; const price = parseInt(btn.dataset.price); const qtySpan = document.querySelector(`.qty-num[data-id="${id}"]`); let quantity = qtySpan ? parseInt(qtySpan.innerText) : 1; addToCart({ id, name, price, quantity }); const resetSpan = document.querySelector(`.qty-num[data-id="${id}"]`); if(resetSpan) resetSpan.innerText = "1"; }; }); }
   function attachCartEvents() { attachQuantityEvents(); document.querySelectorAll('.product-card').forEach(card => { card.addEventListener('click', (e) => { if(e.target.closest('.add-to-cart-with-qty') || e.target.closest('.qty-ctrl')) return; const pid = card.dataset.productId; const product = allProducts.find(p => p.id === pid); if(product) openProductModal(product); }); }); }
+
   function addToCart(product) { let cart = JSON.parse(localStorage.getItem('piercingCart')) || []; const idx = cart.findIndex(i => i.id === product.id); if(idx !== -1) cart[idx].quantity += product.quantity; else cart.push({ id: product.id, name: product.name, price: product.price, quantity: product.quantity, image: product.image || (allProducts.find(p=>p.id===product.id)?.images?.[0]) }); localStorage.setItem('piercingCart', JSON.stringify(cart)); updateCartBadge(); showToast(`✨ ${product.name} ${translations[currentLang].addedToCart}`); }
   function updateCartBadge() { const cart = JSON.parse(localStorage.getItem('piercingCart')) || []; const total = cart.reduce((s,i)=>s+i.quantity,0); document.querySelectorAll('#cartNavBadge').forEach(b=>b.innerText=total); }
   function showToast(msg) { const toast = document.createElement('div'); toast.innerText = msg; toast.style.cssText = 'position:fixed; bottom:20px; left:50%; transform:translateX(-50%); background:#2C2C2C; color:#fff; padding:8px 18px; border-radius:60px; z-index:2000; font-size:0.8rem;'; document.body.appendChild(toast); setTimeout(()=>toast.remove(),2500); }
   function escapeHtml(str) { if(!str) return ''; return str.replace(/[&<>]/g, m=> m==='&'?'&amp;':(m==='<'?'&lt;':'&gt;')); }
+
   async function fetchProducts() { try { const res = await fetch('/api/products'); if(!res.ok) throw new Error(); allProducts = await res.json(); renderAllSections(allProducts); applyGlobalFilter(); } catch(err) { document.getElementById('newArrivalsGrid').innerHTML = `<div class="error">${translations[currentLang].loadingError}</div>`; } }
-  // modal logic with quantity
+
   let currentModalProduct = null, modalQty=1;
   function openProductModal(product) { currentModalProduct = product; modalQty=1; document.getElementById('modalQtyVal').innerText = "1"; document.getElementById('modalTitle').innerText = product.name; document.getElementById('modalDesc').innerText = product.description || ''; document.getElementById('modalPrice').innerHTML = `${(product.price/100).toFixed(2)} MAD`; const images = product.images && product.images.length ? product.images : []; if(images.length){ document.getElementById('modalMainImage').src = images[0]; let thumbsHtml=''; images.forEach((img,idx)=>{ thumbsHtml += `<div class="thumb ${idx===0?'active':''}" data-img="${img}"><img src="${img}" alt=""></div>`; }); document.getElementById('modalThumbnails').innerHTML = thumbsHtml; document.querySelectorAll('.thumb').forEach(t=>{ t.onclick=()=>{ document.querySelectorAll('.thumb').forEach(t2=>t2.classList.remove('active')); t.classList.add('active'); document.getElementById('modalMainImage').src = t.dataset.img; }; }); } else { document.getElementById('modalMainImage').src = 'https://via.placeholder.com/600x400'; document.getElementById('modalThumbnails').innerHTML=''; } document.getElementById('productModal').style.display='flex'; }
   function closeModal() { document.getElementById('productModal').style.display='none'; }
@@ -175,7 +365,7 @@
   document.getElementById('modalQtyMinus').onclick = () => { if(modalQty>1) modalQty--; document.getElementById('modalQtyVal').innerText = modalQty; };
   document.getElementById('modalQtyPlus').onclick = () => { modalQty++; document.getElementById('modalQtyVal').innerText = modalQty; };
   document.getElementById('modalAddToCart').onclick = () => { if(currentModalProduct) addToCart({ id: currentModalProduct.id, name: currentModalProduct.name, price: currentModalProduct.price, quantity: modalQty, image: currentModalProduct.images?.[0] }); closeModal(); };
-  // drawer & appointment
+
   function openDrawer() { document.getElementById('drawer').classList.add('open'); document.getElementById('drawerOverlay').classList.add('open'); }
   function closeDrawer() { document.getElementById('drawer').classList.remove('open'); document.getElementById('drawerOverlay').classList.remove('open'); }
   document.getElementById('hamburgerBtn').addEventListener('click', openDrawer);
@@ -183,6 +373,7 @@
   document.getElementById('drawerOverlay').addEventListener('click', closeDrawer);
   document.getElementById('langToggle').addEventListener('click', () => { const newLang = currentLang === 'en' ? 'fr' : 'en'; setLanguage(newLang); });
   document.getElementById('bookAppointmentBtn').addEventListener('click', () => { window.open('https://wa.me/212781570083?text=Hello%2C%20I%20would%20like%20to%20book%20a%20piercing%20appointment.%20Can%20you%20let%20me%20know%20the%20available%20slots%3F', '_blank'); });
+
   renderCircleSlider(); renderDrawer(); fetchProducts(); updateCartBadge(); setLanguage(currentLang);
 </script>
 </body>
