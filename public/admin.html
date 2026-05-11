@@ -22,9 +22,10 @@
     input, select, textarea { width: 100%; padding: 0.75rem; margin-top: 0.3rem; border: 1px solid #E8D8C8; border-radius: 20px; background: #FEFAF5; font-family: inherit; }
     .image-upload-group { margin: 1rem 0; }
     .image-previews { display: flex; flex-wrap: wrap; gap: 1rem; margin-top: 0.5rem; }
-    .preview-item { position: relative; width: 80px; height: 80px; border-radius: 12px; overflow: hidden; border: 1px solid #E8D8C8; background: #FEFAF5; }
+    .preview-item { position: relative; width: 80px; height: 80px; border-radius: 12px; overflow: hidden; border: 1px solid #E8D8C8; background: #FEFAF5; cursor: pointer; }
     .preview-item img { width: 100%; height: 100%; object-fit: cover; }
-    .preview-item button { position: absolute; top: 2px; right: 2px; background: rgba(0,0,0,0.6); color: white; border: none; border-radius: 50%; width: 20px; height: 20px; font-size: 12px; cursor: pointer; }
+    .preview-item .delete-img-btn { position: absolute; top: 2px; right: 2px; background: rgba(0,0,0,0.7); color: white; border: none; border-radius: 50%; width: 20px; height: 20px; font-size: 12px; cursor: pointer; display: flex; align-items: center; justify-content: center; opacity: 0; transition: opacity 0.2s; }
+    .preview-item:hover .delete-img-btn { opacity: 1; }
     button { background: #C4A882; color: #1E1B18; border: none; padding: 0.8rem 1.5rem; border-radius: 60px; font-weight: 700; cursor: pointer; width: 100%; margin-top: 1.5rem; font-size: 1rem; transition: 0.2s; }
     button:hover { background: #A88262; color: white; }
     .message { margin-top: 1rem; padding: 0.75rem; border-radius: 20px; text-align: center; }
@@ -98,10 +99,24 @@
     <label>Name</label><input id="editName">
     <label>Description</label><textarea id="editDescription" rows="2"></textarea>
     <label>Price (MAD)</label><input type="number" step="0.01" id="editPrice">
-    <label>Category</label><select id="editCategory"><option value="oreille">Oreille</option><option value="nez">Nez</option><option value="nombril">Nombril</option><option value="micro-dermal">Micro dermal</option></select>
+    <label>Category</label><select id="editCategory">
+      <option value="oreille">Oreille</option>
+      <option value="nez">Nez</option>
+      <option value="nombril">Nombril</option>
+      <option value="micro-dermal">Micro dermal</option>
+    </select>
     <label>Subcategory</label><select id="editSubCategory"><option value="">None</option></select>
-    <label>Images (enter URLs, one per line, max 4)</label><textarea id="editImages" rows="2" placeholder="https://..."></textarea>
-    <div style="display: flex; gap: 1rem; margin-top: 1rem;"><button id="saveEditBtn">Save Changes</button><button id="cancelEditBtn">Cancel</button></div>
+    
+    <!-- New image management for edit -->
+    <label>Product Images (max 4)</label>
+    <div id="editImagePreviewContainer" class="image-previews" style="margin-bottom: 0.5rem;"></div>
+    <input type="file" id="editNewImages" accept="image/jpeg,image/png,image/gif,image/webp,image/avif" multiple>
+    <div style="font-size:0.75rem; color:#8E7A5E; margin-top:0.3rem;">Add new images (will be uploaded on save).</div>
+    
+    <div style="display: flex; gap: 1rem; margin-top: 1rem;">
+      <button id="saveEditBtn">Save Changes</button>
+      <button id="cancelEditBtn">Cancel</button>
+    </div>
   </div>
 
   <h2>📦 Current Products</h2>
@@ -113,7 +128,12 @@
 <script>
   let adminToken = localStorage.getItem('adminToken') || '';
   let currentProducts = [];
-  let selectedFiles = [];
+  let selectedFiles = [];  // for add product form
+
+  // For edit: store original images URLs and new files to upload
+  let editOriginalImages = [];     // array of existing image URLs
+  let editNewFiles = [];           // array of File objects to upload
+  let editDeletedImages = [];      // URLs to remove (optional, but we'll just keep the final set)
 
   const subCategories = { oreille: ['lobe','helix','flat helix','tragus','conch','daith','rook/snug','industrial','anti-tragus'], nez: ['nostril','septum','bridge','high nostril'], nombril: [], 'micro-dermal': [] };
   function updateSubCategories(selectId, mainCat) { const select = document.getElementById(selectId); select.innerHTML = '<option value="">None</option>'; if(subCategories[mainCat]) subCategories[mainCat].forEach(sub => { const opt = document.createElement('option'); opt.value = sub; opt.textContent = sub; select.appendChild(opt); }); }
@@ -130,7 +150,7 @@
       const reader = new FileReader();
       reader.onload = (ev) => {
         const div = document.createElement('div'); div.className = 'preview-item';
-        div.innerHTML = `<img src="${ev.target.result}"><button type="button" data-idx="${idx}">✕</button>`;
+        div.innerHTML = `<img src="${ev.target.result}"><button type="button" class="delete-img-btn" data-idx="${idx}">✕</button>`;
         container.appendChild(div);
         div.querySelector('button').addEventListener('click', () => { selectedFiles.splice(idx,1); e.target.files = null; const dt = new DataTransfer(); selectedFiles.forEach(f=>dt.items.add(f)); e.target.files = dt.files; document.getElementById('productImages').dispatchEvent(new Event('change')); });
       }; reader.readAsDataURL(file);
@@ -175,7 +195,9 @@
     document.querySelectorAll('.delete-btn').forEach(btn => btn.addEventListener('click', () => deleteProduct(btn.dataset.id)));
   }
   async function deleteProduct(id) { if(!confirm('Delete permanently?')) return; try { const res = await apiCall(`/api/products/${id}`, { method:'DELETE', body: JSON.stringify({}) }); if(res.ok) { showMessage('addMessage','✅ Product deleted','success'); loadProducts(); } else showMessage('addMessage','❌ Delete failed','error'); } catch(err){ showMessage('addMessage','Error','error'); } }
-  async function editProduct(id) {
+
+  // Edit product with image manager
+  function editProduct(id) {
     const product = currentProducts.find(p => p.id === id);
     if(!product) return;
     document.getElementById('editSection').style.display = 'block';
@@ -187,8 +209,66 @@
     document.getElementById('editCategory').value = product.mainCategory;
     updateSubCategories('editSubCategory', product.mainCategory);
     setTimeout(() => { document.getElementById('editSubCategory').value = product.subCategory || ''; }, 50);
-    document.getElementById('editImages').value = (product.images || []).join('\n');
+    
+    // Setup image management
+    editOriginalImages = [...(product.images || [])];
+    editNewFiles = [];
+    editDeletedImages = [];
+    renderEditImagePreviews();
+    
+    // Reset file input
+    document.getElementById('editNewImages').value = '';
+    document.getElementById('editNewImages').onchange = handleEditNewImages;
   }
+
+  function renderEditImagePreviews() {
+    const container = document.getElementById('editImagePreviewContainer');
+    container.innerHTML = '';
+    // Show existing images
+    editOriginalImages.forEach((url, idx) => {
+      const div = document.createElement('div'); div.className = 'preview-item';
+      div.innerHTML = `<img src="${url}"><button class="delete-img-btn" data-type="existing" data-idx="${idx}">✕</button>`;
+      container.appendChild(div);
+      div.querySelector('button').addEventListener('click', (e) => {
+        e.stopPropagation();
+        editOriginalImages.splice(idx, 1);
+        renderEditImagePreviews();
+      });
+    });
+    // Show new pending images (previews)
+    editNewFiles.forEach((file, idx) => {
+      const reader = new FileReader();
+      reader.onload = (ev) => {
+        const div = document.createElement('div'); div.className = 'preview-item';
+        div.innerHTML = `<img src="${ev.target.result}"><button class="delete-img-btn" data-type="new" data-idx="${idx}">✕</button>`;
+        container.appendChild(div);
+        div.querySelector('button').addEventListener('click', (e) => {
+          e.stopPropagation();
+          editNewFiles.splice(idx, 1);
+          renderEditImagePreviews();
+        });
+      };
+      reader.readAsDataURL(file);
+    });
+    // Re-attach after async, but we will call again at end of loop? Simpler: rerender after state change
+    // Actually we call renderEditImagePreviews after each mutation, so it's fine.
+  }
+
+  function handleEditNewImages(e) {
+    const files = Array.from(e.target.files);
+    const total = editOriginalImages.length + editNewFiles.length + files.length;
+    if(total > 4) {
+      alert(`Maximum 4 images. You already have ${editOriginalImages.length + editNewFiles.length} images.`);
+      e.target.value = '';
+      return;
+    }
+    editNewFiles.push(...files);
+    renderEditImagePreviews();
+    e.target.value = ''; // clear input so same files can be selected again if needed
+  }
+
+  document.getElementById('editCategory').addEventListener('change', () => updateSubCategories('editSubCategory', document.getElementById('editCategory').value));
+
   document.getElementById('saveEditBtn').addEventListener('click', async () => {
     const id = document.getElementById('editId').value;
     const name = document.getElementById('editName').value.trim();
@@ -196,15 +276,36 @@
     const price = parseFloat(document.getElementById('editPrice').value);
     const mainCategory = document.getElementById('editCategory').value;
     const subCategory = document.getElementById('editSubCategory').value;
-    let images = document.getElementById('editImages').value.split('\n').filter(u=>u.trim().startsWith('http')).slice(0,4);
-    if(!name || isNaN(price) || !mainCategory || images.length===0) { alert('Fill all required fields (name, price, category, at least one image URL)'); return; }
+    
+    if(!name || isNaN(price) || !mainCategory) { alert('Fill required fields: name, price, category'); return; }
+    
+    // Upload new images first
+    let newImageUrls = [];
+    if(editNewFiles.length > 0) {
+      const formData = new FormData();
+      editNewFiles.forEach(file => formData.append('productImages', file));
+      try {
+        const uploadRes = await apiCall('/api/upload-multiple', { method: 'POST', body: formData, headers: {} });
+        if(!uploadRes.ok) throw new Error('Upload failed');
+        const { imageUrls } = await uploadRes.json();
+        newImageUrls = imageUrls;
+      } catch(err) { showMessage('addMessage', '❌ Image upload failed', 'error'); return; }
+    }
+    
+    // Combine existing (that were not deleted) + new uploaded
+    let finalImages = [...editOriginalImages, ...newImageUrls];
+    if(finalImages.length === 0) { alert('At least one image required'); return; }
+    if(finalImages.length > 4) finalImages = finalImages.slice(0,4);
+    
+    const productData = { name, description, price, mainCategory, subCategory, images: finalImages };
     try {
-      const res = await apiCall(`/api/products/${id}`, { method:'PUT', body: JSON.stringify({ name, description, price, mainCategory, subCategory, images }) });
-      if(res.ok) { showMessage('addMessage','✅ Product updated','success'); loadProducts(); document.getElementById('editSection').style.display = 'none'; }
-      else { const err = await res.json(); showMessage('addMessage',`❌ ${err.error}`,'error'); }
-    } catch(err){ showMessage('addMessage','Error','error'); }
+      const res = await apiCall(`/api/products/${id}`, { method: 'PUT', body: JSON.stringify(productData) });
+      if(res.ok) { showMessage('addMessage', '✅ Product updated', 'success'); loadProducts(); document.getElementById('editSection').style.display = 'none'; }
+      else { const err = await res.json(); showMessage('addMessage', `❌ ${err.error}`, 'error'); }
+    } catch(err) { showMessage('addMessage', 'Error updating', 'error'); }
   });
   document.getElementById('cancelEditBtn').addEventListener('click', () => { document.getElementById('editSection').style.display = 'none'; });
+
   document.getElementById('addProductForm').addEventListener('submit', async (e) => {
     e.preventDefault();
     const name = document.getElementById('name').value.trim();
@@ -215,7 +316,7 @@
     if(!name || isNaN(price) || !mainCategory || selectedFiles.length===0) { showMessage('addMessage','❌ Fill all fields and upload at least one image','error'); return; }
     const formData = new FormData();
     selectedFiles.forEach(f=>formData.append('productImages',f));
-    const uploadRes = await apiCall('/api/upload-multiple', { method:'POST', body: formData, headers: {} }); // headers will add auth
+    const uploadRes = await apiCall('/api/upload-multiple', { method:'POST', body: formData, headers: {} });
     if(!uploadRes.ok) { showMessage('addMessage','❌ Image upload failed','error'); return; }
     const { imageUrls } = await uploadRes.json();
     const productData = { name, description, price, mainCategory, subCategory, images: imageUrls.slice(0,4) };
@@ -231,7 +332,6 @@
   document.getElementById('loginPassword').addEventListener('keypress', e=>{ if(e.key==='Enter') attemptLogin(); });
   document.getElementById('logoutBtn').addEventListener('click', logout);
   if(localStorage.getItem('adminToken')) { adminToken = localStorage.getItem('adminToken'); document.getElementById('loginContainer').style.display = 'none'; document.getElementById('adminPanel').style.display = 'block'; loadProducts(); }
-  document.getElementById('editCategory').addEventListener('change', () => updateSubCategories('editSubCategory', document.getElementById('editCategory').value));
 </script>
 </body>
 </html>
