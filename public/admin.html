@@ -8,21 +8,21 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
-    body { font-family: 'Inter', sans-serif; background: #FFFFFF; padding: 1rem; min-height: 100vh; display: flex; align-items: center; justify-content: center; }
-    .login-container { width: 100%; max-width: 400px; margin: 2rem auto; }
-    .login-card { background: #FFFFFF; border-radius: 32px; padding: 2rem; box-shadow: 0 10px 25px rgba(0,0,0,0.05); border: 1px solid #E8D8C8; }
+    body { font-family: 'Inter', sans-serif; background: #F8F5F2; padding: 1rem; min-height: 100vh; display: flex; align-items: center; justify-content: center; }
+    .login-container, .admin-panel { width: 100%; max-width: 1100px; margin: 0 auto; }
+    .login-card { background: white; border-radius: 32px; padding: 2rem; box-shadow: 0 10px 25px rgba(0,0,0,0.05); border: 1px solid #E8D8C8; max-width: 400px; margin: 2rem auto; }
     .login-card h2 { color: #C4A882; margin-bottom: 1rem; text-align: center; }
     .login-card input { width: 100%; padding: 0.8rem; margin: 1rem 0; border: 1px solid #E8D8C8; border-radius: 40px; background: #FEFAF5; }
     .login-card button { width: 100%; background: #C4A882; border: none; padding: 0.8rem; border-radius: 40px; color: white; font-weight: 600; cursor: pointer; }
     .error-msg { color: #c62828; font-size: 0.8rem; text-align: center; margin-top: 1rem; }
-    .admin-panel { display: none; max-width: 900px; margin: 0 auto; background: white; border-radius: 32px; padding: 2rem; border: 1px solid #E8D8C8; width: 100%; }
-    .admin-panel h1 { font-size: 1.8rem; margin-bottom: 1.5rem; background: linear-gradient(135deg, #C4A882, #A88262); background-clip: text; -webkit-background-clip: text; color: transparent; }
-    .admin-panel h2 { font-size: 1.3rem; margin: 1.5rem 0 1rem; color: #A88262; }
+    .admin-panel { background: white; border-radius: 32px; padding: 2rem; border: 1px solid #E8D8C8; display: none; }
+    .admin-panel h1 { font-size: 1.8rem; margin-bottom: 1.5rem; color: #C4A882; }
+    .admin-panel h2 { font-size: 1.3rem; margin: 1.5rem 0 1rem; color: #A88262; border-left: 4px solid #C4A882; padding-left: 0.75rem; }
     label { display: block; margin-top: 1rem; font-weight: 600; color: #2C2C2C; }
     input, select, textarea { width: 100%; padding: 0.75rem; margin-top: 0.3rem; border: 1px solid #E8D8C8; border-radius: 20px; background: #FEFAF5; font-family: inherit; }
     .image-upload-group { margin: 1rem 0; }
     .image-previews { display: flex; flex-wrap: wrap; gap: 1rem; margin-top: 0.5rem; }
-    .preview-item { position: relative; width: 80px; height: 80px; border-radius: 12px; overflow: hidden; border: 1px solid #E8D8C8; }
+    .preview-item { position: relative; width: 80px; height: 80px; border-radius: 12px; overflow: hidden; border: 1px solid #E8D8C8; background: #FEFAF5; }
     .preview-item img { width: 100%; height: 100%; object-fit: cover; }
     .preview-item button { position: absolute; top: 2px; right: 2px; background: rgba(0,0,0,0.6); color: white; border: none; border-radius: 50%; width: 20px; height: 20px; font-size: 12px; cursor: pointer; }
     button { background: #C4A882; color: #1E1B18; border: none; padding: 0.8rem 1.5rem; border-radius: 60px; font-weight: 700; cursor: pointer; width: 100%; margin-top: 1.5rem; font-size: 1rem; transition: 0.2s; }
@@ -39,8 +39,13 @@
     .product-details { flex: 1; }
     .product-name { font-weight: 700; color: #2C2C2C; }
     .product-price { color: #A88262; font-weight: 700; }
-    .delete-btn { background: #1E1B18; width: auto; padding: 0.5rem 1.2rem; margin-top: 0; }
-    @media (max-width: 600px) { .admin-panel { padding: 1rem; } .product-info { flex-direction: column; align-items: flex-start; } }
+    .action-buttons { display: flex; gap: 0.5rem; }
+    .edit-btn, .delete-btn { background: #2C2C2C; width: auto; padding: 0.5rem 1rem; margin-top: 0; font-size: 0.8rem; }
+    .edit-btn { background: #C4A882; color: #1E1B18; }
+    .edit-btn:hover { background: #A88262; color: white; }
+    .delete-btn { background: #c62828; }
+    .delete-btn:hover { background: #b71c1c; }
+    @media (max-width: 600px) { .admin-panel { padding: 1rem; } .product-item { flex-direction: column; align-items: stretch; } .action-buttons { justify-content: flex-end; } }
   </style>
 </head>
 <body>
@@ -48,48 +53,57 @@
   <div class="login-card">
     <h2><i class="fas fa-lock"></i> Admin Login</h2>
     <input type="password" id="loginPassword" placeholder="Enter admin password">
-    <button id="loginBtn">Unlock Panel</button>
+    <button id="loginBtn">Login with JWT</button>
     <div id="loginError" class="error-msg"></div>
   </div>
 </div>
 
 <div class="admin-panel" id="adminPanel">
-  <h1><i class="fas fa-crown"></i> Admin – Manage Products</h1>
-  <p style="color: #8E7A5E; margin-bottom: 1rem;">Add products with up to 4 images each.</p>
+  <h1><i class="fas fa-crown"></i> Admin Dashboard</h1>
+  <div style="display: flex; justify-content: space-between; flex-wrap: wrap; align-items: center;">
+    <p style="color: #8E7A5E;">Manage products, edit, delete, or add new items.</p>
+    <button id="logoutBtn" style="width: auto; background: #E8D8C8; color: #2C2C2C;">Logout</button>
+  </div>
 
+  <!-- Add Product Form -->
   <h2>➕ Add New Product</h2>
   <form id="addProductForm">
     <label>Product Name *</label>
     <input type="text" id="name" required>
-
     <label>Description</label>
     <textarea id="description" rows="2" required></textarea>
-
     <label>Price (MAD) *</label>
     <input type="number" step="0.01" id="price" required>
-
     <label>Category *</label>
     <select id="category" required>
-      <option value="oreille">🌙 Oreille (Orielle)</option>
+      <option value="oreille">🌙 Oreille</option>
       <option value="nez">🪶 Nez</option>
       <option value="nombril">⭐ Nombril</option>
       <option value="micro-dermal">✨ Micro dermal</option>
     </select>
-
-    <label>Subcategory (if any)</label>
-    <select id="subCategory">
-      <option value="">None</option>
-    </select>
-
+    <label>Subcategory</label>
+    <select id="subCategory"><option value="">None</option></select>
     <label>Product Images (max 4) *</label>
     <input type="file" id="productImages" accept="image/jpeg,image/png,image/gif,image/webp,image/avif" multiple>
     <div class="image-previews" id="imagePreviews"></div>
-
     <button type="submit"><i class="fas fa-save"></i> Add Product</button>
   </form>
   <div id="addMessage"></div>
 
   <hr>
+  <h2>✏️ Edit Product</h2>
+  <div id="editSection" style="display: none; background: #FEFAF5; padding: 1rem; border-radius: 24px; margin-bottom: 1rem;">
+    <h3>Editing: <span id="editProductName"></span></h3>
+    <input type="hidden" id="editId">
+    <label>Name</label><input id="editName">
+    <label>Description</label><textarea id="editDescription" rows="2"></textarea>
+    <label>Price (MAD)</label><input type="number" step="0.01" id="editPrice">
+    <label>Category</label><select id="editCategory"><option value="oreille">Oreille</option><option value="nez">Nez</option><option value="nombril">Nombril</option><option value="micro-dermal">Micro dermal</option></select>
+    <label>Subcategory</label><select id="editSubCategory"><option value="">None</option></select>
+    <label>Images (enter URLs, one per line, max 4)</label><textarea id="editImages" rows="2" placeholder="https://..."></textarea>
+    <div style="display: flex; gap: 1rem; margin-top: 1rem;"><button id="saveEditBtn">Save Changes</button><button id="cancelEditBtn">Cancel</button></div>
+  </div>
+
   <h2>📦 Current Products</h2>
   <div id="currentProducts" class="product-list">Loading...</div>
   <hr>
@@ -97,117 +111,100 @@
 </div>
 
 <script>
-  let adminPassword = '';
+  let adminToken = localStorage.getItem('adminToken') || '';
   let currentProducts = [];
   let selectedFiles = [];
 
-  const subCategories = {
-     oreille: ['lobe', 'helix', 'flat helix', 'tragus', 'conch', 'daith', 'rook/snug', 'industrial', 'anti-tragus'],
-    nez: ['nostril', 'septum', 'bridge', 'high nostril'],
-    nombril: [],
-    'micro-dermal': []
-  };
+  const subCategories = { oreille: ['lobe','helix','flat helix','tragus','conch','daith','rook/snug','industrial','anti-tragus'], nez: ['nostril','septum','bridge','high nostril'], nombril: [], 'micro-dermal': [] };
+  function updateSubCategories(selectId, mainCat) { const select = document.getElementById(selectId); select.innerHTML = '<option value="">None</option>'; if(subCategories[mainCat]) subCategories[mainCat].forEach(sub => { const opt = document.createElement('option'); opt.value = sub; opt.textContent = sub; select.appendChild(opt); }); }
+  document.getElementById('category').addEventListener('change', () => updateSubCategories('subCategory', document.getElementById('category').value));
+  updateSubCategories('subCategory', 'oreille');
 
-  function updateSubCategories() {
-    const mainCat = document.getElementById('category').value;
-    const subSelect = document.getElementById('subCategory');
-    subSelect.innerHTML = '<option value="">None</option>';
-    if (subCategories[mainCat]) {
-      subCategories[mainCat].forEach(sub => {
-        const option = document.createElement('option');
-        option.value = sub;
-        option.textContent = sub;
-        subSelect.appendChild(option);
-      });
-    }
-  }
-  document.getElementById('category').addEventListener('change', updateSubCategories);
-  updateSubCategories();
-
-  // Image previews
   document.getElementById('productImages').addEventListener('change', (e) => {
     const files = Array.from(e.target.files);
-    if (files.length > 4) {
-      alert('You can select up to 4 images.');
-      document.getElementById('productImages').value = '';
-      selectedFiles = [];
-      document.getElementById('imagePreviews').innerHTML = '';
-      return;
-    }
+    if(files.length > 4) { alert('Max 4 images'); e.target.value = ''; selectedFiles = []; document.getElementById('imagePreviews').innerHTML = ''; return; }
     selectedFiles = files;
     const container = document.getElementById('imagePreviews');
     container.innerHTML = '';
     files.forEach((file, idx) => {
       const reader = new FileReader();
       reader.onload = (ev) => {
-        const div = document.createElement('div');
-        div.className = 'preview-item';
+        const div = document.createElement('div'); div.className = 'preview-item';
         div.innerHTML = `<img src="${ev.target.result}"><button type="button" data-idx="${idx}">✕</button>`;
         container.appendChild(div);
-        div.querySelector('button').addEventListener('click', () => {
-          selectedFiles.splice(idx, 1);
-          document.getElementById('productImages').files = null;
-          const newInput = document.getElementById('productImages');
-          const dataTransfer = new DataTransfer();
-          selectedFiles.forEach(f => dataTransfer.items.add(f));
-          newInput.files = dataTransfer.files;
-          document.getElementById('productImages').dispatchEvent(new Event('change'));
-        });
-      };
-      reader.readAsDataURL(file);
+        div.querySelector('button').addEventListener('click', () => { selectedFiles.splice(idx,1); e.target.files = null; const dt = new DataTransfer(); selectedFiles.forEach(f=>dt.items.add(f)); e.target.files = dt.files; document.getElementById('productImages').dispatchEvent(new Event('change')); });
+      }; reader.readAsDataURL(file);
     });
   });
 
+  async function apiCall(url, options = {}) {
+    const headers = { 'Content-Type': 'application/json', ...options.headers };
+    if(adminToken) headers['Authorization'] = `Bearer ${adminToken}`;
+    const res = await fetch(url, { ...options, headers });
+    if(res.status === 401 && !url.includes('/login')) { logout(); throw new Error('Session expired'); }
+    return res;
+  }
+
   async function loadProducts() {
     try {
-      const res = await fetch('/api/products');
+      const res = await apiCall('/api/products');
       currentProducts = await res.json();
       renderProductList();
-    } catch (err) {
-      document.getElementById('currentProducts').innerHTML = '<div class="error">Failed to load products</div>';
-    }
+    } catch(err) { document.getElementById('currentProducts').innerHTML = '<div class="error">Failed to load</div>'; }
   }
-
   function renderProductList() {
     const container = document.getElementById('currentProducts');
-    if (!currentProducts.length) {
-      container.innerHTML = '<div style="text-align:center; padding:2rem;">✨ No products yet. Add your first one! ✨</div>';
-      return;
-    }
+    if(!currentProducts.length) { container.innerHTML = '<div style="text-align:center; padding:2rem;">✨ No products yet.</div>'; return; }
     container.innerHTML = currentProducts.map(p => `
-      <div class="product-item">
+      <div class="product-item" data-id="${p.id}">
         <div class="product-info">
-          <img class="product-thumb" src="${p.images && p.images[0] || ''}" onerror="this.src='https://via.placeholder.com/60'" alt="">
+          <img class="product-thumb" src="${p.images?.[0] || ''}" onerror="this.src='https://via.placeholder.com/60'">
           <div class="product-details">
-            <div class="product-name">${escapeHtml(p.name)} <span class="product-cat">${escapeHtml(p.subCategory || p.mainCategory)}</span></div>
+            <div class="product-name">${escapeHtml(p.name)} <span style="font-size:0.7rem;">${escapeHtml(p.subCategory || p.mainCategory)}</span></div>
             <div class="product-price">${(p.price/100).toFixed(2)} MAD</div>
-            <div style="font-size:0.75rem;">${escapeHtml(p.description || '')}</div>
+            <div style="font-size:0.7rem;">${escapeHtml(p.description || '').substring(0,80)}</div>
           </div>
         </div>
-        <button class="delete-btn" onclick="deleteProduct('${p.id}')"><i class="fas fa-trash-alt"></i> Delete</button>
+        <div class="action-buttons">
+          <button class="edit-btn" data-id="${p.id}"><i class="fas fa-edit"></i> Edit</button>
+          <button class="delete-btn" data-id="${p.id}"><i class="fas fa-trash-alt"></i> Delete</button>
+        </div>
       </div>
     `).join('');
+    document.querySelectorAll('.edit-btn').forEach(btn => btn.addEventListener('click', () => editProduct(btn.dataset.id)));
+    document.querySelectorAll('.delete-btn').forEach(btn => btn.addEventListener('click', () => deleteProduct(btn.dataset.id)));
   }
-
-  async function deleteProduct(id) {
-    if (!confirm("Delete this product permanently?")) return;
+  async function deleteProduct(id) { if(!confirm('Delete permanently?')) return; try { const res = await apiCall(`/api/products/${id}`, { method:'DELETE', body: JSON.stringify({}) }); if(res.ok) { showMessage('addMessage','✅ Product deleted','success'); loadProducts(); } else showMessage('addMessage','❌ Delete failed','error'); } catch(err){ showMessage('addMessage','Error','error'); } }
+  async function editProduct(id) {
+    const product = currentProducts.find(p => p.id === id);
+    if(!product) return;
+    document.getElementById('editSection').style.display = 'block';
+    document.getElementById('editProductName').innerText = product.name;
+    document.getElementById('editId').value = product.id;
+    document.getElementById('editName').value = product.name;
+    document.getElementById('editDescription').value = product.description || '';
+    document.getElementById('editPrice').value = (product.price/100).toFixed(2);
+    document.getElementById('editCategory').value = product.mainCategory;
+    updateSubCategories('editSubCategory', product.mainCategory);
+    setTimeout(() => { document.getElementById('editSubCategory').value = product.subCategory || ''; }, 50);
+    document.getElementById('editImages').value = (product.images || []).join('\n');
+  }
+  document.getElementById('saveEditBtn').addEventListener('click', async () => {
+    const id = document.getElementById('editId').value;
+    const name = document.getElementById('editName').value.trim();
+    const description = document.getElementById('editDescription').value.trim();
+    const price = parseFloat(document.getElementById('editPrice').value);
+    const mainCategory = document.getElementById('editCategory').value;
+    const subCategory = document.getElementById('editSubCategory').value;
+    let images = document.getElementById('editImages').value.split('\n').filter(u=>u.trim().startsWith('http')).slice(0,4);
+    if(!name || isNaN(price) || !mainCategory || images.length===0) { alert('Fill all required fields (name, price, category, at least one image URL)'); return; }
     try {
-      const res = await fetch(`/api/products/${id}`, {
-        method: 'DELETE',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ password: adminPassword })
-      });
-      if (res.ok) {
-        showMessage('addMessage', '✅ Product deleted', 'success');
-        loadProducts();
-      } else {
-        showMessage('addMessage', '❌ Delete failed', 'error');
-      }
-    } catch (err) {
-      showMessage('addMessage', '❌ Server error', 'error');
-    }
-  }
-
+      const res = await apiCall(`/api/products/${id}`, { method:'PUT', body: JSON.stringify({ name, description, price, mainCategory, subCategory, images }) });
+      if(res.ok) { showMessage('addMessage','✅ Product updated','success'); loadProducts(); document.getElementById('editSection').style.display = 'none'; }
+      else { const err = await res.json(); showMessage('addMessage',`❌ ${err.error}`,'error'); }
+    } catch(err){ showMessage('addMessage','Error','error'); }
+  });
+  document.getElementById('cancelEditBtn').addEventListener('click', () => { document.getElementById('editSection').style.display = 'none'; });
   document.getElementById('addProductForm').addEventListener('submit', async (e) => {
     e.preventDefault();
     const name = document.getElementById('name').value.trim();
@@ -215,80 +212,26 @@
     const price = parseFloat(document.getElementById('price').value);
     const mainCategory = document.getElementById('category').value;
     const subCategory = document.getElementById('subCategory').value;
-    if (!name || isNaN(price) || !mainCategory || selectedFiles.length === 0) {
-      showMessage('addMessage', '❌ Please fill name, price, category, and upload at least one image', 'error');
-      return;
-    }
+    if(!name || isNaN(price) || !mainCategory || selectedFiles.length===0) { showMessage('addMessage','❌ Fill all fields and upload at least one image','error'); return; }
     const formData = new FormData();
-    selectedFiles.forEach(file => formData.append('productImages', file));
-    const uploadRes = await fetch('/api/upload-multiple', { method: 'POST', body: formData });
-    if (!uploadRes.ok) {
-      showMessage('addMessage', '❌ Image upload failed', 'error');
-      return;
-    }
+    selectedFiles.forEach(f=>formData.append('productImages',f));
+    const uploadRes = await apiCall('/api/upload-multiple', { method:'POST', body: formData, headers: {} }); // headers will add auth
+    if(!uploadRes.ok) { showMessage('addMessage','❌ Image upload failed','error'); return; }
     const { imageUrls } = await uploadRes.json();
-    const productData = {
-      password: adminPassword,
-      name,
-      description,
-      price,
-      mainCategory,
-      subCategory,
-      images: imageUrls.slice(0, 4)
-    };
-    const addRes = await fetch('/api/products', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(productData)
-    });
-    if (addRes.ok) {
-      showMessage('addMessage', '✨ Product added successfully!', 'success');
-      document.getElementById('addProductForm').reset();
-      selectedFiles = [];
-      document.getElementById('imagePreviews').innerHTML = '';
-      loadProducts();
-    } else {
-      const err = await addRes.json();
-      showMessage('addMessage', `❌ ${err.error}`, 'error');
-    }
+    const productData = { name, description, price, mainCategory, subCategory, images: imageUrls.slice(0,4) };
+    const addRes = await apiCall('/api/products', { method:'POST', body: JSON.stringify(productData) });
+    if(addRes.ok) { showMessage('addMessage','✨ Product added!','success'); document.getElementById('addProductForm').reset(); selectedFiles=[]; document.getElementById('imagePreviews').innerHTML=''; loadProducts(); }
+    else { const err = await addRes.json(); showMessage('addMessage',`❌ ${err.error}`,'error'); }
   });
-
-  function showMessage(el, text, type) {
-    const msgDiv = document.getElementById(el);
-    msgDiv.innerHTML = `<div class="message ${type}">${text}</div>`;
-    setTimeout(() => msgDiv.innerHTML = '', 4000);
-  }
-  function escapeHtml(str) { if (!str) return ''; return str.replace(/[&<>]/g, m => m === '&' ? '&amp;' : (m === '<' ? '&lt;' : '&gt;')); }
-
-  // Login logic
-  const loginContainer = document.getElementById('loginContainer');
-  const adminPanel = document.getElementById('adminPanel');
-  async function attemptLogin() {
-    const password = document.getElementById('loginPassword').value;
-    const loginError = document.getElementById('loginError');
-    loginError.innerText = '';
-    try {
-      const res = await fetch('/api/verify-admin', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ password })
-      });
-      const data = await res.json();
-      if (res.ok && data.success) {
-        adminPassword = password;
-        loginContainer.style.display = 'none';
-        adminPanel.style.display = 'block';
-        loadProducts();
-      } else {
-        loginError.innerText = 'Incorrect password. Please try again.';
-        document.getElementById('loginPassword').value = '';
-      }
-    } catch (err) {
-      loginError.innerText = 'Server error. Please try again later.';
-    }
-  }
+  function showMessage(el, text, type) { const div = document.getElementById(el); div.innerHTML = `<div class="message ${type}">${text}</div>`; setTimeout(()=>div.innerHTML='',4000); }
+  function escapeHtml(str) { if(!str) return ''; return str.replace(/[&<>]/g, m=> m==='&'?'&amp;':(m==='<'?'&lt;':'&gt;')); }
+  async function attemptLogin() { const pwd = document.getElementById('loginPassword').value; try { const res = await fetch('/api/admin/login', { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({ password:pwd }) }); const data = await res.json(); if(res.ok && data.token) { adminToken = data.token; localStorage.setItem('adminToken', adminToken); document.getElementById('loginContainer').style.display = 'none'; document.getElementById('adminPanel').style.display = 'block'; loadProducts(); } else { document.getElementById('loginError').innerText = 'Invalid password'; } } catch(err) { document.getElementById('loginError').innerText = 'Server error'; } }
+  function logout() { adminToken = ''; localStorage.removeItem('adminToken'); document.getElementById('loginContainer').style.display = 'block'; document.getElementById('adminPanel').style.display = 'none'; document.getElementById('loginPassword').value = ''; }
   document.getElementById('loginBtn').addEventListener('click', attemptLogin);
-  document.getElementById('loginPassword').addEventListener('keypress', (e) => { if (e.key === 'Enter') attemptLogin(); });
+  document.getElementById('loginPassword').addEventListener('keypress', e=>{ if(e.key==='Enter') attemptLogin(); });
+  document.getElementById('logoutBtn').addEventListener('click', logout);
+  if(localStorage.getItem('adminToken')) { adminToken = localStorage.getItem('adminToken'); document.getElementById('loginContainer').style.display = 'none'; document.getElementById('adminPanel').style.display = 'block'; loadProducts(); }
+  document.getElementById('editCategory').addEventListener('change', () => updateSubCategories('editSubCategory', document.getElementById('editCategory').value));
 </script>
 </body>
 </html>
