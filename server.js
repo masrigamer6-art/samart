@@ -18,7 +18,7 @@ app.use(express.static('public'));
 // --------------------- JWT secret ---------------------
 const JWT_SECRET = process.env.JWT_SECRET || 'samar-piercing-super-secret-key-change-me';
 
-// --------------------- Cloudinary ---------------------
+// --------------------- Cloudinary (safer config) ---------------------
 cloudinary.config({
   cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
   api_key: process.env.CLOUDINARY_API_KEY,
@@ -26,18 +26,23 @@ cloudinary.config({
   secure: true,
 });
 
+// Safer storage: generate random public_id, avoid file.originalname issues
 const storage = new CloudinaryStorage({
   cloudinary: cloudinary,
   params: {
     folder: 'samar-piercing',
     allowed_formats: ['jpg', 'png', 'jpeg', 'gif', 'webp', 'avif'],
-    public_id: (req, file) => `product-${Date.now()}-${file.originalname.split('.')[0]}`,
+    public_id: (req, file) => {
+      const unique = Date.now() + '-' + Math.random().toString(36).substring(2, 10);
+      return `product-${unique}`;
+    },
   },
 });
+
 const upload = multer({ storage, limits: { fileSize: 5 * 1024 * 1024 } });
 
 // --------------------- MongoDB ---------------------
-const mongoURI = process.env.MONGODB_CONNECT_URL || process.env.MONGODB_CONNECT_URL;
+const mongoURI = process.env.MONGODB_CONNECT_URL || process.env.MONGODB_URI;
 if (!mongoURI) {
   console.error('❌ MongoDB URI missing');
   process.exit(1);
@@ -61,13 +66,18 @@ const Product = mongoose.model('Product', productSchema);
 
 // Migrate old products
 async function migrateOldProducts() {
-  await Product.updateMany({ images: { $exists: false } }, { $set: { images: [] } });
-  const products = await Product.find({ image: { $exists: true }, images: { $size: 0 } });
-  for (const prod of products) {
-    if (prod.image) {
-      prod.images = [prod.image];
-      await prod.save();
+  try {
+    await Product.updateMany({ images: { $exists: false } }, { $set: { images: [] } });
+    const products = await Product.find({ image: { $exists: true }, images: { $size: 0 } });
+    for (const prod of products) {
+      if (prod.image) {
+        prod.images = [prod.image];
+        await prod.save();
+      }
     }
+    console.log('✅ Migration completed');
+  } catch (err) {
+    console.error('Migration error:', err);
   }
 }
 migrateOldProducts().catch(console.error);
@@ -82,7 +92,7 @@ const authenticateAdmin = (req, res, next) => {
   const authHeader = req.headers.authorization;
   const password = req.body.password || req.query.password;
   
-  // First check if it's a direct password (legacy)
+  // First check direct password (legacy)
   if (password && (password === process.env.ADMIN_PASSWORD || password === 'admin123')) {
     req.adminAuthenticated = true;
     return next();
@@ -116,17 +126,32 @@ app.get('/api/products', async (req, res) => {
     }));
     res.json(productsWithImage);
   } catch (err) {
+    console.error(err);
     res.status(500).json({ error: err.message });
   }
 });
 
-// UPLOAD multiple images (admin only)
+// UPLOAD multiple images (admin only) with improved error logging
 app.post('/api/upload-multiple', authenticateAdmin, (req, res) => {
   upload.array('productImages', 4)(req, res, (err) => {
-    if (err) return res.status(400).json({ error: err.message });
-    if (!req.files || req.files.length === 0) return res.status(400).json({ error: 'No files uploaded' });
-    const imageUrls = req.files.map(file => file.path);
-    res.json({ imageUrls });
+    if (err) {
+      console.error('Multer error:', err);
+      return res.status(400).json({ error: err.message });
+    }
+    if (!req.files || req.files.length === 0) {
+      return res.status(400).json({ error: 'No files uploaded' });
+    }
+    try {
+      const imageUrls = req.files.map(file => {
+        if (!file.path) throw new Error('Cloudinary did not return a path');
+        return file.path;
+      });
+      console.log(`✅ Uploaded ${imageUrls.length} images`);
+      res.json({ imageUrls });
+    } catch (uploadErr) {
+      console.error('Cloudinary upload error:', uploadErr);
+      res.status(500).json({ error: uploadErr.message });
+    }
   });
 });
 
@@ -150,17 +175,18 @@ app.post('/api/products', authenticateAdmin, async (req, res) => {
     await newProduct.save();
     res.json({ success: true, product: newProduct });
   } catch (err) {
+    console.error(err);
     res.status(500).json({ error: err.message });
   }
 });
 
-// UPDATE product (new edit feature)
+// UPDATE product
 app.put('/api/products/:id', authenticateAdmin, async (req, res) => {
   try {
     const { id } = req.params;
     const { name, description, price, mainCategory, subCategory, images } = req.body;
     if (!name || !price || !mainCategory || !images || !images.length) {
-      return res.status(400).json({ error: 'Missing required fields (name, price, mainCategory, images)' });
+      return res.status(400).json({ error: 'Missing required fields' });
     }
     const priceCents = Math.round(parseFloat(price) * 100);
     const updatedProduct = await Product.findOneAndUpdate(
@@ -178,6 +204,7 @@ app.put('/api/products/:id', authenticateAdmin, async (req, res) => {
     if (!updatedProduct) return res.status(404).json({ error: 'Product not found' });
     res.json({ success: true, product: updatedProduct });
   } catch (err) {
+    console.error(err);
     res.status(500).json({ error: err.message });
   }
 });
@@ -188,6 +215,7 @@ app.delete('/api/products/:id', authenticateAdmin, async (req, res) => {
     await Product.findOneAndDelete({ id: req.params.id });
     res.json({ success: true });
   } catch (err) {
+    console.error(err);
     res.status(500).json({ error: err.message });
   }
 });
@@ -212,7 +240,7 @@ app.post('/api/verify-admin', (req, res) => {
   }
 });
 
-// Generate order PDF (unchanged)
+// Generate order PDF
 app.post('/api/create-order-pdf', async (req, res) => {
   try {
     const { cartItems } = req.body;
