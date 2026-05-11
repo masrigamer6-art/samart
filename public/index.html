@@ -11,7 +11,6 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;400;500;600;700&display=swap" rel="stylesheet">
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&display=swap" rel="stylesheet">
   <link href="https://fonts.googleapis.com/css?family=Muli:400,400i,700,700i" rel="stylesheet">
-  <!-- New font for headings -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Playwrite+AR+Guides&display=swap" rel="stylesheet">
@@ -20,7 +19,7 @@
     * { margin: 0; padding: 0; box-sizing: border-box; }
     body { font-family: 'Muli', sans-serif; background: #FFFFFF; color: #1E1B18; line-height: 1.4; }
 
-    /* Header (unchanged) */
+    /* Header */
     .main-header {
       display: flex;
       align-items: center;
@@ -50,7 +49,6 @@
     .hero-image { width: 100%; height: auto; max-height: 500px; overflow: hidden; background: #FAFAFA; }
     .hero-image img { width: 100%; height: auto; object-fit: cover; display: block; }
 
-    /* Shop By Piercing - 20% bigger */
     .shop-by-section {
       max-width: 1280px;
       margin: 2rem auto 0;
@@ -104,7 +102,6 @@
       transform: scale(1.02);
     }
 
-    /* PREMIERE NEW ARRIVALS TEXT with new font & black color */
     .premiere-title {
       text-align: center;
       font-family: 'Playwrite AR Guides', cursive;
@@ -133,7 +130,6 @@
       margin-bottom: 2rem;
     }
 
-    /* Category titles with new font & black color */
     .cat-title {
       text-align: center;
       font-family: 'Playwrite AR Guides', cursive;
@@ -144,7 +140,6 @@
       letter-spacing: 1px;
     }
 
-    /* Product Cards (wsk-cp-product style) unchanged */
     .products-grid {
       display: grid;
       grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
@@ -273,7 +268,6 @@
       font-size: 1rem;
       color: #C4A882;
     }
-    /* Animated Add to Cart Button */
     .button {
       --width: 100px;
       --height: 35px;
@@ -293,6 +287,7 @@
       border: none;
       outline: none;
       font-weight: 600;
+      color: white; /* ensures text contrast */
     }
     .button::before {
       content: attr(data-tooltip);
@@ -372,7 +367,6 @@
     .button:hover::after { bottom: calc(var(--height) + var(--gap-between-tooltip-to-button) - 20px); }
     .button:hover::before { bottom: calc(var(--height) + var(--gap-between-tooltip-to-button)); }
 
-    /* Modal */
     .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); z-index: 1000; align-items: center; justify-content: center; }
     .modal-content { max-width: 700px; width: 90%; background: white; border-radius: 28px; overflow: hidden; max-height: 90vh; overflow-y: auto; }
     .modal-header { display: flex; justify-content: space-between; align-items: center; padding: 1rem; border-bottom: 1px solid #F0E2D8; }
@@ -384,9 +378,8 @@
     .thumb { width: 60px; height: 60px; border-radius: 12px; overflow: hidden; cursor: pointer; border: 2px solid transparent; }
     .thumb img { width: 100%; height: 100%; object-fit: cover; }
     .thumb.active { border-color: #C4A882; }
-    .modal-add { background: #C4A882; border: none; padding: 0.6rem; border-radius: 40px; font-weight: 600; width: 100%; margin-top: 1rem; cursor: pointer; }
+    .modal-add { background: #C4A882; border: none; padding: 0.6rem; border-radius: 40px; font-weight: 600; width: 100%; margin-top: 1rem; cursor: pointer; color: #1E1B18; }
 
-    /* Footer, drawer */
     .info-container-bottom { background: #FFFFFF; border-top: 1px solid #F0E2D8; padding: 1.5rem 1rem; margin-top: 2rem; }
     .info-flex { max-width: 1280px; margin: 0 auto; display: flex; justify-content: center; gap: 2rem; flex-wrap: wrap; }
     .social-links { display: flex; gap: 1.2rem; }
@@ -426,39 +419,61 @@
 <body>
 <div class="main-header">
   <div class="header-left">
-    <button class="hamburger" id="hamburgerBtn"><i class="fas fa-bars"></i></button>
-    <button class="appointment-icon" id="bookAppointmentBtn"><i class="fas fa-phone-alt"></i></button>
-    <button class="location-icon" id="locationBtn"><i class="fas fa-map-marker-alt"></i></button>
+    <button class="hamburger" id="hamburgerBtn" aria-label="Menu"><i class="fas fa-bars"></i></button>
+    <button class="appointment-icon" id="bookAppointmentBtn" aria-label="Book appointment by phone"><i class="fas fa-phone-alt"></i></button>
+    <button class="location-icon" id="locationBtn" aria-label="Shop location on map"><i class="fas fa-map-marker-alt"></i></button>
   </div>
-  <div class="logo-stacked"><span class="logo-samar">SAMAR</span><span class="logo-piercing">PIERCING</span></div>
+  <div class="logo-stacked" aria-label="Samar Piercing logo"><span class="logo-samar">SAMAR</span><span class="logo-piercing">PIERCING</span></div>
   <div class="header-right">
-    <div class="search-bar"><i class="fas fa-search"></i><input type="text" id="searchInput" placeholder="Search..."></div>
-    <button id="langToggle" class="lang-toggle">🇫🇷 FR</button>
-    <a href="/cart" class="cart-icon"><i class="fas fa-shopping-bag"></i> <span id="cartNavBadge" class="cart-count">0</span></a>
+    <div class="search-bar" role="search"><i class="fas fa-search" aria-hidden="true"></i><input type="text" id="searchInput" placeholder="Search..." aria-label="Search products"></div>
+    <button id="langToggle" class="lang-toggle" aria-label="Change language">🇫🇷 FR</button>
+    <a href="/cart" class="cart-icon" aria-label="Shopping cart"><i class="fas fa-shopping-bag" aria-hidden="true"></i> <span id="cartNavBadge" class="cart-count">0</span></a>
   </div>
 </div>
 <div class="hero-image"><img src="Neutral Minimalist Business Proposal Docs Banner.png" alt="Samar piercing collection"></div>
 
-<!-- Shop By Piercing (20% bigger) -->
-<div class="shop-by-section">
-  <div class="shop-by-title" id="shopByTitle">Shop By Piercing</div>
-  <div class="circle-slider" id="circleSlider"></div>
-</div>
+<!-- Main landmark -->
+<main>
+  <div class="shop-by-section">
+    <div class="shop-by-title" id="shopByTitle">Shop By Piercing</div>
+    <div class="circle-slider" id="circleSlider" role="list" aria-label="Piercing categories"></div>
+  </div>
 
-<!-- Dynamic content: New Arrivals, Categories will be injected here -->
-<div id="fullLayout" class="full-layout-container" style="max-width:1280px; margin:0 auto;"></div>
-<div id="filteredProductsGrid" style="display: none; max-width:1280px; margin:0 auto;"></div>
+  <div id="fullLayout" class="full-layout-container" style="max-width:1280px; margin:0 auto;"></div>
+  <div id="filteredProductsGrid" style="display: none; max-width:1280px; margin:0 auto;"></div>
+</main>
 
-<div class="info-container-bottom"><div class="info-flex"><div class="social-links"><a href="https://wa.me/212781570083" target="_blank" class="social-icon"><i class="fab fa-whatsapp"></i></a><a href="https://www.instagram.com/piercing_bysamar" target="_blank" class="social-icon"><i class="fab fa-instagram"></i></a><a href="https://www.tiktok.com/@piercingbysmar" target="_blank" class="social-icon"><i class="fab fa-tiktok"></i></a><a href="https://www.snapchat.com/add/piercingbysamar" target="_blank" class="social-icon"><i class="fab fa-snapchat-ghost"></i></a></div></div></div>
+<div class="info-container-bottom"><div class="info-flex"><div class="social-links"><a href="https://wa.me/212781570083" target="_blank" class="social-icon" aria-label="WhatsApp"><i class="fab fa-whatsapp"></i></a><a href="https://www.instagram.com/piercing_bysamar" target="_blank" class="social-icon" aria-label="Instagram"><i class="fab fa-instagram"></i></a><a href="https://www.tiktok.com/@piercingbysmar" target="_blank" class="social-icon" aria-label="TikTok"><i class="fab fa-tiktok"></i></a><a href="https://www.snapchat.com/add/piercingbysamar" target="_blank" class="social-icon" aria-label="Snapchat"><i class="fab fa-snapchat-ghost"></i></a></div></div></div>
 <footer id="footer">© 2026 Samar Piercing — Order via WhatsApp</footer>
 
 <div class="drawer-overlay" id="drawerOverlay"></div>
-<div class="drawer" id="drawer"><div class="drawer-header"><h3 id="drawerTitle"><i class="fas fa-tags"></i> Categories</h3><button class="close-drawer" id="closeDrawerBtn">&times;</button></div><div class="categories-list" id="categoriesList"></div></div>
+<div class="drawer" id="drawer"><div class="drawer-header"><h3 id="drawerTitle"><i class="fas fa-tags"></i> Categories</h3><button class="close-drawer" id="closeDrawerBtn" aria-label="Close categories menu">&times;</button></div><div class="categories-list" id="categoriesList"></div></div>
 
-<div id="productModal" class="modal"><div class="modal-content"><div class="modal-header"><h3>Product Details</h3><button class="close-modal">&times;</button></div><div class="modal-body"><div class="main-image"><img id="modalMainImage" src="" alt=""></div><div class="thumbnails" id="modalThumbnails"></div><div class="modal-details"><div class="product-title" id="modalTitle"></div><div class="product-desc" id="modalDesc"></div><div class="modal-price" id="modalPrice"></div><div class="price-row" style="margin-top:1rem;"><div class="qty-ctrl" style="display:inline-flex; margin-right:1rem;"><button id="modalQtyMinus">-</button><span id="modalQtyVal">1</span><button id="modalQtyPlus">+</button></div><button id="modalAddToCart" class="modal-add"><i class="fas fa-plus-circle"></i> Add to Cart</button></div></div></div></div></div>
+<div id="productModal" class="modal" role="dialog" aria-modal="true" aria-label="Product details">
+  <div class="modal-content">
+    <div class="modal-header"><h3>Product Details</h3><button class="close-modal" aria-label="Close">&times;</button></div>
+    <div class="modal-body">
+      <div class="main-image"><img id="modalMainImage" src="" alt="Product image"></div>
+      <div class="thumbnails" id="modalThumbnails"></div>
+      <div class="modal-details">
+        <div class="product-title" id="modalTitle"></div>
+        <div class="product-desc" id="modalDesc"></div>
+        <div class="modal-price" id="modalPrice"></div>
+        <div class="price-row" style="margin-top:1rem;">
+          <div class="qty-ctrl" style="display:inline-flex; margin-right:1rem;">
+            <button id="modalQtyMinus" aria-label="Decrease quantity">-</button>
+            <span id="modalQtyVal" aria-live="polite">1</span>
+            <button id="modalQtyPlus" aria-label="Increase quantity">+</button>
+          </div>
+          <button id="modalAddToCart" class="modal-add"><i class="fas fa-plus-circle"></i> Add to Cart</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
 
 <script>
-  // Translations
+  // Translations (unchanged)
   const translations = { en: { shopByTitle: "Shop By Piercing", footer: "© 2026 Samar Piercing — Order via WhatsApp", drawerTitle: "Categories", allProducts: "✨ All Products", addToCart: "Add", addedToCart: "added to cart", loadingError: "⚠️ Unable to load products" }, fr: { shopByTitle: "Acheter par piercing", footer: "© 2026 Samar Piercing — Commande via WhatsApp", drawerTitle: "Catégories", allProducts: "✨ Tous les produits", addToCart: "Ajouter", addedToCart: "ajouté au panier", loadingError: "⚠️ Impossible de charger les produits" } };
   let currentLang = localStorage.getItem('lang') || 'en';
   function setLanguage(lang) { currentLang = lang; localStorage.setItem('lang', lang); document.getElementById('shopByTitle').innerText = translations[lang].shopByTitle; document.getElementById('footer').innerText = translations[lang].footer; document.getElementById('drawerTitle').innerHTML = `<i class="fas fa-tags"></i> ${translations[lang].drawerTitle}`; const toggleBtn = document.getElementById('langToggle'); toggleBtn.innerText = lang === 'en' ? '🇫🇷 FR' : '🇬🇧 EN'; renderDrawer(); if (allProducts.length) renderFullLayout(allProducts); else fetchProducts(); }
@@ -467,12 +482,12 @@
   const circleItems = [ { name: "Helix", mainCat: "oreille", subCat: "helix", imgUrl: "/images/helix.avif" }, { name: "Tragus", mainCat: "oreille", subCat: "tragus", imgUrl: "/images/tragus.avif" }, { name: "Conch", mainCat: "oreille", subCat: "conch", imgUrl: "/images/conch.avif" }, { name: "Daith", mainCat: "oreille", subCat: "daith", imgUrl: "/images/daith.avif" }, { name: "Rook", mainCat: "oreille", subCat: "rook/snug", imgUrl: "/images/rock.avif" }, { name: "Industrial", mainCat: "oreille", subCat: "industrial", imgUrl: "/images/indu.avif" }, { name: "Lobe", mainCat: "oreille", subCat: "lobe", imgUrl: "/images/lobe.avif" } ];
   let allProducts = [], currentMain = "all", currentSub = "";
 
-  function renderCircleSlider() { const container = document.getElementById('circleSlider'); if(!container) return; let html = ''; circleItems.forEach(item => { html += `<div class="circle-item" data-main="${item.mainCat}" data-sub="${item.subCat}"><div class="circle-img"><img src="${item.imgUrl}" alt="${item.name}" loading="lazy" onerror="this.src='https://via.placeholder.com/100'"></div><div class="circle-label">${item.name}</div></div>`; }); container.innerHTML = html; document.querySelectorAll('.circle-item').forEach(el => { el.addEventListener('click', () => { currentMain = el.dataset.main; currentSub = el.dataset.sub; document.querySelectorAll('.circle-item').forEach(c=>c.classList.remove('active')); el.classList.add('active'); applyFilter(); }); }); }
+  function renderCircleSlider() { const container = document.getElementById('circleSlider'); if(!container) return; let html = ''; circleItems.forEach(item => { html += `<div class="circle-item" data-main="${item.mainCat}" data-sub="${item.subCat}" role="button" tabindex="0" aria-label="${item.name} piercing category"> <div class="circle-img"><img src="${item.imgUrl}" alt="${item.name}" loading="lazy" onerror="this.src='https://via.placeholder.com/100'"></div><div class="circle-label">${item.name}</div></div>`; }); container.innerHTML = html; document.querySelectorAll('.circle-item').forEach(el => { el.addEventListener('click', () => { currentMain = el.dataset.main; currentSub = el.dataset.sub; document.querySelectorAll('.circle-item').forEach(c=>c.classList.remove('active')); el.classList.add('active'); applyFilter(); }); el.addEventListener('keypress', (e) => { if(e.key === 'Enter' || e.key === ' ') { e.preventDefault(); el.click(); } }); }); }
 
-  function renderDrawer() { const container = document.getElementById("categoriesList"); if(!container) return; let html = `<div class="all-link" data-main="all" data-sub="">${translations[currentLang].allProducts}</div>`; categoriesDef.forEach(cat => { const catLabel = currentLang === 'en' ? cat.labelEn : cat.labelFr; const hasSub = cat.sub.length > 0; html += `<div class="main-cat-item" data-main="${cat.main}"><div class="main-cat-title">${catLabel}${hasSub ? '<i class="fas fa-chevron-down"></i>' : ''}</div>${hasSub ? `<div class="subcats" data-parent="${cat.main}">${cat.sub.map(sub => `<div class="subcat-item" data-main="${cat.main}" data-sub="${sub}">${sub.charAt(0).toUpperCase()+sub.slice(1)}</div>`).join('')}</div>` : ''}</div>`; }); container.innerHTML = html;
-    document.querySelectorAll('.all-link').forEach(el => { el.addEventListener('click', () => { currentMain="all"; currentSub=""; closeDrawer(); applyFilter(); }); });
-    document.querySelectorAll('.main-cat-title').forEach(title => { title.addEventListener('click', (e) => { e.stopPropagation(); const parentDiv = title.closest('.main-cat-item'); const subDiv = parentDiv.querySelector('.subcats'); if(subDiv) subDiv.classList.toggle('show'); else { currentMain = parentDiv.dataset.main; currentSub = ""; closeDrawer(); applyFilter(); } }); });
-    document.querySelectorAll('.subcat-item').forEach(sub => { sub.addEventListener('click', () => { currentMain = sub.dataset.main; currentSub = sub.dataset.sub; closeDrawer(); applyFilter(); }); });
+  function renderDrawer() { const container = document.getElementById("categoriesList"); if(!container) return; let html = `<div class="all-link" data-main="all" data-sub="" role="button" tabindex="0" aria-label="Show all products">${translations[currentLang].allProducts}</div>`; categoriesDef.forEach(cat => { const catLabel = currentLang === 'en' ? cat.labelEn : cat.labelFr; const hasSub = cat.sub.length > 0; html += `<div class="main-cat-item" data-main="${cat.main}"><div class="main-cat-title" role="button" tabindex="0" aria-label="${catLabel} category">${catLabel}${hasSub ? '<i class="fas fa-chevron-down"></i>' : ''}</div>${hasSub ? `<div class="subcats" data-parent="${cat.main}">${cat.sub.map(sub => `<div class="subcat-item" data-main="${cat.main}" data-sub="${sub}" role="button" tabindex="0" aria-label="${sub} subcategory">${sub.charAt(0).toUpperCase()+sub.slice(1)}</div>`).join('')}</div>` : ''}</div>`; }); container.innerHTML = html;
+    document.querySelectorAll('.all-link').forEach(el => { el.addEventListener('click', () => { currentMain="all"; currentSub=""; closeDrawer(); applyFilter(); }); el.addEventListener('keypress', (e) => { if(e.key === 'Enter' || e.key === ' ') { e.preventDefault(); el.click(); } }); });
+    document.querySelectorAll('.main-cat-title').forEach(title => { title.addEventListener('click', (e) => { e.stopPropagation(); const parentDiv = title.closest('.main-cat-item'); const subDiv = parentDiv.querySelector('.subcats'); if(subDiv) subDiv.classList.toggle('show'); else { currentMain = parentDiv.dataset.main; currentSub = ""; closeDrawer(); applyFilter(); } }); title.addEventListener('keypress', (e) => { if(e.key === 'Enter' || e.key === ' ') { e.preventDefault(); title.click(); } }); });
+    document.querySelectorAll('.subcat-item').forEach(sub => { sub.addEventListener('click', () => { currentMain = sub.dataset.main; currentSub = sub.dataset.sub; closeDrawer(); applyFilter(); }); sub.addEventListener('keypress', (e) => { if(e.key === 'Enter' || e.key === ' ') { e.preventDefault(); sub.click(); } }); });
   }
 
   function applyFilter() { 
@@ -493,35 +508,19 @@
     } 
   }
 
-  // Render New Arrivals (4 newest) + category sections (each up to 4 products)
   function renderFullLayout(productsArray) {
     const container = document.getElementById('fullLayout');
     if (!productsArray.length) {
       container.innerHTML = `<div style="text-align:center; padding:2rem;">No products available</div>`;
       return;
     }
-
-    // 1. New Arrivals: 4 newest products (by id descending)
     const sorted = [...productsArray].sort((a,b)=> (Number(b.id)||0) - (Number(a.id)||0));
     const newest = sorted.slice(0,4);
-    let html = `
-      <div class="premiere-title">✨ New Arrivals ✨</div>
-      <div class="section-sub">Discover our latest pieces</div>
-      <div class="products-grid">${renderProductsHTML(newest)}</div>
-    `;
-
-    // 2. Category sections: oreille, nez, nombril, micro-dermal
-    const categoryOrder = [
-      { key: "oreille", label: currentLang === 'en' ? "Ear" : "Oreille" },
-      { key: "nez", label: currentLang === 'en' ? "Nose" : "Nez" },
-      { key: "nombril", label: currentLang === 'en' ? "Belly" : "Nombril" },
-      { key: "micro-dermal", label: currentLang === 'en' ? "Micro dermal" : "Micro dermal" }
-    ];
+    let html = `<div class="premiere-title">✨ New Arrivals ✨</div><div class="section-sub">Discover our latest pieces</div><div class="products-grid">${renderProductsHTML(newest)}</div>`;
+    const categoryOrder = [ { key: "oreille", label: currentLang === 'en' ? "Ear" : "Oreille" }, { key: "nez", label: currentLang === 'en' ? "Nose" : "Nez" }, { key: "nombril", label: currentLang === 'en' ? "Belly" : "Nombril" }, { key: "micro-dermal", label: currentLang === 'en' ? "Micro dermal" : "Micro dermal" } ];
     for (const cat of categoryOrder) {
       const catProducts = productsArray.filter(p => p.mainCategory === cat.key).slice(0,4);
-      if (catProducts.length) {
-        html += `<div class="cat-title">${cat.label}</div><div class="products-grid">${renderProductsHTML(catProducts)}</div>`;
-      }
+      if (catProducts.length) { html += `<div class="cat-title">${cat.label}</div><div class="products-grid">${renderProductsHTML(catProducts)}</div>`; }
     }
     container.innerHTML = html;
     attachCartEvents(); attachQuantityEvents();
@@ -532,27 +531,7 @@
     const buttonText = translations[currentLang].addToCart;
     return productsArray.map(p => {
       const catDisplay = p.subCategory || p.mainCategory;
-      return `
-        <div class="wsk-cp-product" data-product-id="${p.id}">
-          <div class="wsk-cp-img"><img src="${p.images?.[0] || ''}" alt="${escapeHtml(p.name)}" onerror="this.src='https://via.placeholder.com/300'"></div>
-          <div class="wsk-cp-text">
-            <div class="category"><span>${escapeHtml(catDisplay)}</span></div>
-            <div class="title-product"><h3>${escapeHtml(p.name)}</h3></div>
-            <div class="description-prod"><p>${escapeHtml(p.description || '')}</p></div>
-            <div class="card-footer">
-              <div class="price">${(p.price/100).toFixed(2)} MAD</div>
-              <div class="qty-ctrl" data-pid="${p.id}">
-                <button class="qty-minus" data-id="${p.id}">-</button>
-                <span class="qty-num" data-id="${p.id}">1</span>
-                <button class="qty-plus" data-id="${p.id}">+</button>
-              </div>
-              <button class="button add-to-cart-with-qty" data-id="${p.id}" data-name="${escapeHtml(p.name)}" data-price="${p.price}" data-tooltip="${buttonText}">
-                <div class="button-wrapper"><div class="text">${buttonText}</div><div class="icon"><i class="fas fa-shopping-cart"></i></div></div>
-              </button>
-            </div>
-          </div>
-        </div>
-      `;
+      return `<div class="wsk-cp-product" data-product-id="${p.id}" role="article"> <div class="wsk-cp-img"><img src="${p.images?.[0] || ''}" alt="${escapeHtml(p.name)}" onerror="this.src='https://via.placeholder.com/300'"></div><div class="wsk-cp-text"><div class="category"><span>${escapeHtml(catDisplay)}</span></div><div class="title-product"><h3>${escapeHtml(p.name)}</h3></div><div class="description-prod"><p>${escapeHtml(p.description || '')}</p></div><div class="card-footer"><div class="price">${(p.price/100).toFixed(2)} MAD</div><div class="qty-ctrl" data-pid="${p.id}"><button class="qty-minus" data-id="${p.id}" aria-label="Decrease quantity">-</button><span class="qty-num" data-id="${p.id}" aria-live="polite">1</span><button class="qty-plus" data-id="${p.id}" aria-label="Increase quantity">+</button></div><button class="button add-to-cart-with-qty" data-id="${p.id}" data-name="${escapeHtml(p.name)}" data-price="${p.price}" data-tooltip="${buttonText}" aria-label="Add ${escapeHtml(p.name)} to cart"> <div class="button-wrapper"><div class="text">${buttonText}</div><div class="icon"><i class="fas fa-shopping-cart" aria-hidden="true"></i></div></div> </button> </div> </div> </div>`;
     }).join('');
   }
 
