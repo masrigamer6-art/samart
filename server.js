@@ -18,7 +18,7 @@ app.use(express.static('public'));
 // --------------------- JWT secret ---------------------
 const JWT_SECRET = process.env.JWT_SECRET || 'samar-piercing-super-secret-key-change-me';
 
-// --------------------- Cloudinary (safer config) ---------------------
+// --------------------- Cloudinary ---------------------
 cloudinary.config({
   cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
   api_key: process.env.CLOUDINARY_API_KEY,
@@ -26,7 +26,6 @@ cloudinary.config({
   secure: true,
 });
 
-// Safer storage: generate random public_id, avoid file.originalname issues
 const storage = new CloudinaryStorage({
   cloudinary: cloudinary,
   params: {
@@ -90,7 +89,8 @@ app.use('/orders', express.static(ordersDir));
 // --------------------- Helper: verify JWT or admin password ---------------------
 const authenticateAdmin = (req, res, next) => {
   const authHeader = req.headers.authorization;
-  const password = req.body.password || req.query.password;
+  // Safe check: req.body may be undefined for multipart/form-data before multer
+  const password = req.body && req.body.password ? req.body.password : (req.query ? req.query.password : null);
   
   // First check direct password (legacy)
   if (password && (password === process.env.ADMIN_PASSWORD || password === 'admin123')) {
@@ -131,7 +131,7 @@ app.get('/api/products', async (req, res) => {
   }
 });
 
-// UPLOAD multiple images (admin only) with improved error logging
+// UPLOAD multiple images (admin only)
 app.post('/api/upload-multiple', authenticateAdmin, (req, res) => {
   upload.array('productImages', 4)(req, res, (err) => {
     if (err) {
@@ -142,10 +142,7 @@ app.post('/api/upload-multiple', authenticateAdmin, (req, res) => {
       return res.status(400).json({ error: 'No files uploaded' });
     }
     try {
-      const imageUrls = req.files.map(file => {
-        if (!file.path) throw new Error('Cloudinary did not return a path');
-        return file.path;
-      });
+      const imageUrls = req.files.map(file => file.path);
       console.log(`✅ Uploaded ${imageUrls.length} images`);
       res.json({ imageUrls });
     } catch (uploadErr) {
@@ -180,7 +177,7 @@ app.post('/api/products', authenticateAdmin, async (req, res) => {
   }
 });
 
-// UPDATE product
+// UPDATE product (fix deprecation warning)
 app.put('/api/products/:id', authenticateAdmin, async (req, res) => {
   try {
     const { id } = req.params;
@@ -199,7 +196,7 @@ app.put('/api/products/:id', authenticateAdmin, async (req, res) => {
         subCategory: subCategory || '',
         images: images.slice(0, 4),
       },
-      { new: true }
+      { returnDocument: 'after' }  // Fix deprecation warning
     );
     if (!updatedProduct) return res.status(404).json({ error: 'Product not found' });
     res.json({ success: true, product: updatedProduct });
